@@ -76,6 +76,10 @@ export default function MentionsLegalesPage() {
           Pour les informations relatives au traitement des données, consultez la page{" "}
           <Link href="/confidentialite">Politique de confidentialité</Link>.
         </p>
+        <p>
+          Les cookies de mesure d’audience Google Analytics 4 sont activés uniquement après
+          consentement de l’utilisateur via la bannière cookies.
+        </p>
       </section>
 
       <section>

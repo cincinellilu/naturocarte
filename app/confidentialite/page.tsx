@@ -73,6 +73,10 @@ export default function ConfidentialitePage() {
           sur des prestataires techniques (hébergement et base de données) agissant en
           qualité de sous-traitants.
         </p>
+        <p>
+          Pour la mesure d’audience, NaturoCarte utilise Google Analytics 4 (Google Ireland
+          Limited), uniquement après consentement explicite.
+        </p>
       </section>
 
       <section>
@@ -98,8 +102,23 @@ export default function ConfidentialitePage() {
       <section>
         <h2>Cookies et traceurs</h2>
         <p>
-          Le site peut utiliser des traceurs techniques strictement nécessaires au
-          fonctionnement des services cartographiques et applicatifs.
+          Le site utilise:
+        </p>
+        <p>
+          1. Des cookies strictement nécessaires au fonctionnement du site et des services
+          cartographiques.
+        </p>
+        <p>
+          2. Des cookies de mesure d’audience Google Analytics 4 uniquement si vous cliquez
+          sur “Accepter” dans la bannière cookies.
+        </p>
+        <p>
+          Vous pouvez modifier votre choix à tout moment via le lien “Gérer mes cookies”
+          disponible dans le pied de page.
+        </p>
+        <p>
+          Durée de conservation du choix de consentement: 6 mois. Les cookies Analytics
+          sont ensuite gérés selon la politique de Google.
         </p>
         <p>
           Pour les informations éditeur/hébergeur, consultez{" "}

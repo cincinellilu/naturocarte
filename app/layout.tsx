@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { getSiteUrl } from "@/lib/site";
+import Analytics from "@/components/Analytics";
+import CookieBannerMount from "@/components/CookieBannerMount";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 const siteUrl = getSiteUrl();
 
@@ -30,8 +33,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body>
+    <html lang="fr" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <Analytics />
         <header className="site-header">
           <div className="container">
             <nav aria-label="Navigation principale">
@@ -62,10 +66,12 @@ export default function RootLayout({
             <p>NaturoCarte - annuaire des naturopathes.</p>
             <p>
               <Link href="/mentions-legales">Mentions légales</Link> ·{" "}
-              <Link href="/confidentialite">Confidentialité</Link>
+              <Link href="/confidentialite">Confidentialité</Link> ·{" "}
+              <CookieSettingsButton />
             </p>
           </div>
         </footer>
+        <CookieBannerMount />
       </body>
     </html>
   );

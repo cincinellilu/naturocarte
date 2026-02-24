@@ -9,7 +9,7 @@
     "start:prod": "next start -H 0.0.0.0 -p ${PORT:-3000}"
   },
   "engines": {
-    "node": ">=20.11.0 <23"
+    "node": ">=20.11.0 <25"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",

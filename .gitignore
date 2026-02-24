@@ -24,8 +24,19 @@ yarn-error.log*
 pnpm-debug.log*
 
 # local env files
-.env*.local
 .env
+.env.*
+!.env.example
+.env*.local
+.envrc
+.envrc.local
+
+# credentials / certificates
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
 
 # vercel
 .vercel

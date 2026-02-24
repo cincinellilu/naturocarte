@@ -4,22 +4,22 @@ import "./globals.css";
 import { getSiteUrl } from "@/lib/site";
 import Analytics from "@/components/Analytics";
 import CookieBannerMount from "@/components/CookieBannerMount";
-import CookieSettingsButton from "@/components/CookieSettingsButton";
+import CookieSettingsButtonMount from "@/components/CookieSettingsButtonMount";
 
 const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "NaturoCarte",
+    default: "Naturopathe Paris | Annuaire naturopathes | NaturoCarte",
     template: "%s | NaturoCarte"
   },
   description:
-    "Annuaire cartographique de naturopathes. Trouvez des praticiens et consultez une carte simple et claire.",
+    "Annuaire cartographique de naturopathes à Paris. Trouvez un naturopathe par arrondissement et consultez des fiches détaillées.",
   openGraph: {
     title: "NaturoCarte",
     description:
-      "Annuaire cartographique de naturopathes. Trouvez des praticiens et consultez une carte simple et claire.",
+      "Annuaire cartographique de naturopathes à Paris. Trouvez un naturopathe par arrondissement et consultez des fiches détaillées.",
     url: siteUrl,
     siteName: "NaturoCarte",
     locale: "fr_FR",
@@ -44,7 +44,7 @@ export default function RootLayout({
                   <Link href="/">Accueil</Link>
                 </li>
                 <li>
-                  <Link href="/carte">Carte</Link>
+                  <Link href="/naturopathe-paris">Naturopathe Paris</Link>
                 </li>
                 <li>
                   <Link href="/a-propos">A propos</Link>
@@ -67,7 +67,7 @@ export default function RootLayout({
             <p>
               <Link href="/mentions-legales">Mentions légales</Link> ·{" "}
               <Link href="/confidentialite">Confidentialité</Link> ·{" "}
-              <CookieSettingsButton />
+              <CookieSettingsButtonMount />
             </p>
           </div>
         </footer>

@@ -6,24 +6,24 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Carte des naturopathes",
+  title: "Carte des naturopathes à Paris",
   description:
-    "Consultez la carte des naturopathes et accédez aux profils des praticiens.",
+    "Consultez la carte des naturopathes à Paris et accédez aux profils des praticiens.",
   alternates: {
     canonical: "/carte"
   },
   openGraph: {
-    title: "Carte des naturopathes | NaturoCarte",
+    title: "Carte des naturopathes à Paris | NaturoCarte",
     description:
-      "Consultez la carte des naturopathes et accédez aux profils des praticiens.",
+      "Consultez la carte des naturopathes à Paris et accédez aux profils des praticiens.",
     url: "/carte",
     type: "website"
   },
   twitter: {
     card: "summary",
-    title: "Carte des naturopathes | NaturoCarte",
+    title: "Carte des naturopathes à Paris | NaturoCarte",
     description:
-      "Consultez la carte des naturopathes et accédez aux profils des praticiens."
+      "Consultez la carte des naturopathes à Paris et accédez aux profils des praticiens."
   }
 };
 
@@ -104,6 +104,11 @@ export default async function CartePage() {
         (adresse, contact, lien de prise de rendez-vous lorsque disponible). La structure
         est conçue pour rester claire et lisible pour les utilisateurs comme pour les moteurs
         de recherche, avec une expérience cartographique complète.
+      </p>
+      <p>
+        Pour une recherche éditoriale par quartier, consultez aussi la page{" "}
+        <Link href="/naturopathe-paris">Naturopathe Paris</Link> et ses déclinaisons par
+        arrondissement.
       </p>
 
       {showEmptyState ? (

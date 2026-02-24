@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { PARIS_ARRONDISSEMENTS } from "@/lib/paris";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -29,7 +30,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url: `${siteUrl}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    {
+      url: `${siteUrl}/annuaire-naturopathes`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9
+    },
     { url: `${siteUrl}/carte`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    {
+      url: `${siteUrl}/naturopathe-paris`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.95
+    },
+    ...PARIS_ARRONDISSEMENTS.map((arrondissement) => ({
+      url: `${siteUrl}/naturopathe-paris/${arrondissement}`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.85
+    })),
     ...practitionerEntries,
     { url: `${siteUrl}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     {

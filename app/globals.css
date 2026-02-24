@@ -660,6 +660,16 @@ h2 {
   color: #475569;
 }
 
+.paris-practitioners-section {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.paris-practitioners-section h2 {
+  margin: 0 0 0.8rem;
+}
+
 @media (max-width: 640px) {
   .faq-item {
     padding: 0.7rem 0.75rem;

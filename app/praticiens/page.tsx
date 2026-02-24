@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PractitionerContactFormMounted from "@/components/PractitionerContactFormMounted";
 
 export const metadata: Metadata = {
   title: "Espace praticiens",
   description:
-    "Demande de correction ou de revendication de fiche praticien.",
+    "Contact pour souscription ou demande de rappel praticien.",
   robots: {
     index: false,
     follow: true
@@ -40,18 +41,15 @@ export default async function PractitionersPage({
 
       <section>
         <p>
-          Cet espace permet aux naturopathes de transmettre leurs informations
-          professionnelles pour corriger ou compléter une fiche existante, être contactés
-          si une précision est nécessaire et suivre les évolutions de l’annuaire. Le
-          service est actuellement disponible sur une première zone, avec un déploiement
-          progressif.
+          Cet espace permet aux naturopathes de demander un rappel, de demander leur
+          souscription à l’abonnement (5€/mois), ou de poser une question.
         </p>
       </section>
 
       <section className="practitioner-card practitioner-form-card">
-        <h2>Formulaire d’inscription</h2>
+        <h2>Formulaire de contact praticiens</h2>
         <p className="practitioner-form-intro">
-          Renseignez votre email professionnel pour recevoir les prochaines étapes.
+          Envoyez votre demande et nous revenons vers vous par email.
         </p>
 
         {submitted === "1" ? (
@@ -66,7 +64,25 @@ export default async function PractitionersPage({
           </p>
         ) : null}
 
-        {error === "db_error" || error === "server_error" ? (
+        {error === "invalid_subject" ? (
+          <p className="practitioner-form-feedback practitioner-form-feedback--error">
+            Merci de sélectionner un sujet valide.
+          </p>
+        ) : null}
+
+        {error === "missing_subject" ? (
+          <p className="practitioner-form-feedback practitioner-form-feedback--error">
+            Merci de renseigner le sujet de votre question.
+          </p>
+        ) : null}
+
+        {error === "missing_phone" ? (
+          <p className="practitioner-form-feedback practitioner-form-feedback--error">
+            Merci de renseigner votre numéro de téléphone pour être recontacté.
+          </p>
+        ) : null}
+
+        {error === "server_error" ? (
           <p className="practitioner-form-feedback practitioner-form-feedback--error">
             Une erreur est survenue pendant l’envoi. Merci de réessayer dans quelques
             instants.
@@ -82,55 +98,7 @@ export default async function PractitionersPage({
           </p>
         ) : null}
 
-        <form action="/api/lead-practitioner" method="post" className="practitioner-form">
-          {normalizedClaim ? (
-            <input type="hidden" name="claim" value={normalizedClaim} />
-          ) : null}
-          <input
-            type="text"
-            name="company"
-            tabIndex={-1}
-            autoComplete="off"
-            className="practitioner-form-honeypot"
-            aria-hidden="true"
-          />
-
-          <div className="practitioner-form-field">
-            <label htmlFor="email" className="practitioner-form-label">
-              Email professionnel
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              className="practitioner-form-input"
-            />
-            <p className="practitioner-form-help">
-              Utilisez une adresse consultée régulièrement.
-            </p>
-            <p className="practitioner-form-help">
-              En envoyant ce formulaire, vous acceptez d’être recontacté au sujet de votre
-              fiche et de la gestion de votre demande.
-            </p>
-          </div>
-
-          <p className="practitioner-form-actions">
-            <button type="submit" className="btn">
-              Envoyer
-            </button>
-          </p>
-        </form>
-      </section>
-
-      <section>
-          <h2>Tarif et accès</h2>
-          <p>
-            Le service est proposé à <strong>5€/mois</strong>. Lorsqu’un naturopathe est
-            connecté et dispose d’un abonnement actif, il peut également retrouver ses
-            factures depuis son espace.
-          </p>
+        <PractitionerContactFormMounted claim={normalizedClaim} />
       </section>
     </article>
   );

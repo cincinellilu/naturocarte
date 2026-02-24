@@ -63,7 +63,7 @@ export default function RootLayout({
 
         <footer className="site-footer">
           <div className="container">
-            <p>NaturoCarte - annuaire des naturopathes.</p>
+            <p>Lucas - annuaire des naturopathes.</p>
             <p>
               <Link href="/mentions-legales">Mentions légales</Link> ·{" "}
               <Link href="/confidentialite">Confidentialité</Link> ·{" "}

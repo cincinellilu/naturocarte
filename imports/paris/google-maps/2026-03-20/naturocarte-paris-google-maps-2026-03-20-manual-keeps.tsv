@@ -1,0 +1,4 @@
+first_name	last_name	slug	adresse	postal_code	city	lat	lng	phone	email	website	booking_url	description	status
+Adrien	RUET	adrien-ruet-paris-1	23 Rue d'Argenteuil	75001	Paris	48.8660388	2.3332207	0659208914				Validation manuelle utilisateur	manual_keep_20260320
+Gisèle	VIDON	gisele-vidon-paris-5	24 Rue Geoffroy-Saint-Hilaire	75005	Paris	48.8402228	2.356453	0684526603	gisele.naturo@yahoo.fr	https://naturopathie-et-dietetique.fr/		Validation manuelle utilisateur	manual_keep_20260320
+Adeline	LABARRE	adeline-labarre-montrouge	22 bis Rue Auber	92120	Montrouge	48.8121035	2.3127446	0612224475	adelinenaturopathe92@gmail.com	https://www.adelinenaturopathe.com/	https://www.adelinenaturopathe.com/book-online	Validation manuelle utilisateur ; hors Paris intra-muros conservé explicitement	manual_keep_20260320

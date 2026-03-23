@@ -5,6 +5,7 @@ import { getSiteUrl } from "@/lib/site";
 import Analytics from "@/components/Analytics";
 import CookieBannerMount from "@/components/CookieBannerMount";
 import CookieSettingsButtonMount from "@/components/CookieSettingsButtonMount";
+import { MobileTabBar, SiteHeaderNav } from "@/components/SiteNavigation";
 
 const siteUrl = getSiteUrl();
 
@@ -38,22 +39,7 @@ export default function RootLayout({
         <Analytics />
         <header className="site-header">
           <div className="container">
-            <nav aria-label="Navigation principale">
-              <ul>
-                <li>
-                  <Link href="/">Accueil</Link>
-                </li>
-                <li>
-                  <Link href="/naturopathe-paris">Naturopathe Paris</Link>
-                </li>
-                <li>
-                  <Link href="/a-propos">A propos</Link>
-                </li>
-                <li>
-                  <Link href="/praticiens">Praticiens</Link>
-                </li>
-              </ul>
-            </nav>
+            <SiteHeaderNav />
           </div>
         </header>
 
@@ -71,6 +57,7 @@ export default function RootLayout({
             </p>
           </div>
         </footer>
+        <MobileTabBar />
         <CookieBannerMount />
       </body>
     </html>

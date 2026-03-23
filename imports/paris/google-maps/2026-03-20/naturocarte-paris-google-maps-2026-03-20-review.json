@@ -1,0 +1,1379 @@
+{
+  "summary": {
+    "google_maps_unique_ids": 281,
+    "resolved_places": 281,
+    "accepted_after_filtering": 217,
+    "duplicates_against_existing_prod": 9,
+    "final_rows": 203,
+    "skipped_other": 64,
+    "manual_exclusions_after_review": 4
+  },
+  "duplicates_against_existing_prod": [
+    {
+      "first_name": "Elodie",
+      "last_name": "DUMOULIN",
+      "slug": "elodie-dumoulin-paris-8",
+      "adresse": "101 Rue de Miromesnil",
+      "postal_code": "75008",
+      "city": "Paris",
+      "lat": 48.8804655,
+      "lng": 2.3152386,
+      "phone": "3622161016",
+      "email": "",
+      "website": "https://www.holicure.fr/?utm_campaign=gmb&utm_content=site-web&utm_medium=organic&utm_source=google",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0x8ae59ef654a8c5cd",
+      "_maps_url": "https://www.google.com/maps/preview/place/Elodie+DUMOULIN+-+Naturopathe,+101+Rue+de+Miromesnil,+75008+Paris/@48.8804655,2.3152386,2624a,13.1y/data=!4m2!3m1!1s0x8d650912683655c3:0x8ae59ef654a8c5cd"
+    },
+    {
+      "first_name": "Loïc",
+      "last_name": "TERNISIEN",
+      "slug": "loic-ternisien-paris-9",
+      "adresse": "11 Rue Clapeyron",
+      "postal_code": "75009",
+      "city": "Paris",
+      "lat": 48.8815598,
+      "lng": 2.3240274,
+      "phone": "3669199532",
+      "email": "",
+      "website": "http://loicternisien.com/",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0xf959e1fff7b11b34",
+      "_maps_url": "https://www.google.com/maps/preview/place/Lo%C3%AFc+Ternisien+%7C+Naturopathe+%26+%C3%A9nerg%C3%A9ticien+%7C+Paris,+11+Rue+Clapeyron,+75009+Paris/@48.8815598,2.3240274,2624a,13.1y/data=!4m2!3m1!1s0x47e6714465a7daff:0xf959e1fff7b11b34"
+    },
+    {
+      "first_name": "ANNE",
+      "last_name": "GUILLERM",
+      "slug": "anne-guillerm-paris-17",
+      "adresse": "3 Rue Meissonier",
+      "postal_code": "75017",
+      "city": "Paris",
+      "lat": 48.882750099999996,
+      "lng": 2.3041329,
+      "phone": "3778176983",
+      "email": "",
+      "website": "",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0x8a3b5eaffe09c41a",
+      "_maps_url": "https://www.google.com/maps/preview/place/ANNE+GUILLERM+-+Naturopathe+-+Consultations+en+cabinet+et+%C3%A0+domicile,+3+Rue+Meissonier,+75017+Paris/@48.8827501,2.3041329,2624a,13.1y/data=!4m2!3m1!1s0x47e66fc37e5b9349:0x8a3b5eaffe09c41a"
+    },
+    {
+      "first_name": "Marina",
+      "last_name": "MERLEY",
+      "slug": "marina-merley-paris-17",
+      "adresse": "175 Rue Legendre",
+      "postal_code": "75017",
+      "city": "Paris",
+      "lat": 48.891761699999996,
+      "lng": 2.3257559,
+      "phone": "",
+      "email": "",
+      "website": "https://marinamerley-naturopathe-paris.com/?utm_source=gg-map&utm_medium=search&utm_content=hp",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0x83543a8ff21b94d",
+      "_maps_url": "https://www.google.com/maps/preview/place/Marina+MERLEY+-+Naturopathe+Paris+-+Acn%C3%A9,+Endom%C3%A9triose,Troubles+Digestifs,+175+Rue+Legendre,+75017+Paris/@48.8917617,2.3257559,2623a,13.1y/data=!4m2!3m1!1s0x47e66fd96be999b1:0x83543a8ff21b94d"
+    },
+    {
+      "first_name": "Stephanie",
+      "last_name": "CAREZ DURIEZ",
+      "slug": "stephanie-carez-duriez-paris-17",
+      "adresse": "81 Rue de Rome",
+      "postal_code": "75017",
+      "city": "Paris",
+      "lat": 48.882675899999995,
+      "lng": 2.3196555,
+      "phone": "3646116081",
+      "email": "",
+      "website": "https://www.medoucine.com/consultation/-/stephanie-carez-duriez/5523",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0x9f5587e5920b224a",
+      "_maps_url": "https://www.google.com/maps/preview/place/Stephanie+CAREZ+DURIEZ+Naturopathe+Paris+17eme,+81+Rue+de+Rome,+75017+Paris/@48.8826759,2.3196555,2624a,13.1y/data=!4m2!3m1!1s0x47e66fd340bd8d25:0x9f5587e5920b224a"
+    },
+    {
+      "first_name": "Houda",
+      "last_name": "DAFIR",
+      "slug": "houda-dafir-paris-17",
+      "adresse": "60 Rue de La Jonquière",
+      "postal_code": "75017",
+      "city": "Paris",
+      "lat": 48.893966,
+      "lng": 2.3218946,
+      "phone": "3668131940",
+      "email": "",
+      "website": "https://www.houdadafir.com/?utm_source=google&utm_medium=wix_google_business_profile&utm_campaign=13906927976039815575",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0xd1ce2a2c221c3c9",
+      "_maps_url": "https://www.google.com/maps/preview/place/Houda+Dafir+%7C+Naturopathe+%7C+Stress,+sommeil,+fatigue+%7C+Digestion+%7C+Peau+%7C+Poids+%7C+Maladies+chroniques+%7C+Immunit%C3%A9,+60+Rue+de+La+Jonqui%C3%A8re,+75017+Paris/@48.893966,2.3218946,2623a,13.1y/data=!4m2!3m1!1s0x47e66ff0aaa12683:0xd1ce2a2c221c3c9"
+    },
+    {
+      "first_name": "Christophe",
+      "last_name": "ETIENNE",
+      "slug": "christophe-etienne-paris-17",
+      "adresse": "20 Rue du Débarcadère",
+      "postal_code": "75017",
+      "city": "Paris",
+      "lat": 48.878067699999995,
+      "lng": 2.2855691,
+      "phone": "3658898299",
+      "email": "",
+      "website": "http://www.christopheetienne-naturopathe.com/",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0x3f42c2f2d4e808d5",
+      "_maps_url": "https://www.google.com/maps/preview/place/Christophe+ETIENNE+-+Naturopathe+-+sant%C3%A9+intestinale+-+SIBO+-+Phytoth%C3%A9rapeute,+20+Rue+du+D%C3%A9barcad%C3%A8re,+75017+Paris/@48.8780677,2.2855691,2624a,13.1y/data=!4m2!3m1!1s0x47e66f4c98e9ca2f:0x3f42c2f2d4e808d5"
+    },
+    {
+      "first_name": "Julien",
+      "last_name": "LEI WANG",
+      "slug": "julien-lei-wang-paris-17",
+      "adresse": "3 Rue Meissonier",
+      "postal_code": "75017",
+      "city": "Paris",
+      "lat": 48.8828503,
+      "lng": 2.3042475,
+      "phone": "0665645300",
+      "email": "",
+      "website": "https://www.monchemindesante.fr/",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0x943209a2e574959f",
+      "_maps_url": "https://www.google.com/maps/preview/place/Julien+Lei+WANG+-+Naturopathe+paris+17%2F+Massages+bien-%C3%AAtre+%2F+R%C3%A9flexologie+plantaire,+3+Rue+Meissonier,+75017+Paris/@48.8828503,2.3042475,2624a,13.1y/data=!4m2!3m1!1s0x47e66f0e7f00cea9:0x943209a2e574959f"
+    },
+    {
+      "first_name": "Vanessa",
+      "last_name": "LOPEZ",
+      "slug": "vanessa-lopez-paris-17",
+      "adresse": "1 Rue Cernuschi",
+      "postal_code": "75017",
+      "city": "Paris",
+      "lat": 48.8861409,
+      "lng": 2.3068152,
+      "phone": "",
+      "email": "",
+      "website": "https://vanessa-lopez-naturopathe.com/",
+      "booking_url": "",
+      "description": "",
+      "status": "gmaps_20260320",
+      "_hexid": "0x0:0x3d990f6fa055b3f1",
+      "_maps_url": "https://www.google.com/maps/preview/place/Vanessa+Lopez,+Naturopathe,+ma%C3%AEtre+Reiki,+%C3%A9nerg%C3%A9ticienne+%C3%A0+Paris+17%C3%A8me,+1+Rue+Cernuschi,+75017+Paris/@48.8861409,2.3068152,2624a,13.1y/data=!4m2!3m1!1s0x47e66fbcbcc56815:0x3d990f6fa055b3f1"
+    }
+  ],
+  "skipped": [
+    {
+      "hexid": "0x0:0xa297093b6b218599",
+      "title": "Mélanie Villanova - Naturopathe",
+      "categories": [
+        "Naturopathe",
+        "Service establishment"
+      ],
+      "website": "http://melanievillanova.com/",
+      "lat": 46.123479499999995,
+      "lng": 4.539653899999999,
+      "phone": "3628966484",
+      "full_address": "",
+      "adresse": "",
+      "postal_code": "",
+      "city": "",
+      "parsed_name": [
+        "Mélanie",
+        "VILLANOVA"
+      ],
+      "maps_url": "https://www.google.com/maps/preview/place/M%C3%A9lanie+Villanova+-+Naturopathe/@46.1234795,4.5396539,2765a,13.1y/data=!4m2!3m1!1s0x82556e33c2f24ef1:0xa297093b6b218599",
+      "skip_reason": "not_paris"
+    },
+    {
+      "hexid": "0x0:0xd69eb18a564965c1",
+      "title": "Naturopathe-Aurélie de Beaufort-Coaching Santé Paris",
+      "categories": [
+        "Naturopathe",
+        "Centre de coaching",
+        "Praticien en médecine holistique"
+      ],
+      "website": "https://www.lanaturoetmoi.com/",
+      "lat": 48.8472963,
+      "lng": 2.2624386,
+      "phone": "3784151547",
+      "full_address": "6 Av. Erlanger, 75016 Paris",
+      "adresse": "6 Av. Erlanger",
+      "postal_code": "75016",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe-Aur%C3%A9lie+de+Beaufort-Coaching+Sant%C3%A9+Paris,+6+Av.+Erlanger,+75016+Paris/@48.8472963,2.2624386,2626a,13.1y/data=!4m2!3m1!1s0x47e67b253cbf5b83:0xd69eb18a564965c1",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x8508538f9179671b",
+      "title": "Formation Naturopathie",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.8411136,
+      "lng": 2.3015393,
+      "phone": "",
+      "full_address": "87 bis Rue Blomet, 75015 Paris",
+      "adresse": "87 bis Rue Blomet",
+      "postal_code": "75015",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Formation+Naturopathie,+87+bis+Rue+Blomet,+75015+Paris/@48.8411136,2.3015393,2626a,13.1y/data=!4m2!3m1!1s0x47e6703e66e9b81b:0x8508538f9179671b",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xf9655531296ce650",
+      "title": "Naturopathe Paris Cancer Fibromyalgie Arthrose Hernie Discale Diabète Psoriasis Eczéma Sclérose Charcot AVC Hypertension SOPK",
+      "categories": [
+        "Cabinet médical"
+      ],
+      "website": "https://calendly.com/ali-harzalli/30min",
+      "lat": 48.8510938,
+      "lng": 2.2938199999999997,
+      "phone": "3759397338",
+      "full_address": "11 Rue Humblot, 75015 Paris",
+      "adresse": "11 Rue Humblot",
+      "postal_code": "75015",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+Cancer+Fibromyalgie+Arthrose+Hernie+Discale+Diab%C3%A8te+Psoriasis+Ecz%C3%A9ma+Scl%C3%A9rose+Charcot+AVC+Hypertension+SOPK,+11+Rue+Humblot,+75015+Paris/@48.8510938,2.29382,2625a,13.1y/data=!4m2!3m1!1s0x47e671e03866ac59:0xf9655531296ce650",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x8469fe36cd7990aa",
+      "title": "Naturopathe, Paris 15, Inaya WAHIDI, Santé en Or",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.resalib.fr/praticien/102973-inaya-wahidi-naturopathe-paris",
+      "lat": 48.8425849,
+      "lng": 2.3141286,
+      "phone": "3665603419",
+      "full_address": "7 Rue Nicolas Charlet, 75015 Paris",
+      "adresse": "7 Rue Nicolas Charlet",
+      "postal_code": "75015",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe,+Paris+15,+Inaya+WAHIDI,+Sant%C3%A9+en+Or,+7+Rue+Nicolas+Charlet,+75015+Paris/@48.8425849,2.3141286,2626a,13.1y/data=!4m2!3m1!1s0x47e671f007e19ddf:0x8469fe36cd7990aa",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xf7a22bf42a4e8677",
+      "title": "Adrien Naturopathe",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.8660388,
+      "lng": 2.3332207,
+      "phone": "3659208914",
+      "full_address": "23 Rue d'Argenteuil, 75001 Paris",
+      "adresse": "23 Rue d'Argenteuil",
+      "postal_code": "75001",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Adrien+Naturopathe,+23+Rue+d'Argenteuil,+75001+Paris/@48.8660388,2.3332207,2625a,13.1y/data=!4m2!3m1!1s0x47e66f52a961cea5:0xf7a22bf42a4e8677",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x92e53c28fd152251",
+      "title": "Deboterah Paris",
+      "categories": [
+        "Magasin de vitamines et compléments alimentaires",
+        "Naturopathe"
+      ],
+      "website": "https://www.deboterah.com/",
+      "lat": 48.8661501,
+      "lng": 2.3276529,
+      "phone": "3170939773",
+      "full_address": "5 Rue de Castiglione, 75001 Paris",
+      "adresse": "5 Rue de Castiglione",
+      "postal_code": "75001",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Deboterah+Paris,+5+Rue+de+Castiglione,+75001+Paris/@48.8661501,2.3276529,2625a,13.1y/data=!4m2!3m1!1s0x3ab5bb4a8d5ea73:0x92e53c28fd152251",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x87dc66c14dd9ef91",
+      "title": "Aglaé - Naturopathie - Drainage lymphatique Renata França - Madérothérapie I Paris 11",
+      "categories": [
+        "Praticien en drainage lymphatique",
+        "Naturopathe"
+      ],
+      "website": "https://aglaelampson.com/",
+      "lat": 48.865988699999996,
+      "lng": 2.3667229,
+      "phone": "3625673806",
+      "full_address": "11 Bd Voltaire, 75011 Paris",
+      "adresse": "11 Bd Voltaire",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Agla%C3%A9+-+Naturopathie+-+Drainage+lymphatique+Renata+Fran%C3%A7a+-+Mad%C3%A9roth%C3%A9rapie+I+Paris+11,+11+Bd+Voltaire,+75011+Paris/@48.8659887,2.3667229,2625a,13.1y/data=!4m2!3m1!1s0x47e66f7be6b4884b:0x87dc66c14dd9ef91",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x56bcf736f6ba031a",
+      "title": "Naturopathe Paris Centre : Naturopathe Stéphane Beauvais",
+      "categories": [
+        "Naturopathe",
+        "Massothérapeute"
+      ],
+      "website": "https://naturopathe-stephanebeauvais.fr/",
+      "lat": 48.8608038,
+      "lng": 2.350526,
+      "phone": "3685121593",
+      "full_address": "40 R. Quincampoix, 75004 Paris",
+      "adresse": "40 R. Quincampoix",
+      "postal_code": "75004",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+Centre+:+Naturopathe+St%C3%A9phane+Beauvais,+40+R.+Quincampoix,+75004+Paris/@48.8608038,2.350526,2625a,13.1y/data=!4m2!3m1!1s0x47e67207b60bffff:0x56bcf736f6ba031a",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xc18eb6a380bdc296",
+      "title": "Vitalistique",
+      "categories": [
+        "Nutritionniste",
+        "Service d'hypnothérapie",
+        "Naturopathe",
+        "Coach particulier"
+      ],
+      "website": "http://www.vitalistique.com/",
+      "lat": 48.8518092,
+      "lng": 2.354132,
+      "phone": "3618837087",
+      "full_address": "1 Rue le Regrattier, 75004 Paris",
+      "adresse": "1 Rue le Regrattier",
+      "postal_code": "75004",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Vitalistique,+1+Rue+le+Regrattier,+75004+Paris/@48.8518092,2.354132,2625a,13.1y/data=!4m2!3m1!1s0x218e608feff6e11d:0xc18eb6a380bdc296",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xe05da53f5fd694d4",
+      "title": "Théra Santé",
+      "categories": [
+        "Naturopathe",
+        "Massothérapeute",
+        "Professeur de yoga"
+      ],
+      "website": "http://www.thera-sante.fr/?utm_source=gmb",
+      "lat": 48.852970299999996,
+      "lng": 2.3441970999999997,
+      "phone": "3623870376",
+      "full_address": "1 Bd Saint-Michel, 75005 Paris",
+      "adresse": "1 Bd Saint-Michel",
+      "postal_code": "75005",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Th%C3%A9ra+Sant%C3%A9,+1+Bd+Saint-Michel,+75005+Paris/@48.8529703,2.3441971,2625a,13.1y/data=!4m2!3m1!1s0x47e6717a7c0b6ff3:0xe05da53f5fd694d4",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x6688f8ee51c73816",
+      "title": "Naturopathie et diététique paris 5",
+      "categories": [
+        "Naturopathe",
+        "Diététicien",
+        "Praticien en drainage lymphatique"
+      ],
+      "website": "https://naturopathie-et-dietetique.fr/",
+      "lat": 48.8402228,
+      "lng": 2.3564529999999997,
+      "phone": "3684526603",
+      "full_address": "24 Rue Geoffroy-Saint-Hilaire, 75005 Paris",
+      "adresse": "24 Rue Geoffroy-Saint-Hilaire",
+      "postal_code": "75005",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathie+et+di%C3%A9t%C3%A9tique+paris+5,+24+Rue+Geoffroy-Saint-Hilaire,+75005+Paris/@48.8402228,2.356453,2626a,13.1y/data=!4m2!3m1!1s0x47e671595ab04dcd:0x6688f8ee51c73816",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x13e358c5cb672535",
+      "title": "Naturopathe Paris 5 - NaturoKos",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.naturokos.com/",
+      "lat": 48.8413578,
+      "lng": 2.3570306999999997,
+      "phone": "3656786516",
+      "full_address": "67 Rue Buffon, 75005 Paris",
+      "adresse": "67 Rue Buffon",
+      "postal_code": "75005",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+5+-+NaturoKos,+67+Rue+Buffon,+75005+Paris/@48.8413578,2.3570307,2626a,13.1y/data=!4m2!3m1!1s0x47e67143edbf2be5:0x13e358c5cb672535",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x7a7baf63c880794",
+      "title": "Holistic social club",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "http://www.holisticsocialclub.fr/?utm_source=google&utm_medium=wix_google_business_profile&utm_campaign=14154923062979367063",
+      "lat": 48.8448212,
+      "lng": 2.3452468,
+      "phone": "3651978924",
+      "full_address": "12 Rue d'Ulm, 75005 Paris",
+      "adresse": "12 Rue d'Ulm",
+      "postal_code": "75005",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Holistic+social+club,+12+Rue+d'Ulm,+75005+Paris/@48.8448212,2.3452468,2626a,13.1y/data=!4m2!3m1!1s0x47e67117c71509f5:0x7a7baf63c880794",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x233ea24bd18e2efe",
+      "title": "Naturopathe-Paris-5-Pascale-Fremeaux",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://foodandhumans.com/",
+      "lat": 48.8430749,
+      "lng": 2.3421621999999997,
+      "phone": "3652253143",
+      "full_address": "5 Rue de l'Abbé de l'Épée, 75005 Paris",
+      "adresse": "5 Rue de l'Abbé de l'Épée",
+      "postal_code": "75005",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe-Paris-5-Pascale-Fremeaux,+5+Rue+de+l'Abb%C3%A9+de+l'%C3%89p%C3%A9e,+75005+Paris/@48.8430749,2.3421622,2626a,13.1y/data=!4m2!3m1!1s0x47e67152a44a64d3:0x233ea24bd18e2efe",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x585bacfd013c00c4",
+      "title": "Cabinet naturopathe",
+      "categories": [
+        "Praticien de médecine alternative"
+      ],
+      "website": "",
+      "lat": 48.8456678,
+      "lng": 2.3501925,
+      "phone": "",
+      "full_address": "62 Rue du Cardinal Lemoine, 75005 Paris",
+      "adresse": "62 Rue du Cardinal Lemoine",
+      "postal_code": "75005",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Cabinet+naturopathe,+62+Rue+du+Cardinal+Lemoine,+75005+Paris/@48.8456678,2.3501925,2626a,13.1y/data=!4m2!3m1!1s0x47e671ef01b0a6bd:0x585bacfd013c00c4",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x634fc489fe9844fb",
+      "title": "Naturopathe - Catherine Danis-Rigouin",
+      "categories": [
+        "Praticien de médecine alternative",
+        "Naturopathe",
+        "Nutritionniste",
+        "Magasin de vitamines et compléments alimentaires"
+      ],
+      "website": "http://www.naturopathe-75006.com/",
+      "lat": 48.8524597,
+      "lng": 2.3313515,
+      "phone": "3662271286",
+      "full_address": "40 Rue du Four, 75006 Paris",
+      "adresse": "40 Rue du Four",
+      "postal_code": "75006",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+-+Catherine+Danis-Rigouin,+40+Rue+du+Four,+75006+Paris/@48.8524597,2.3313515,2625a,13.1y/data=!4m2!3m1!1s0x47e671b0c17daf53:0x634fc489fe9844fb",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xef02a09a258440b5",
+      "title": "Cabinet naturopathie",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.hippocrate-et-epicure.fr/catherine-piault",
+      "lat": 48.8538256,
+      "lng": 2.3392672,
+      "phone": "3688878601",
+      "full_address": "7 Rue André Mazet, 75006 Paris",
+      "adresse": "7 Rue André Mazet",
+      "postal_code": "75006",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Cabinet+naturopathie,+7+Rue+Andr%C3%A9+Mazet,+75006+Paris/@48.8538256,2.3392672,2625a,13.1y/data=!4m2!3m1!1s0xa4bf4654ff095709:0xef02a09a258440b5",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x65e976f6b00e98a2",
+      "title": "Naturopathe - Caroline Cottez",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.840332599999996,
+      "lng": 2.2949257,
+      "phone": "3699414904",
+      "full_address": "208 Rue Lecourbe, 75015 Paris",
+      "adresse": "208 Rue Lecourbe",
+      "postal_code": "75015",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+-+Caroline+Cottez,+208+Rue+Lecourbe,+75015+Paris/@48.8403326,2.2949257,2626a,13.1y/data=!4m2!3m1!1s0x47e671902842f535:0x65e976f6b00e98a2",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xbf6a7d807c3b2443",
+      "title": "Cabinet Médical De Naturopathie",
+      "categories": [
+        "Médecin"
+      ],
+      "website": "",
+      "lat": 48.858663299999996,
+      "lng": 2.3076919,
+      "phone": "3786673636",
+      "full_address": "15 Bis Rue Amélie, 75007 Paris",
+      "adresse": "15 Bis Rue Amélie",
+      "postal_code": "75007",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Cabinet+M%C3%A9dical+De+Naturopathie,+15+Bis+Rue+Am%C3%A9lie,+75007+Paris/@48.8586633,2.3076919,2625a,13.1y/data=!4m2!3m1!1s0x47e66fec9c9bffff:0xbf6a7d807c3b2443",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x680591fd33dd2a54",
+      "title": "Massage du ventre (Chi Nei Tsang), Naturopathie, Rituel bien-être (AromaTouch™), Linda Imbert – Paris",
+      "categories": [
+        "Praticien de médecine alternative",
+        "Naturopathe"
+      ],
+      "website": "https://www.lindaimbert.com/",
+      "lat": 48.847595,
+      "lng": 2.3072247,
+      "phone": "3767782920",
+      "full_address": "139 Av. de Suffren, 75007 Paris",
+      "adresse": "139 Av. de Suffren",
+      "postal_code": "75007",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Massage+du+ventre+(Chi+Nei+Tsang),+Naturopathie,+Rituel+bien-%C3%AAtre+(AromaTouch%E2%84%A2),+Linda+Imbert+%E2%80%93+Paris,+139+Av.+de+Suffren,+75007+Paris/@48.847595,2.3072247,2626a,13.1y/data=!4m2!3m1!1s0x47e67122c609758b:0x680591fd33dd2a54",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x4a5e2ab34e25cb3",
+      "title": "Vital Wellness Naturopathie",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.871047499999996,
+      "lng": 2.3057669,
+      "phone": "3766735151",
+      "full_address": "128 Rue La Boétie, 75008 Paris",
+      "adresse": "128 Rue La Boétie",
+      "postal_code": "75008",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Vital+Wellness+Naturopathie,+128+Rue+La+Bo%C3%A9tie,+75008+Paris/@48.8710475,2.3057669,2624a,13.1y/data=!4m2!3m1!1s0x47e66f36305c7035:0x4a5e2ab34e25cb3",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x3b9772d25e301146",
+      "title": "Ma Naturopathie",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.8660231,
+      "lng": 2.3055407999999997,
+      "phone": "3645789525",
+      "full_address": "22 Av. Montaigne, 75008 Paris",
+      "adresse": "22 Av. Montaigne",
+      "postal_code": "75008",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Ma+Naturopathie,+22+Av.+Montaigne,+75008+Paris/@48.8660231,2.3055408,2625a,13.1y/data=!4m2!3m1!1s0x47e66ff40f49b8c9:0x3b9772d25e301146",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xbe2943a8c25f33ac",
+      "title": "Naturopathe - Caroline Tancrede",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.carolinenaturopathe.fr/",
+      "lat": 48.8821857,
+      "lng": 2.3362164,
+      "phone": "3609080738",
+      "full_address": "10 Rue Duperré, 75009 Paris",
+      "adresse": "10 Rue Duperré",
+      "postal_code": "75009",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+-+Caroline+Tancrede,+10+Rue+Duperr%C3%A9,+75009+Paris/@48.8821857,2.3362164,2624a,13.1y/data=!4m2!3m1!1s0x47e66f5fc6bf6929:0xbe2943a8c25f33ac",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x3914a933aec076c5",
+      "title": "Aglaé - Naturopathie - Drainage lymphatique Renata França - Madérothérapie I Paris 9",
+      "categories": [
+        "Praticien en drainage lymphatique",
+        "Naturopathe"
+      ],
+      "website": "https://aglaelampson.com/",
+      "lat": 48.878786899999994,
+      "lng": 2.3379133,
+      "phone": "3625673806",
+      "full_address": "32 Place St Georges, 75009 Paris",
+      "adresse": "32 Place St Georges",
+      "postal_code": "75009",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Agla%C3%A9+-+Naturopathie+-+Drainage+lymphatique+Renata+Fran%C3%A7a+-+Mad%C3%A9roth%C3%A9rapie+I+Paris+9,+32+Place+St+Georges,+75009+Paris/@48.8787869,2.3379133,2624a,13.1y/data=!4m2!3m1!1s0x47e66f9fb9166671:0x3914a933aec076c5",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xd34ee7d6434b3b9e",
+      "title": "Atmasphera - Chloé Pitras - Cocon holistique dédié à la santé et au bien-être des femmes - Massage, naturopathie, yoga",
+      "categories": [
+        "Massothérapeute",
+        "Naturopathe",
+        "Réflexologue",
+        "Professeur de yoga"
+      ],
+      "website": "https://atmasphera.fr/",
+      "lat": 48.881327,
+      "lng": 2.3296647,
+      "phone": "3624626568",
+      "full_address": "9 Rue du Cardinal Mercier, 75009 Paris",
+      "adresse": "9 Rue du Cardinal Mercier",
+      "postal_code": "75009",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Atmasphera+-+Chlo%C3%A9+Pitras+-+Cocon+holistique+d%C3%A9di%C3%A9+%C3%A0+la+sant%C3%A9+et+au+bien-%C3%AAtre+des+femmes+-+Massage,+naturopathie,+yoga,+9+Rue+du+Cardinal+Mercier,+75009+Paris/@48.881327,2.3296647,2624a,13.1y/data=!4m2!3m1!1s0x2883d7e2745a2ca9:0xd34ee7d6434b3b9e",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xb8d043642962b6fe",
+      "title": "Alma Naturopathie",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.alma-naturopathie.fr/",
+      "lat": 48.873702099999996,
+      "lng": 2.3480879999999997,
+      "phone": "3638225130",
+      "full_address": "40 bis Rue du Faubourg Poissonnière, 75010 Paris",
+      "adresse": "40 bis Rue du Faubourg Poissonnière",
+      "postal_code": "75010",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Alma+Naturopathie,+40+bis+Rue+du+Faubourg+Poissonni%C3%A8re,+75010+Paris/@48.8737021,2.348088,2624a,13.1y/data=!4m2!3m1!1s0x47e66fb4a27b78e3:0xb8d043642962b6fe",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xcb19b197125a7294",
+      "title": "Naturopathe Paris 10 | Sophie-Caroline Chancel | Consultation, Réflexologie - Chi Nei Tsang - Massage bien-être holistique",
+      "categories": [
+        "Praticien en médecine holistique"
+      ],
+      "website": "https://www.chancel-naturopathe.fr/",
+      "lat": 48.8736034,
+      "lng": 2.3481422999999997,
+      "phone": "3631103122",
+      "full_address": "TERAPYA, 40 bis Rue du Faubourg Poissonnière, 75010 Paris",
+      "adresse": "TERAPYA, 40 bis Rue du Faubourg Poissonnière",
+      "postal_code": "75010",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+10+%7C+Sophie-Caroline+Chancel+%7C+Consultation,+R%C3%A9flexologie+-+Chi+Nei+Tsang+-+Massage+bien-%C3%AAtre+holistique,+TERAPYA,+40+bis+Rue+du+Faubourg+Poissonni%C3%A8re,+75010+Paris/@48.8736034,2.3481423,2624a,13.1y/data=!4m2!3m1!1s0x47e66f7bfbce8bb7:0xcb19b197125a7294",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x17dd44b64f059dde",
+      "title": "Natureve - Coaching bien-être & Naturopathie",
+      "categories": [
+        "Praticien en médecine holistique",
+        "Coach de vie",
+        "Naturopathe"
+      ],
+      "website": "http://natureve.paris/",
+      "lat": 48.8736034,
+      "lng": 2.3481422999999997,
+      "phone": "3765532155",
+      "full_address": "40 bis Rue du Faubourg Poissonnière Espace Terapya, 75010 Paris",
+      "adresse": "40 bis Rue du Faubourg Poissonnière Espace Terapya",
+      "postal_code": "75010",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Natureve+-+Coaching+bien-%C3%AAtre+%26+Naturopathie,+40+bis+Rue+du+Faubourg+Poissonni%C3%A8re+Espace+Terapya,+75010+Paris/@48.8736034,2.3481423,2624a,13.1y/data=!4m2!3m1!1s0x684bfbc93d2c2fc9:0x17dd44b64f059dde",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x4e643022f2e37a68",
+      "title": "Biorésonance Paris 9-2-3-8-10-11.Maladie de Lyme. Anastasia Voisin Naturopathe/Bioresonance/Iridologie",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.8692455,
+      "lng": 2.3612029,
+      "phone": "3602274704",
+      "full_address": "9 Rue du Château d'Eau, 75010 Paris",
+      "adresse": "9 Rue du Château d'Eau",
+      "postal_code": "75010",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Bior%C3%A9sonance+Paris+9-2-3-8-10-11.Maladie+de+Lyme.+Anastasia+Voisin+Naturopathe%2FBioresonance%2FIridologie,+9+Rue+du+Ch%C3%A2teau+d'Eau,+75010+Paris/@48.8692455,2.3612029,2624a,13.1y/data=!4m2!3m1!1s0x47e66f9bd884ea69:0x4e643022f2e37a68",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x44c83045bbd131d1",
+      "title": "Naturopathe Paris 75011 Drainage lymphatique (méthode Renata Franca ) Claudia PARASCANDOLO",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://therapeutes.com/naturopathie/paris/claudia-parascandolo",
+      "lat": 48.8641339,
+      "lng": 2.3703198,
+      "phone": "3652125409",
+      "full_address": "103 Bd Richard-Lenoir, 75011 Paris",
+      "adresse": "103 Bd Richard-Lenoir",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+75011+Drainage+lymphatique+(m%C3%A9thode+Renata+Franca+)+Claudia+PARASCANDOLO,+103+Bd+Richard-Lenoir,+75011+Paris/@48.8641339,2.3703198,2625a,13.1y/data=!4m2!3m1!1s0x47e66dc5f2bf7ad9:0x44c83045bbd131d1",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x959dc17af9f5b8ab",
+      "title": "Anaïs Naturopathe",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://calendly.com/anaisfaucher-naturopathe/30min",
+      "lat": 48.852950899999996,
+      "lng": 2.3764626,
+      "phone": "",
+      "full_address": "5 Pass. Saint-Antoine, 75011 Paris",
+      "adresse": "5 Pass. Saint-Antoine",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Ana%C3%AFs+Naturopathe,+5+Pass.+Saint-Antoine,+75011+Paris/@48.8529509,2.3764626,2625a,13.1y/data=!4m2!3m1!1s0x47e6738355774cdb:0x959dc17af9f5b8ab",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x33de77c35869f9f1",
+      "title": "Cabinet de Naturopathie Ayurveda",
+      "categories": [
+        "Naturopathe",
+        "Massothérapeute"
+      ],
+      "website": "http://www.srisriayurveda.fr/",
+      "lat": 48.8502484,
+      "lng": 2.3906169,
+      "phone": "3620321322",
+      "full_address": "17 Rue des Boulets, 75011 Paris",
+      "adresse": "17 Rue des Boulets",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Cabinet+de+Naturopathie+Ayurveda,+17+Rue+des+Boulets,+75011+Paris/@48.8502484,2.3906169,2625a,13.1y/data=!4m2!3m1!1s0x47e673a14e10816b:0x33de77c35869f9f1",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xa2f553127e8f6e20",
+      "title": "Le temple des divines",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.855285599999995,
+      "lng": 2.3818205,
+      "phone": "3756829646",
+      "full_address": "19 Rue Richard Lenoir, 75011 Paris",
+      "adresse": "19 Rue Richard Lenoir",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Le+temple+des+divines,+19+Rue+Richard+Lenoir,+75011+Paris/@48.8552856,2.3818205,2625a,13.1y/data=!4m2!3m1!1s0x47e673485af4d7f5:0xa2f553127e8f6e20",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x8dffda31756b8461",
+      "title": "Naturopathe Paris 11 - Marie Harache",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://mhmaunaturel.wixsite.com/marieharache",
+      "lat": 48.8565703,
+      "lng": 2.3722064,
+      "phone": "3651660577",
+      "full_address": "10 R. Bréguet, 75011 Paris",
+      "adresse": "10 R. Bréguet",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+11+-+Marie+Harache,+10+R.+Br%C3%A9guet,+75011+Paris/@48.8565703,2.3722064,2625a,13.1y/data=!4m2!3m1!1s0x47e66dd530098b0d:0x8dffda31756b8461",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xa2995fbc818382e1",
+      "title": "Naturopathe Paris 11 - Martine Rol Tanguy",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.8588658,
+      "lng": 2.382381,
+      "phone": "3630239505",
+      "full_address": "11 Rue Pache, 75011 Paris",
+      "adresse": "11 Rue Pache",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+11+-+Martine+Rol+Tanguy,+11+Rue+Pache,+75011+Paris/@48.8588658,2.382381,2625a,13.1y/data=!4m2!3m1!1s0x47e66df6eeb61367:0xa2995fbc818382e1",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xa04552f828a02866",
+      "title": "Pirate Naturopathe (Kaoutar Salamat) Paris",
+      "categories": [
+        "Naturopathe",
+        "Coach particulier"
+      ],
+      "website": "http://www.piratenaturopathe.com/",
+      "lat": 48.8566617,
+      "lng": 2.370203,
+      "phone": "3621996329",
+      "full_address": "Le Cube Fight Club 21, 23 Bd Richard-Lenoir, 75011 Paris",
+      "adresse": "Le Cube Fight Club 21, 23 Bd Richard-Lenoir",
+      "postal_code": "75011",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Pirate+Naturopathe+(Kaoutar+Salamat)+Paris,+Le+Cube+Fight+Club+21,+23+Bd+Richard-Lenoir,+75011+Paris/@48.8566617,2.370203,2625a,13.1y/data=!4m2!3m1!1s0x47e66d2d5d73fc0d:0xa04552f828a02866",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xc52d49a2a90d361a",
+      "title": "HIBISCUS SLOW LIFE",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.hibiscus-slow-life.fr/",
+      "lat": 48.846395,
+      "lng": 2.3971169999999997,
+      "phone": "3666650102",
+      "full_address": "17 Av. du Bel air, 75012 Paris",
+      "adresse": "17 Av. du Bel air",
+      "postal_code": "75012",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/HIBISCUS+SLOW+LIFE,+17+Av.+du+Bel+air,+75012+Paris/@48.846395,2.397117,2626a,13.1y/data=!4m2!3m1!1s0x47e66f6ef3229733:0xc52d49a2a90d361a",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xa53125e77ba0b676",
+      "title": "Naturopathe Paris 12 - Auriculothérapie -Energétique Priscille Melandri",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://naturopathe-paris-melandri.fr/",
+      "lat": 48.8464302,
+      "lng": 2.3970306999999997,
+      "phone": "3617966717",
+      "full_address": "17 Av. du Bel air, 75012 Paris",
+      "adresse": "17 Av. du Bel air",
+      "postal_code": "75012",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+12+-+Auriculoth%C3%A9rapie+-Energ%C3%A9tique+Priscille+Melandri,+17+Av.+du+Bel+air,+75012+Paris/@48.8464302,2.3970307,2626a,13.1y/data=!4m2!3m1!1s0x47e6731a4ee4d583:0xa53125e77ba0b676",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xf1505efc0510ecd9",
+      "title": "Hygéia naturo - Natacha B. Naturopathe",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.hygeia-naturo.fr/",
+      "lat": 48.847898099999995,
+      "lng": 2.3950358,
+      "phone": "3633630294",
+      "full_address": "Av. Dorian, 75012 Paris",
+      "adresse": "Av. Dorian",
+      "postal_code": "75012",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Hyg%C3%A9ia+naturo+-+Natacha+B.+Naturopathe,+Av.+Dorian,+75012+Paris/@48.8478981,2.3950358,2626a,13.1y/data=!4m2!3m1!1s0x47e673c999826d3b:0xf1505efc0510ecd9",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x6ccc5525b92b3c23",
+      "title": "Naturopathe Paris 12 | Sophie-Caroline Chancel | Consultation, Réflexologie - Chi Nei Tsang - Massage bien-être holistique",
+      "categories": [
+        "Praticien en médecine holistique"
+      ],
+      "website": "https://www.chancel-naturopathe.fr/",
+      "lat": 48.8483667,
+      "lng": 2.3742658999999997,
+      "phone": "3631103122",
+      "full_address": "Plantes & Ter'Happy, 32 Rue Traversière, 75012 Paris",
+      "adresse": "Plantes & Ter'Happy, 32 Rue Traversière",
+      "postal_code": "75012",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+12+%7C+Sophie-Caroline+Chancel+%7C+Consultation,+R%C3%A9flexologie+-+Chi+Nei+Tsang+-+Massage+bien-%C3%AAtre+holistique,+Plantes+%26+Ter'Happy,+32+Rue+Traversi%C3%A8re,+75012+Paris/@48.8483667,2.3742659,2626a,13.1y/data=!4m2!3m1!1s0x47e673c13c5553ed:0x6ccc5525b92b3c23",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xe12aee87bea24c2d",
+      "title": "Naturopathe à Paris 12 - Paris 11- Paris 20 - Brigitte Florentine GIRAUDEAU",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.833949399999995,
+      "lng": 2.3876578999999998,
+      "phone": "3763650410",
+      "full_address": "14 Rue Gabriel Lamé, 75012 Paris",
+      "adresse": "14 Rue Gabriel Lamé",
+      "postal_code": "75012",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+%C3%A0+Paris+12+-+Paris+11-+Paris+20+-+Brigitte+Florentine+GIRAUDEAU,+14+Rue+Gabriel+Lam%C3%A9,+75012+Paris/@48.8339494,2.3876579,2626a,13.1y/data=!4m2!3m1!1s0x47e673c44ac3a669:0xe12aee87bea24c2d",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x42d27b6043838a5a",
+      "title": "Studio Ann Caroline naturopathe et art thérapeute",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://linktr.ee/studio.anncaroline",
+      "lat": 48.8251059,
+      "lng": 2.3611019,
+      "phone": "3660914808",
+      "full_address": "98 Av. de Choisy, 75013 Paris",
+      "adresse": "98 Av. de Choisy",
+      "postal_code": "75013",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Studio+Ann+Caroline+naturopathe+et+art+th%C3%A9rapeute,+98+Av.+de+Choisy,+75013+Paris/@48.8251059,2.3611019,2627a,13.1y/data=!4m2!3m1!1s0x8b39af16f02456a9:0x42d27b6043838a5a",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xe7bbd9835833300e",
+      "title": "Naturopathe Paris 14 Delphine Portal",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.delphine-naturopathie-paris.fr/",
+      "lat": 48.8346192,
+      "lng": 2.3282331,
+      "phone": "3673448735",
+      "full_address": "40 Rue Daguerre, 75014 Paris",
+      "adresse": "40 Rue Daguerre",
+      "postal_code": "75014",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+14+Delphine+Portal,+40+Rue+Daguerre,+75014+Paris/@48.8346192,2.3282331,2626a,13.1y/data=!4m2!3m1!1s0x47e6718ed49b5ca1:0xe7bbd9835833300e",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xb3548c9c305f45b2",
+      "title": "Médoucine",
+      "categories": [
+        "Praticien de médecine alternative"
+      ],
+      "website": "https://www.medoucine.com/",
+      "lat": 48.832213499999995,
+      "lng": 2.351541,
+      "phone": "3182887589",
+      "full_address": "14 Rue des Reculettes, 75013 Paris",
+      "adresse": "14 Rue des Reculettes",
+      "postal_code": "75013",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/M%C3%A9doucine,+14+Rue+des+Reculettes,+75013+Paris/@48.8322135,2.351541,2626a,13.1y/data=!4m2!3m1!1s0x47e672223696edeb:0xb3548c9c305f45b2",
+      "skip_reason": "not_naturopath"
+    },
+    {
+      "hexid": "0x0:0xff082519fefd3241",
+      "title": "Naturopathe Paris 14",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://portaldelphine.wixsite.com/website/accueil",
+      "lat": 48.8346192,
+      "lng": 2.3282331,
+      "phone": "3673448735",
+      "full_address": "40 Rue Daguerre, 75014 Paris",
+      "adresse": "40 Rue Daguerre",
+      "postal_code": "75014",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Paris+14,+40+Rue+Daguerre,+75014+Paris/@48.8346192,2.3282331,2626a,13.1y/data=!4m2!3m1!1s0xa6b34dfde14d2c6b:0xff082519fefd3241",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xeefc1e1bebae1132",
+      "title": "Ostéopathe Paris 14 – Audry LEBIHAN, Naturopathie & Réflexologie Plantaire",
+      "categories": [
+        "Ostéopathe",
+        "Naturopathe",
+        "Réflexologue"
+      ],
+      "website": "https://www.audrylebihan.com/",
+      "lat": 48.8295442,
+      "lng": 2.3231109,
+      "phone": "3682432347",
+      "full_address": "27 Rue des Plantes, 75014 Paris",
+      "adresse": "27 Rue des Plantes",
+      "postal_code": "75014",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Ost%C3%A9opathe+Paris+14+%E2%80%93+Audry+LEBIHAN,+Naturopathie+%26+R%C3%A9flexologie+Plantaire,+27+Rue+des+Plantes,+75014+Paris/@48.8295442,2.3231109,2627a,13.1y/data=!4m2!3m1!1s0x47e67105dbdf820d:0xeefc1e1bebae1132",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x38aee4f1d6f4f39c",
+      "title": "Fermé",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.833895,
+      "lng": 2.3202583999999997,
+      "phone": "",
+      "full_address": "4 Pl. de la Garenne, 75014 Paris",
+      "adresse": "4 Pl. de la Garenne",
+      "postal_code": "75014",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Ferm%C3%A9,+4+Pl.+de+la+Garenne,+75014+Paris/@48.833895,2.3202584,2626a,13.1y/data=!4m2!3m1!1s0x47e671ac44e59487:0x38aee4f1d6f4f39c",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xfa71cb1990b937b4",
+      "title": "Adeline Labarre Naturopathe Massages Montrouge",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://www.adelinenaturopathe.com/",
+      "lat": 48.8121035,
+      "lng": 2.3127446,
+      "phone": "3612224475",
+      "full_address": "22 bis Rue Auber, 92120 Montrouge",
+      "adresse": "",
+      "postal_code": "",
+      "city": "",
+      "parsed_name": [
+        "Adeline",
+        "LABARRE"
+      ],
+      "maps_url": "https://www.google.com/maps/preview/place/Adeline+Labarre+Naturopathe+Massages+Montrouge,+22+bis+Rue+Auber,+92120+Montrouge/@48.8121035,2.3127446,2627a,13.1y/data=!4m2!3m1!1s0x47e67149ebf0021d:0xfa71cb1990b937b4",
+      "skip_reason": "not_paris"
+    },
+    {
+      "hexid": "0x0:0x40754f3b2b928022",
+      "title": "Caroline Holef",
+      "categories": [
+        "Conseiller santé"
+      ],
+      "website": "http://www.carolineholefnutritherapie.fr/",
+      "lat": 48.841431299999996,
+      "lng": 2.2915655999999998,
+      "phone": "3642441450",
+      "full_address": "138 Rue de la Croix Nivert, 75015 Paris",
+      "adresse": "138 Rue de la Croix Nivert",
+      "postal_code": "75015",
+      "city": "Paris",
+      "parsed_name": [
+        "Caroline",
+        "HOLEF"
+      ],
+      "maps_url": "https://www.google.com/maps/preview/place/Caroline+Holef,+138+Rue+de+la+Croix+Nivert,+75015+Paris/@48.8414313,2.2915656,2626a,13.1y/data=!4m2!3m1!1s0x47e67013f0a448bb:0x40754f3b2b928022",
+      "skip_reason": "not_naturopath"
+    },
+    {
+      "hexid": "0x0:0xa983fed7962178d8",
+      "title": "Fertilité Boost",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.841456799999996,
+      "lng": 2.2945946,
+      "phone": "3784108853",
+      "full_address": "34 Rue de l'Abbé Groult 1er étage, 75015 Paris",
+      "adresse": "34 Rue de l'Abbé Groult 1er étage",
+      "postal_code": "75015",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Fertilit%C3%A9+Boost,+34+Rue+de+l'Abb%C3%A9+Groult+1er+%C3%A9tage,+75015+Paris/@48.8414568,2.2945946,2626a,13.1y/data=!4m2!3m1!1s0x47e670143b255555:0xa983fed7962178d8",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xfc4182d252e2a7fe",
+      "title": "Naturopathe",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.8524035,
+      "lng": 2.2873052,
+      "phone": "",
+      "full_address": "6 Rue du Dr Finlay, 75015 Paris",
+      "adresse": "6 Rue du Dr Finlay",
+      "postal_code": "75015",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe,+6+Rue+du+Dr+Finlay,+75015+Paris/@48.8524035,2.2873052,2625a,13.1y/data=!4m2!3m1!1s0x47e67003577457bf:0xfc4182d252e2a7fe",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xb4f93ec26a71b6e2",
+      "title": "Agathe Sultan - Micronutrition et Naturopathie - Accompgnement des troubles hormonaux et de la fertilité des couples",
+      "categories": [
+        "Naturopathe",
+        "Praticien en drainage lymphatique"
+      ],
+      "website": "https://agathesultan.com/",
+      "lat": 48.8686532,
+      "lng": 2.282372,
+      "phone": "3683994464",
+      "full_address": "108 Av. Victor Hugo, 75116 Paris",
+      "adresse": "",
+      "postal_code": "",
+      "city": "",
+      "parsed_name": [
+        "Agathe",
+        "SULTAN"
+      ],
+      "maps_url": "https://www.google.com/maps/preview/place/Agathe+Sultan+-+Micronutrition+et+Naturopathie+-+Accompgnement+des+troubles+hormonaux+et+de+la+fertilit%C3%A9+des+couples,+108+Av.+Victor+Hugo,+75116+Paris/@48.8686532,2.282372,2624a,13.1y/data=!4m2!3m1!1s0x47e66ffc6043ffff:0xb4f93ec26a71b6e2",
+      "skip_reason": "not_paris"
+    },
+    {
+      "hexid": "0x0:0x203e1c9ee1dc306f",
+      "title": "Andéole naturopathe",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://andeole-naturopathe.com/",
+      "lat": 48.8903581,
+      "lng": 2.3252208999999997,
+      "phone": "3629832156",
+      "full_address": "33 Rue Dautancourt, 75017 Paris",
+      "adresse": "33 Rue Dautancourt",
+      "postal_code": "75017",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/And%C3%A9ole+naturopathe,+33+Rue+Dautancourt,+75017+Paris/@48.8903581,2.3252209,2623a,13.1y/data=!4m2!3m1!1s0x47e66ff2ea914aed:0x203e1c9ee1dc306f",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x3450063b249694b2",
+      "title": "Naturopathe Carole Antoine",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "",
+      "lat": 48.8898764,
+      "lng": 2.3134349,
+      "phone": "3613201230",
+      "full_address": "30 Rue Mstislav Rostropovitch, 75017 Paris",
+      "adresse": "30 Rue Mstislav Rostropovitch",
+      "postal_code": "75017",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturopathe+Carole+Antoine,+30+Rue+Mstislav+Rostropovitch,+75017+Paris/@48.8898764,2.3134349,2623a,13.1y/data=!4m2!3m1!1s0x47e66f92316b491d:0x3450063b249694b2",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xa7049b88004931f2",
+      "title": "FADIA NATUROPATHIE & MICRONUTRITION",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://fadianaturo.com/",
+      "lat": 48.8847516,
+      "lng": 2.3395669,
+      "phone": "3765525900",
+      "full_address": "9 Rue la Vieuville, 75018 Paris",
+      "adresse": "9 Rue la Vieuville",
+      "postal_code": "75018",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/FADIA+NATUROPATHIE+%26+MICRONUTRITION,+9+Rue+la+Vieuville,+75018+Paris/@48.8847516,2.3395669,2624a,13.1y/data=!4m2!3m1!1s0x47e66f231ce18b59:0xa7049b88004931f2",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x92fc9667c0dddc97",
+      "title": "Naturogi",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "http://naturogi.com/",
+      "lat": 48.8903246,
+      "lng": 2.3329842999999997,
+      "phone": "3672386314",
+      "full_address": "21 Rue Eugène Carrière, 75018 Paris",
+      "adresse": "21 Rue Eugène Carrière",
+      "postal_code": "75018",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Naturogi,+21+Rue+Eug%C3%A8ne+Carri%C3%A8re,+75018+Paris/@48.8903246,2.3329843,2623a,13.1y/data=!4m2!3m1!1s0x47e66f5b3ce0c33f:0x92fc9667c0dddc97",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xd8517cb36978e30",
+      "title": "Sylvie by Yenaja l KOBIDO, DRAINAGE, SHIATSU, CHI NEI TSANG l Paris 18",
+      "categories": [
+        "Massothérapeute",
+        "Naturopathe"
+      ],
+      "website": "http://www.yenaja.com/",
+      "lat": 48.8833597,
+      "lng": 2.3348941,
+      "phone": "3682602794",
+      "full_address": "58 Bd de Clichy, 75018 Paris",
+      "adresse": "58 Bd de Clichy",
+      "postal_code": "75018",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Sylvie+by+Yenaja+l+KOBIDO,+DRAINAGE,+SHIATSU,+CHI+NEI+TSANG+l+Paris+18,+58+Bd+de+Clichy,+75018+Paris/@48.8833597,2.3348941,2624a,13.1y/data=!4m2!3m1!1s0x4a86196883148b4b:0xd8517cb36978e30",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x8926fcf0272a4796",
+      "title": "NATUROPIE",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "http://www.naturopie.com/",
+      "lat": 48.8945478,
+      "lng": 2.3614316,
+      "phone": "",
+      "full_address": "18 Rue Boucry, 75018 Paris",
+      "adresse": "18 Rue Boucry",
+      "postal_code": "75018",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/NATUROPIE,+18+Rue+Boucry,+75018+Paris/@48.8945478,2.3614316,2623a,13.1y/data=!4m2!3m1!1s0x47e66fc8a955eaa5:0x8926fcf0272a4796",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xd0e795333e415ab2",
+      "title": "NaturoYoga - Naturopathie, Yoga, Endométriose, Hygiène de vie globale",
+      "categories": [
+        "Naturopathe",
+        "Service d'hypnothérapie",
+        "Professeur de yoga"
+      ],
+      "website": "http://www.naturoyoga.fr/",
+      "lat": 48.8898794,
+      "lng": 2.3817388999999998,
+      "phone": "3662000437",
+      "full_address": "7 Quai de l'Oise, 75019 Paris",
+      "adresse": "7 Quai de l'Oise",
+      "postal_code": "75019",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/NaturoYoga+-+Naturopathie,+Yoga,+Endom%C3%A9triose,+Hygi%C3%A8ne+de+vie+globale,+7+Quai+de+l'Oise,+75019+Paris/@48.8898794,2.3817389,2623a,13.1y/data=!4m2!3m1!1s0x47e66d61f8ff3d49:0xd0e795333e415ab2",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x5a0d516146d0557a",
+      "title": "Kinésiologue Paris /Eric Boulot",
+      "categories": [
+        "Kinésiologue",
+        "Naturopathe",
+        "Ostéopathe"
+      ],
+      "website": "",
+      "lat": 48.8783375,
+      "lng": 2.3713428999999997,
+      "phone": "3662082002",
+      "full_address": "3 Av. Mathurin Moreau, 75019 Paris",
+      "adresse": "3 Av. Mathurin Moreau",
+      "postal_code": "75019",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Kin%C3%A9siologue+Paris+%2FEric+Boulot,+3+Av.+Mathurin+Moreau,+75019+Paris/@48.8783375,2.3713429,2624a,13.1y/data=!4m2!3m1!1s0x47e66ddfabcc6227:0x5a0d516146d0557a",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0x9f517d3f4ea400d9",
+      "title": "Julia Simon",
+      "categories": [
+        "Praticien en médecine holistique",
+        "Coaching professionnel",
+        "Conseiller santé"
+      ],
+      "website": "http://www.cabinetjuliasimon.fr/",
+      "lat": 48.8801025,
+      "lng": 2.3725875,
+      "phone": "",
+      "full_address": "Cabinet de Santé - RDC, 22 All. Georges Récipon, 75019 Paris",
+      "adresse": "Cabinet de Santé - RDC, 22 All. Georges Récipon",
+      "postal_code": "75019",
+      "city": "Paris",
+      "parsed_name": [
+        "Julia",
+        "SIMON"
+      ],
+      "maps_url": "https://www.google.com/maps/preview/place/Julia+Simon,+Cabinet+de+Sant%C3%A9+-+RDC,+22+All.+Georges+R%C3%A9cipon,+75019+Paris/@48.8801025,2.3725875,2624a,13.1y/data=!4m2!3m1!1s0x47e66ddec425d2dd:0x9f517d3f4ea400d9",
+      "skip_reason": "not_naturopath"
+    },
+    {
+      "hexid": "0x0:0xd114fd8da12fa4fb",
+      "title": "Silvia Naturopathe",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://silvianaturopathe.com/",
+      "lat": 48.858288599999995,
+      "lng": 2.3988663,
+      "phone": "3678655107",
+      "full_address": "110 Rue de la Réunion, 75020 Paris",
+      "adresse": "110 Rue de la Réunion",
+      "postal_code": "75020",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Silvia+Naturopathe,+110+Rue+de+la+R%C3%A9union,+75020+Paris/@48.8582886,2.3988663,2625a,13.1y/data=!4m2!3m1!1s0x47e66dcfeb415291:0xd114fd8da12fa4fb",
+      "skip_reason": "unparseable_name"
+    },
+    {
+      "hexid": "0x0:0xa1ecece80b1f588b",
+      "title": "Penelopeortmans-naturopathe",
+      "categories": [
+        "Naturopathe"
+      ],
+      "website": "https://penelopeortmans-naturopathe.com/",
+      "lat": 48.8747204,
+      "lng": 2.3892466999999997,
+      "phone": "3668419474",
+      "full_address": "7 Rue du Jourdain, 75020 Paris",
+      "adresse": "7 Rue du Jourdain",
+      "postal_code": "75020",
+      "city": "Paris",
+      "parsed_name": null,
+      "maps_url": "https://www.google.com/maps/preview/place/Penelopeortmans-naturopathe,+7+Rue+du+Jourdain,+75020+Paris/@48.8747204,2.3892467,2624a,13.1y/data=!4m2!3m1!1s0x47e66d1c2fe858ff:0xa1ecece80b1f588b",
+      "skip_reason": "unparseable_name"
+    }
+  ]
+}

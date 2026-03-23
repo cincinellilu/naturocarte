@@ -1,9 +1,223 @@
 first_name	last_name	slug	adresse	postal_code	city	lat	lng	phone	email	website	booking_url	description	status
+Marie	ANNICK BORIE	marie-annick-borie-antony	100 Rue Roger Salengro	92160	Antony	48.7474358	2.287999	0676585768					gmaps_idf_20260323_92
+Ycille	BIEN-ÊTRE POUR TOUS	ycille-bien-etre-pour-tous-antony	14 Av. Fernand Fenzy	92160	Antony	48.7626262	2.3102612	0765159954					gmaps_idf_20260323_92
+Farida	BOUDJEMA-BERKANE	farida-boudjema-berkane-antony	21 Rue Mozart	92160	Antony	48.7580439	2.3103018	0659348524					gmaps_idf_20260323_92
+Ludivine	COURSON	ludivine-courson-antony	19 Av. de la Division Leclerc	92160	Antony	48.7523876	2.3048649	0699712683					gmaps_idf_20260323_92
+Anne	GOUBAU	anne-goubau-antony	11 Rue Jean Moulin	92160	Antony	48.7532883	2.3065362	0671203682					gmaps_idf_20260323_92
+Olivia	GRIMAUD OSTÉOPATHE	olivia-grimaud-osteopathe-antony	63 Av. Aristide Briand	92160	Antony	48.757901	2.3061962	0778210911					gmaps_idf_20260323_92
+Anne	MARTEL	anne-martel-antony	RDC, 5 allée Fernand Braudel Résidence Pamela - Cabinet paramédical Entrée par le 16-18 avenue Aristide Briand Autre entrée possible :, 6 Rue de Sderot	92160	Antony	48.7546279	2.3062952	0665234694					gmaps_idf_20260323_92
+Gwladys	MONTREDON	gwladys-montredon-antony	Centre Athéna Santé, 5 Av. Gallieni	92160	Antony	48.7587104	2.2994357	0626561247					gmaps_idf_20260323_92
+Les	SENS CIEL DE MEG	les-sens-ciel-de-meg-antony	92 Av. de la Division Leclerc	92160	Antony	48.747081	2.3034981	0658055777					gmaps_idf_20260323_92
+Catherine	SOUM	catherine-soum-antony	80 Avenue de la Division Leclerc	92160	Antony	48.7481882	2.3036243	0695721433					gmaps_idf_20260323_92
+Mylène	ADICO	mylene-adico-asnieres-sur-seine	8 Rue Pilaudo	92600	Asnières-sur-Seine	48.90782	2.275819						gmaps_idf_20260323_92
+Inès	ANCIAÈS	ines-anciaes-asnieres-sur-seine	14 Rue du Chalet	92600	Asnières-sur-Seine	48.914339	2.275556	0687487715					gmaps_idf_20260323_92
+Sophrologue	ASNIÈRES	sophrologue-asnieres-asnieres-sur-seine	20 Rue Henri Say	92600	Asnières-sur-Seine	48.9151654	2.2770719	0627779178					gmaps_idf_20260323_92
+Eve	BRZYSKI	eve-brzyski-asnieres-sur-seine	1 All. Anatoli Vaisser	92600	Asnières-sur-Seine	48.9172983	2.3109309	0743584440					gmaps_idf_20260323_92
+Lorette	CAILLON	lorette-caillon-asnieres-sur-seine	85 Av. de la Marne	92600	Asnières-sur-Seine	48.9095038	2.2857208	0647563734					gmaps_idf_20260323_92
+Evgeniya	DIARD	evgeniya-diard-asnieres-sur-seine	13 Rue Olympe de Gouges	92600	Asnières-sur-Seine	48.9187605	2.3170355	0617276854					gmaps_idf_20260323_92
+Lidwina	DUVAL	lidwina-duval-asnieres-sur-seine	1 Rue de la Comète	92600	Asnières-sur-Seine	48.9125833	2.2848665	0635520870					gmaps_idf_20260323_92
+Julie	FOLLENIUS	julie-follenius-asnieres-sur-seine	3 Rue des Champs	92600	Asnières-sur-Seine	48.9144243	2.2806631	0608186656					gmaps_idf_20260323_92
+Nathalie	JEANDIDIER	nathalie-jeandidier-asnieres-sur-seine	8 Rue du Château	92600	Asnières-sur-Seine	48.9063648	2.2872965	0623777239					gmaps_idf_20260323_92
+Isabelle	MORIN	isabelle-morin-asnieres-sur-seine	(1)Conseiller en santé	92600	Asnières-sur-Seine	48.9151355	2.3030644						gmaps_idf_20260323_92
+Anne	THEVENON	anne-thevenon-asnieres-sur-seine	23 Rue Hector Gonsalphe Fontaine	92600	Asnières-sur-Seine	48.9144094	2.2856349	0632661976					gmaps_idf_20260323_92
+Holibody	WELLNESS	holibody-wellness-asnieres-sur-seine	7 Rue de Belfort	92600	Asnières-sur-Seine	48.9069805	2.2690645	0756865260					gmaps_idf_20260323_92
+Johanna	ALEXIS	johanna-alexis-bagneux	3 Mail Claude Debussy	92220	Bagneux	48.8037083	2.3165323	0664674181					gmaps_idf_20260323_92
+Nature	MERVEILLEUSE	nature-merveilleuse-bagneux	137 Rue des Meuniers	92220	Bagneux	48.7982153	2.3193662	0663864891					gmaps_idf_20260323_92
+Corinne	REGNAULT	corinne-regnault-bagneux	13 Av. Henri Ravera	92220	Bagneux	48.7965809	2.301486	0783208380					gmaps_idf_20260323_92
+Isabelle	VITALIS	isabelle-vitalis-bagneux	17 bis Rue Blanchard	92220	Bagneux	48.7965679	2.2980285	0664437300					gmaps_idf_20260323_92
+Marie	BEAUDRY	marie-beaudry-bois-colombes	21 Rue Charles Duflos	92270	Bois-Colombes	48.9146816	2.2673834	0672045665					gmaps_idf_20260323_92
 Nathalie	ALEXANDRE	nathalie-alexandre-boulogne-billancourt	13 bis Rue Neuve Saint-Germain	92100	Boulogne-Billancourt	48.8277931	2.248198	0651120930					gmaps_idf_20260323_92
+Margarita	BATSOU	margarita-batsou-boulogne-billancourt	74 Rte de la Reine	92100	Boulogne-Billancourt	48.8398154	2.2409888	0768947969					gmaps_idf_20260323_92
+Amandine	BAUDIN	amandine-baudin-boulogne-billancourt	11 Villa Marie-Justine	92100	Boulogne-Billancourt	48.8402208	2.2413396	0756804745					gmaps_idf_20260323_92
+Olivia	CHARLET	olivia-charlet-boulogne-billancourt	81 All. Georges Askinazi	92100	Boulogne-Billancourt	48.8255824	2.235992	0685428651					gmaps_idf_20260323_92
+Vieillard	CLAUDE ISABELLE	vieillard-claude-isabelle-boulogne-billancourt	103 Bis Rue du Point du Jour	92100	Boulogne-Billancourt	48.8289361	2.2476633	0615103775					gmaps_idf_20260323_92
 Eulalie	COURTHÉOUX CHANEL	eulalie-courtheoux-chanel-boulogne-billancourt	11 Rue de la Pyramide	92100	Boulogne-Billancourt	48.8346878	2.238434	0672811342					gmaps_idf_20260323_92
+Natacha	DA SILVA	natacha-da-silva-boulogne-billancourt	74 Rte de la Reine	92100	Boulogne-Billancourt	48.8398154	2.2409888	0611816357					gmaps_idf_20260323_92
+Gaétane	DECLÉTY	gaetane-declety-boulogne-billancourt	73 Rue Marcel Dassault	92100	Boulogne-Billancourt	48.8342429	2.2499771	0661891928					gmaps_idf_20260323_92
 Marie	DEFOORT	marie-defoort-boulogne-billancourt	73 Rue Marcel Dassault	92100	Boulogne-Billancourt	48.8342429	2.2499771	0749516303					gmaps_idf_20260323_92
+Karen	DENTE	karen-dente-boulogne-billancourt	64 Rue de la Tourelle	92100	Boulogne-Billancourt	48.8390949	2.2509651	0624685011					gmaps_idf_20260323_92
 Marie-Alix	DES COURTILS	marie-alix-des-courtils-boulogne-billancourt	rez de chaussée, 10 Sq. du Pont de Sèvres	92100	Boulogne-Billancourt	48.8305055	2.2290544	0668524284					gmaps_idf_20260323_92
+Agathe	DESCAMPS	agathe-descamps-boulogne-billancourt	56 Rue Fessart	92100	Boulogne-Billancourt	48.8418037	2.2398321	0623800813					gmaps_idf_20260323_92
+Patricia	GONET-LAPOUS	patricia-gonet-lapous-boulogne-billancourt	69 Rue de la Saussière	92100	Boulogne-Billancourt	48.8361276	2.241378	0146050921					gmaps_idf_20260323_92
+Eugénie	HOUDEMENT	eugenie-houdement-boulogne-billancourt	28 Rue de la Belle Feuille	92100	Boulogne-Billancourt	48.8374942	2.2428601						gmaps_idf_20260323_92
+Le	JEÛNE EN DOUCEUR	le-jeune-en-douceur-boulogne-billancourt	53 Rue Thiers	92100	Boulogne-Billancourt	48.8365209	2.2488237	0609244369					gmaps_idf_20260323_92
 Alexandra	KOUKLEVSKY	alexandra-kouklevsky-boulogne-billancourt	21 Rue des Peupliers	92100	Boulogne-Billancourt	48.832271	2.256965	0616048184					gmaps_idf_20260323_92
+Marie-Laure	LEROUGE	marie-laure-lerouge-boulogne-billancourt	28 Rue de la Belle Feuille	92100	Boulogne-Billancourt	48.8374942	2.2428601	0756915755					gmaps_idf_20260323_92
 Eleana	MAHTALLAH	eleana-mahtallah-boulogne-billancourt	119 Av. André Morizet	92100	Boulogne-Billancourt	48.8394217	2.2293228	0650460449					gmaps_idf_20260323_92
+Marie-Claire	MAJOREL	marie-claire-majorel-boulogne-billancourt	87 Rue de la Saussière	92100	Boulogne-Billancourt	48.8354992	2.2420599	0681464386					gmaps_idf_20260323_92
 Maryline	MAZÉ	maryline-maze-boulogne-billancourt	26 Rue d'Aguesseau	92100	Boulogne-Billancourt	48.8437825	2.2364232	0695404296					gmaps_idf_20260323_92
+Philippe	MESSAGER	philippe-messager-boulogne-billancourt	8 Rue Édouard Detaille	92100	Boulogne-Billancourt	48.8383618	2.2493001	0760633988					gmaps_idf_20260323_92
+Pauline	NATUROYOGA	pauline-naturoyoga-boulogne-billancourt	9 bis Bd Jean Jaurès	92100	Boulogne-Billancourt	48.8438531	2.2381402	0647995698					gmaps_idf_20260323_92
 Estelle	PAUTRET	estelle-pautret-boulogne-billancourt	10 Sq. du Pont de Sèvres	92100	Boulogne-Billancourt	48.8305055	2.2290544	0673151651					gmaps_idf_20260323_92
+Cécile	ROSE	cecile-rose-boulogne-billancourt	813 Av. du Général Leclerc	92100	Boulogne-Billancourt	48.8300892	2.2334895	0606534094					gmaps_idf_20260323_92
+Bárbara	CRUZ	barbara-cruz-bourg-la-reine	2 bis Rue Pasteur	92340	Bourg-la-Reine	48.7733294	2.3138045	0659665678					gmaps_idf_20260323_92
+Sonia	JANNOT	sonia-jannot-bourg-la-reine	56 Rue de la Font Grelot	92340	Bourg-la-Reine	48.7727602	2.3172001	0628331779					gmaps_idf_20260323_92
+Sonia	JANNOT	sonia-jannot-bourg-la-reine	3 Rue RavonDéfinitivement	92340	Bourg-la-Reine	48.7800342	2.3161508	0628331779					gmaps_idf_20260323_92
+Arom-Anel	LA BEAUTÉ SIMPLE ET NATURELLE À DOMICILE	arom-anel-la-beaute-simple-et-naturelle-a-domicile-bourg-la-reine	23 bis Av. du Château	92340	Bourg-la-Reine	48.7744595	2.3172622	0671654306					gmaps_idf_20260323_92
+Rania	LAYOUNI	rania-layouni-bourg-la-reine	7 Rue le Bouvier	92340	Bourg-la-Reine	48.7777437	2.3171639	0664638738					gmaps_idf_20260323_92
+Virginie	TRILLOT	virginie-trillot-bourg-la-reine	31 Bd du Maréchal Joffre	92340	Bourg-la-Reine	48.7843007	2.3163956	0620606048					gmaps_idf_20260323_92
+Léa	KERN	lea-kern-chatenay-malabry	8 Rte Forestière de la Corneille	92290	Châtenay-Malabry	48.7624118	2.2650075	0767394573					gmaps_idf_20260323_92
+Solenne	MAQUERE	solenne-maquere-chatenay-malabry	48 Avenue Roger Salengro	92290	Châtenay-Malabry	48.7731926	2.2750016	0628257535					gmaps_idf_20260323_92
+Jean-René	LEBEL	jean-rene-lebel-chatillon	2 Pl. de l'Église	92320	Châtillon	48.7999294	2.2908212	0663715648					gmaps_idf_20260323_92
+Marion	ROBERT-VERITE	marion-robert-verite-chatillon	2 Pl. de l'Église	92320	Châtillon	48.7999294	2.2908212	0686680801					gmaps_idf_20260323_92
+Andréa	BUDILLON	andrea-budillon-chaville	6 Rue Voltaire	92370	Chaville	48.8001799	2.1871791	0769610263					gmaps_idf_20260323_92
+Yoga	CHAVILLE AVEC ANDRÉA	yoga-chaville-avec-andrea-chaville	6 Rue Voltaire	92370	Chaville	48.8001799	2.1871791						gmaps_idf_20260323_92
+Stéphane	AMOURDA	stephane-amourda-clamart	117 Avenue Victor Hugo	92140	Clamart	48.8070068	2.2698801	0685801426					gmaps_idf_20260323_92
+Karine	BENSIMON	karine-bensimon-clamart	116 Av. Marguerite Renaudin	92140	Clamart	48.8071905	2.2740815	0785745261					gmaps_idf_20260323_92
+Kevin	DESERT	kevin-desert-clamart	29 Rue Pierre et Marie Curie	92140	Clamart	48.8014394	2.265291	0781078260					gmaps_idf_20260323_92
+Ragot	FRANCK	ragot-franck-clamart	387 Avenue du Général de Gaulle	92140	Clamart	48.7814136	2.2422713	0760061234					gmaps_idf_20260323_92
+Brigitte	GABORIAU	brigitte-gaboriau-clamart	8 Rue de Vanves	92140	Clamart	48.8113713	2.270969	0676476518					gmaps_idf_20260323_92
+Antoinette	GUÉPRATTE	antoinette-guepratte-clamart	Centre de soins :, 33 Rue Chef de ville	92140	Clamart	48.8012571	2.2666093	0671704341					gmaps_idf_20260323_92
+Aurelie	HELD	aurelie-held-clamart	23 Av. Jean Jaurès	92140	Clamart	48.8019039	2.2642417						gmaps_idf_20260323_92
+Henriette	HOCHE	henriette-hoche-clamart	L'alcove, 229 Av. Jean Jaurès	92140	Clamart	48.8125241	2.2710303						gmaps_idf_20260323_92
+Florence	JARRIÉ PEGUILHAN	florence-jarrie-peguilhan-clamart	69 Rue du Trosy	92140	Clamart	48.8041494	2.2638536	0622970959					gmaps_idf_20260323_92
+Diane	LACROIX	diane-lacroix-clamart	69 Rue du Trosy	92140	Clamart	48.8041494	2.2638536						gmaps_idf_20260323_92
+Solenne	MAQUERE	solenne-maquere-clamart	122 Avenue du Général de Gaulle	92140	Clamart	48.7906088	2.2634767	0628257535					gmaps_idf_20260323_92
+Estelle	PAUTRET	estelle-pautret-clamart	385 Avenue du Général de Gaulle	92140	Clamart	48.7818737	2.2434906	0673151651					gmaps_idf_20260323_92
+Isabelle	RIVET	isabelle-rivet-clamart	69 Rue du Trosy	92140	Clamart	48.8041494	2.2638536	0769050554					gmaps_idf_20260323_92
+Judith	SOUBRIER	judith-soubrier-clamart	16 Chem. de la Fossé Bazin	92140	Clamart	48.7912827	2.2727155	0670839945					gmaps_idf_20260323_92
+Manon	THEVENY	manon-theveny-clichy	1 Route d'Asnières	92110	Clichy	48.9015429	2.2909358	0624892053					gmaps_idf_20260323_92
+Inès	ANCIAÈS	ines-anciaes-colombes	8 Rue Labouret	92700	Colombes	48.924467	2.254196	0687487715					gmaps_idf_20260323_92
+Sarah	BENALI	sarah-benali-colombes	8 Rue de la Concorde	92700	Colombes	48.9242936	2.2560823						gmaps_idf_20260323_92
+Coralie	CAGNON	coralie-cagnon-colombes	27 Pl. Henri Neveu Bat B3	92700	Colombes	48.9224494	2.2556071	0630138689					gmaps_idf_20260323_92
+Martine	CAUCHY	martine-cauchy-colombes	71 Rue du Bournard	92700	Colombes	48.9231908	2.25624						gmaps_idf_20260323_92
+Emmanuelle	DOMINICI	emmanuelle-dominici-colombes	20 Av. Houlet	92700	Colombes	48.9167712	2.2459109	0788625998					gmaps_idf_20260323_92
+Fertilité	ET ÉQUILIBRE HORMONAL	fertilite-et-equilibre-hormonal-colombes	45 Rue Colbert	92700	Colombes	48.9108745	2.2368663	0616364813					gmaps_idf_20260323_92
+Marc	FOREST	marc-forest-colombes	72 Rue du Président Salvador Allende	92700	Colombes	48.9222303	2.242413	0611502361					gmaps_idf_20260323_92
+Lydie	GRANDIN	lydie-grandin-colombes	45 Rue Colbert	92700	Colombes	48.9109308	2.2368698	0609397917					gmaps_idf_20260323_92
+Celine	LAINE	celine-laine-colombes	55 Rue du Commerce	92700	Colombes	48.9110606	2.2415793	0147846216					gmaps_idf_20260323_92
+Catherine	MENERVILLE	catherine-menerville-colombes	29 Rue Felix Faure	92700	Colombes	48.9148233	2.2555687	0765657533					gmaps_idf_20260323_92
+Ali	MOHAMED	ali-mohamed-colombes	8 Rue de la Concorde	92700	Colombes	48.9242936	2.2560823	0640060239					gmaps_idf_20260323_92
+Agnès	NATUR'O SOURCES	agnes-natur-o-sources-colombes	41 Bis Av. Anatole France	92700	Colombes	48.9115128	2.2444221	0630605417					gmaps_idf_20260323_92
+Sandra	STUHLEN	sandra-stuhlen-colombes	40 Rue de la Reine Henriette	92700	Colombes	48.9255879	2.2485882	0612851378					gmaps_idf_20260323_92
+Layina	BAFDILE	layina-bafdile-courbevoie	50 Rue de l'Alma	92400	Courbevoie	48.8964278	2.2559301	0625052156					gmaps_idf_20260323_92
+Laurence	CHAROY- DIÉTÉTICIENNE	laurence-charoy-dieteticienne-courbevoie	15 Rue Victor Hugo	92400	Courbevoie	48.8930802	2.2542434	0147881638					gmaps_idf_20260323_92
+Youssouf	HALIMA	youssouf-halima-courbevoie	60 Av. Puvis de Chavannes	92400	Courbevoie	48.8993039	2.2375535	0665909698					gmaps_idf_20260323_92
+Nathalie	LACROIX	nathalie-lacroix-courbevoie	39 Rue Jean Baptiste Charcot	92400	Courbevoie	48.8979338	2.2668491	0660211943					gmaps_idf_20260323_92
+Delphine	PERCEAU	delphine-perceau-courbevoie	33 Rue Jules Lefèvre Prolongée	92400	Courbevoie	48.8987544	2.2577866	0695756198					gmaps_idf_20260323_92
+Pascale	RENARD	pascale-renard-courbevoie	14 Rue du Révérend Père Cloarec	92400	Courbevoie	48.9005582	2.2394577	0670904546					gmaps_idf_20260323_92
+Racha	SALMAN COACH DIÉTÉTIQUE	racha-salman-coach-dietetique-courbevoie	28 Av. Léonard de Vinci	92400	Courbevoie	48.896759	2.237839	0646765794					gmaps_idf_20260323_92
+Céline	TOUATI	celine-touati-courbevoie	49 Rue d'Estienne d'Orves	92400	Courbevoie	48.9025848	2.2504306	0677022379					gmaps_idf_20260323_92
+Floryan	REYNE	floryan-reyne-fontenay-aux-roses	104 Rue Boucicaut	92260	Fontenay-aux-Roses	48.7932145	2.2845905						gmaps_idf_20260323_92
+Marie-Laure	BEAUSSART	marie-laure-beaussart-garches	3 Pl. Saint-Louis	92380	Garches	48.8452818	2.1877821	0680547144					gmaps_idf_20260323_92
+Johanna	FILIOL	johanna-filiol-garches	18 Rue des Jardins	92380	Garches	48.8447617	2.1945371	0660990042					gmaps_idf_20260323_92
+Espace	GUIMEL	espace-guimel-garches	15 Rue du 19 Janvier	92380	Garches	48.8493603	2.1995584	0633710449					gmaps_idf_20260323_92
+Catherine	MICHAUX	catherine-michaux-garches	154 Bd du Général de Gaulle	92380	Garches	48.839251	2.187555	0147410010					gmaps_idf_20260323_92
+Isabelle	DOUMENC	isabelle-doumenc-issy-les-moulineaux	27 bis Rue Danton Cabinet paramédical	92130	Issy-les-Moulineaux	48.8246642	2.2705218	0678945870					gmaps_idf_20260323_92
+Jeanne	DUCHEMIN	jeanne-duchemin-issy-les-moulineaux	22 rue René Béon	92130	Issy-les-Moulineaux	48.8230031	2.2605302						gmaps_idf_20260323_92
+Juliette	JOUANNET	juliette-jouannet-issy-les-moulineaux	8 Rue Auguste Gervais	92130	Issy-les-Moulineaux	48.8232131	2.2731653	0686563419					gmaps_idf_20260323_92
+Ouarda	KEROUAZ	ouarda-kerouaz-issy-les-moulineaux	16 Rue Jacques-Henri Lartigue	92130	Issy-les-Moulineaux	48.8239905	2.2602442	0679718588					gmaps_idf_20260323_92
+Yassir	LAIFAOUI	yassir-laifaoui-issy-les-moulineaux	19 Rue du Passeur de Boulogne	92130	Issy-les-Moulineaux	48.8252415	2.2595499	0699742478					gmaps_idf_20260323_92
+Sarah	REDAELLI	sarah-redaelli-issy-les-moulineaux	26 Rue du Capitaine Ferber	92130	Issy-les-Moulineaux	48.8261631	2.2655493	0765773320					gmaps_idf_20260323_92
+Camille	ROFFI	camille-roffi-issy-les-moulineaux	Centre Exploressence, 166 Av. de Verdun	92130	Issy-les-Moulineaux	48.8182336	2.2511002	0603396872					gmaps_idf_20260323_92
+Soraya	ROHA	soraya-roha-issy-les-moulineaux	27 bis Rue Danton	92130	Issy-les-Moulineaux	48.8245832	2.2706762	0786250587					gmaps_idf_20260323_92
+Le	SEC'H MARTINE	le-sec-h-martine-issy-les-moulineaux	5 Rue du Sergent Blandan	92130	Issy-les-Moulineaux	48.8283679	2.2759162						gmaps_idf_20260323_92
+Sophie	DELBOS	sophie-delbos-la-garenne-colombes	2 Av. Foch	92250	La Garenne-Colombes	48.9112419	2.2542326	0745055295					gmaps_idf_20260323_92
+Sophie	DELBOS	sophie-delbos-la-garenne-colombes	34 Ave. du Général de Gaulle	92250	La Garenne-Colombes	48.9113966	2.2543766	0745055295					gmaps_idf_20260323_92
+Estelle	LE ROUX	estelle-le-roux-la-garenne-colombes	16 Rue Jean Bonal	92250	La Garenne-Colombes	48.9077449	2.2531348	0660123801					gmaps_idf_20260323_92
+Céline	SION	celine-sion-la-garenne-colombes	7 Av. du Général Leclerc	92250	La Garenne-Colombes	48.9130291	2.2524208	0767664765					gmaps_idf_20260323_92
+Stéphanie	SPIRA	stephanie-spira-la-garenne-colombes	6 Av. Joffre	92250	La Garenne-Colombes	48.9091153	2.2421239	0699191357					gmaps_idf_20260323_92
+Ivy	HERBALISTE	ivy-herbaliste-le-plessis-robinson	80 Av. de la République	92350	Le Plessis-Robinson	48.7800313	2.2731145	0683759089					gmaps_idf_20260323_92
+Catherine	KOWAL	catherine-kowal-le-plessis-robinson	12 Rue du Capitaine Georges Facq	92350	Le Plessis-Robinson	48.7771338	2.2631965	0658702418					gmaps_idf_20260323_92
+Valerie	LAMOUR	valerie-lamour-le-plessis-robinson	11-13 Av. Jules Guesde	92350	Le Plessis-Robinson	48.7832175	2.2819284	0665945555					gmaps_idf_20260323_92
+Marie	ROBERT	marie-robert-le-plessis-robinson	5 Rue Pierre d’Artagnan	92350	Le Plessis-Robinson	48.7815485	2.259235	0669404636					gmaps_idf_20260323_92
+Rajaa	THOUVENIN	rajaa-thouvenin-le-plessis-robinson	14 Rue des Hêtres	92350	Le Plessis-Robinson	48.780426	2.266257	0607363199					gmaps_idf_20260323_92
+Florent	ASSIÉ	florent-assie-levallois-perret	6 Pl. du 11 Novembre 1918	92300	Levallois-Perret	48.8991316	2.2893895						gmaps_idf_20260323_92
+Annie	CHEVALIER	annie-chevalier-levallois-perret	34 Rue Chaptal	92300	Levallois-Perret	48.8887408	2.2839102	0663932216					gmaps_idf_20260323_92
+Fiori	GAIDUCOV	fiori-gaiducov-levallois-perret	57 Rue Voltaire	92300	Levallois-Perret	48.8928409	2.285977	0680897202					gmaps_idf_20260323_92
+Laurence	KOWALSKI	laurence-kowalski-levallois-perret	51 bis Rue Edouard Vaillant	92300	Levallois-Perret	48.8950984	2.2896624	0756998590					gmaps_idf_20260323_92
+Sabrina	MEZIANI	sabrina-meziani-levallois-perret	34 Rue Chaptal	92300	Levallois-Perret	48.8887408	2.2839102	0658240249					gmaps_idf_20260323_92
+Cécile	PÉTUREAU	cecile-petureau-levallois-perret	3 Bd Bineau	92300	Levallois-Perret	48.8863163	2.284957						gmaps_idf_20260323_92
+Elisenda	PHILIPPE	elisenda-philippe-levallois-perret	106 Rue Louis Rouquier	92300	Levallois-Perret	48.8927257	2.2920694	0684635764					gmaps_idf_20260323_92
+Lis	CORINA	lis-corina-malakoff	54B Rue Chauvelot	92240	Malakoff	48.8209049	2.3054971	0661760576					gmaps_idf_20260323_92
+Natur'Oum	ME	natur-oum-me-malakoff	41 Rue Paul Bert	92240	Malakoff	48.8170348	2.2943181	0651378338					gmaps_idf_20260323_92
+Sandrine	NEZAN	sandrine-nezan-malakoff	14 Rue Benjamin Raspail	92240	Malakoff	48.8182656	2.3039157	0627221517					gmaps_idf_20260323_92
+Alpha	SANTE	alpha-sante-malakoff	4 Rue Alfred de Musset	92240	Malakoff	48.8193905	2.3070799						gmaps_idf_20260323_92
+Nathalie	BARBE CAYREL	nathalie-barbe-cayrel-meudon	74 Rue de la République	92190	Meudon	48.8050936	2.2353704	0146239919					gmaps_idf_20260323_92
+Mathilde	LAMARRE	mathilde-lamarre-meudon	3 Av. du Bois	92190	Meudon	48.8051554	2.2386962	0686373322					gmaps_idf_20260323_92
+Emma	MESTON	emma-meston-meudon	41 Rte de Vaugirard	92190	Meudon	48.819868	2.2388467	0672193925					gmaps_idf_20260323_92
+Quentin	DAUCHET	quentin-dauchet-montrouge	17 Rue Louis Rolland	92120	Montrouge	48.8163748	2.3226795	0743351120					gmaps_idf_20260323_92
+Anne	DAUVILLIERS	anne-dauvilliers-montrouge	56 Rue Carvès	92120	Montrouge	48.8125875	2.3220029	0671133288					gmaps_idf_20260323_92
+Frédérique	DEMION	frederique-demion-montrouge	Montrouge	92120	Montrouge	48.8159355	2.3162794	0766177454					gmaps_idf_20260323_92
+Lorédane	DI MEO	loredane-di-meo-montrouge	22 Rue Auber	92120	Montrouge	48.8120862	2.3129311	0664618073					gmaps_idf_20260323_92
+Isabelle	MEUNIER	isabelle-meunier-montrouge	20 Av. de la République	92120	Montrouge	48.8205951	2.3207133						gmaps_idf_20260323_92
+Julie	BLUYSEN	julie-bluysen-nanterre	74 Rue Marie Et Pierre Curie	92000	Nanterre	48.8852664	2.2218789	0623183851					gmaps_idf_20260323_92
+Marlène	DIAS	marlene-dias-nanterre	6 Rue de l'Ouest	92000	Nanterre	48.8907664	2.1913702	0612683580					gmaps_idf_20260323_92
+Candice	STOFFELS	candice-stoffels-nanterre	1 Rue des Anciennes Mairies	92000	Nanterre	48.8903871	2.1972509	0618890497					gmaps_idf_20260323_92
+Lucia	BRANE DURAÑONA	lucia-brane-duranona-neuilly-sur-seine	24 Rue de Chézy	92200	Neuilly-sur-Seine	48.886322	2.2696069	0660421701					gmaps_idf_20260323_92
+Delphine	CHARVOLIN	delphine-charvolin-neuilly-sur-seine	9 Rue Soyer	92200	Neuilly-sur-Seine	48.8878266	2.2612705	0666014208					gmaps_idf_20260323_92
+Louise	DE SAYVE	louise-de-sayve-neuilly-sur-seine	54 Rue Perronet	92200	Neuilly-sur-Seine	48.8849377	2.2753446						gmaps_idf_20260323_92
+Clémentine	DRACH	clementine-drach-neuilly-sur-seine	38 Bd d'Inkermann	92200	Neuilly-sur-Seine	48.8866862	2.2754637	0662779788					gmaps_idf_20260323_92
+Ludovic	DROUET OSTÉOPATHE DO	ludovic-drouet-osteopathe-do-neuilly-sur-seine	35 Av. du Roule	92200	Neuilly-sur-Seine	48.8817761	2.2796197	0601743592					gmaps_idf_20260323_92
+Bio	ET NATURO	bio-et-naturo-neuilly-sur-seine	3ter Rue Soyer	92200	Neuilly-sur-Seine	48.887368	2.2618774	0783707779					gmaps_idf_20260323_92
+Elise	HATTAB	elise-hattab-neuilly-sur-seine	6 Rue du Centre	92200	Neuilly-sur-Seine	48.8793733	2.254353	0659947595					gmaps_idf_20260323_92
+Institut	JERUZEN	institut-jeruzen-neuilly-sur-seine	11 Bis Av. de Madrid	92200	Neuilly-sur-Seine	48.8828778	2.2598338	0145725515					gmaps_idf_20260323_92
+Valérie	LOUTER-THOMAS	valerie-louter-thomas-neuilly-sur-seine	8 Av. Sainte-Foy	92200	Neuilly-sur-Seine	48.885315	2.2677479	0609088536					gmaps_idf_20260323_92
+Nutrithérapeute	MICRONUTRITIONNISTE	nutritherapeute-micronutritionniste-neuilly-sur-seine	203 Av. Achille Peretti	92200	Neuilly-sur-Seine	48.8858703	2.2624931	0614500501					gmaps_idf_20260323_92
+Coline	MIDOUX	coline-midoux-neuilly-sur-seine	94 Av. Charles de Gaulle	92200	Neuilly-sur-Seine	48.8822823	2.2696197	0787249229					gmaps_idf_20260323_92
+Claire	ORSEAU	claire-orseau-neuilly-sur-seine	32 Rue Chauveau	92200	Neuilly-sur-Seine	48.8911319	2.2734605	0668860510					gmaps_idf_20260323_92
+Jessie	POUPARD	jessie-poupard-neuilly-sur-seine	44 Rue Ybry	92200	Neuilly-sur-Seine	48.8878646	2.2606476	0670552396					gmaps_idf_20260323_92
+Aurelia	RICHARD	aurelia-richard-neuilly-sur-seine	50 Rue de Longchamp	92200	Neuilly-sur-Seine	48.8819019	2.2549757	0622535475					gmaps_idf_20260323_92
+Feriel	BENALI	feriel-benali-puteaux	9 Rue Chante Coq	92800	Puteaux	48.8830005	2.2379888	0621922688					gmaps_idf_20260323_92
+Elise	CARO	elise-caro-puteaux	32 Rue Jean Jaurès	92800	Puteaux	48.8846964	2.2470363	0789297290					gmaps_idf_20260323_92
+Ludivine	CLAUDE	ludivine-claude-puteaux	63 Rue Sadi Carnot	92800	Puteaux	48.8864925	2.2375826	0651999186					gmaps_idf_20260323_92
+Toinon	DEHOUCK	toinon-dehouck-puteaux	22 Bd Richard Wallace	92800	Puteaux	48.8794179	2.2410197	0786740281					gmaps_idf_20260323_92
+Anne	DEMANGEON	anne-demangeon-puteaux	124 Rue Jean Jaurès	92800	Puteaux	48.8819954	2.2390808	0684387390					gmaps_idf_20260323_92
+Charlotte	FILLET	charlotte-fillet-puteaux	24 Rue de l'Oasis	92800	Puteaux	48.8860804	2.2453292						gmaps_idf_20260323_92
+Léa	GARCIA	lea-garcia-puteaux	13 Rue Victor Hugo	92800	Puteaux	48.880279	2.2319264	0781762919					gmaps_idf_20260323_92
+Emmanuel	JOUBERT	emmanuel-joubert-puteaux	14 Terr. Bellini	92800	Puteaux	48.8867555	2.2512473	0778051543					gmaps_idf_20260323_92
+Charline	LE GLEDIC	charline-le-gledic-puteaux	40 Rue Voltaire	92800	Puteaux	48.8794117	2.2417337	0147723615					gmaps_idf_20260323_92
+Nathalie	LE HEIN EI	nathalie-le-hein-ei-puteaux	16 Rue Anatole France	92800	Puteaux	48.8841265	2.2390754	0756839125					gmaps_idf_20260323_92
+Magnétiseur	MAGNÉTISEUSE	magnetiseur-magnetiseuse-puteaux	6 Rue Anatole France	92800	Puteaux	48.8834821	2.2398038						gmaps_idf_20260323_92
+Mon	MOMENT BULLE	mon-moment-bulle-puteaux	35 Rue de la République	92800	Puteaux	48.8865055	2.2474799	0652320701					gmaps_idf_20260323_92
+Mimoun	MOUH	mimoun-mouh-puteaux	1 Place du S	92800	Puteaux	48.8879054	2.2416483	0622613160					gmaps_idf_20260323_92
+Catherine	PETITDIDIER	catherine-petitdidier-puteaux	21 Rue Godefroy	92800	Puteaux	48.8813752	2.2417741	0783707779					gmaps_idf_20260323_92
+Jessica	PIQUER	jessica-piquer-puteaux	2 Rue Bernard Palissy	92800	Puteaux	48.8819423	2.2286592	0634118436					gmaps_idf_20260323_92
+Carine	SYBILLIN	carine-sybillin-puteaux	58 Rue Eugène Eichenberger	92800	Puteaux	48.8824695	2.239052	0675082989					gmaps_idf_20260323_92
+Camille	TESSIER	camille-tessier-puteaux	Tour Eve, 1 Place du S	92800	Puteaux	48.8879054	2.2416483						gmaps_idf_20260323_92
+Amalia	ALIMI	amalia-alimi-rueil-malmaison	51 Rue du 4 Septembre	92500	Rueil-Malmaison	48.8754993	2.1812984	0615043377					gmaps_idf_20260323_92
+Stéphanie	AVÉDISSIAN	stephanie-avedissian-rueil-malmaison	9 Rue de la Source	92500	Rueil-Malmaison	48.8605555	2.1883482	0766406777					gmaps_idf_20260323_92
+Estelle	BECUWE	estelle-becuwe-rueil-malmaison	28 Rue Georges Baudin	92500	Rueil-Malmaison	48.8833655	2.1780773	0610785628					gmaps_idf_20260323_92
+Deolinda	DA MOTA	deolinda-da-mota-rueil-malmaison	12 Rue d'Estienne d'Orves Cabinet Paramédical	92500	Rueil-Malmaison	48.8817324	2.1809592	0626918170					gmaps_idf_20260323_92
+Digestion	ET IMMUNITÉ	digestion-et-immunite-rueil-malmaison	2 Bd Solferino	92500	Rueil-Malmaison	48.8763173	2.1853787						gmaps_idf_20260323_92
+Raphaël	HÉBRARD	raphael-hebrard-rueil-malmaison	43 Av. Albert 1er	92500	Rueil-Malmaison	48.8825192	2.1766946	0640786479					gmaps_idf_20260323_92
+Nathalie	HERPET	nathalie-herpet-rueil-malmaison	50 Rue Martignon	92500	Rueil-Malmaison	48.8862271	2.1811045	0683529971					gmaps_idf_20260323_92
+Caroline	KOL	caroline-kol-rueil-malmaison	57 Rue Pierre Brossolette	92500	Rueil-Malmaison	48.8832152	2.1852422	0674702412					gmaps_idf_20260323_92
+Virginie	LEFEBVRE	virginie-lefebvre-rueil-malmaison	X, 22 Rue des Jeunes Marquises	92500	Rueil-Malmaison	48.861701	2.182118	0667529392					gmaps_idf_20260323_92
+Ponsa	MARIA	ponsa-maria-rueil-malmaison	15 Rue Amédée Bollée	92500	Rueil-Malmaison	48.888892	2.1709338	0629952776					gmaps_idf_20260323_92
+Linda	SEBILLOTTE	linda-sebillotte-rueil-malmaison	1 Bd du Gué	92500	Rueil-Malmaison	48.8795229	2.1854286	0682120181					gmaps_idf_20260323_92
+Candice	STOFFELS	candice-stoffels-rueil-malmaison	5 Rue de l'Orme Thibault	92500	Rueil-Malmaison	48.8767173	2.1905945	0618890497					gmaps_idf_20260323_92
+Franck	TCHERNEIAN	franck-tcherneian-rueil-malmaison	69 Bd National	92500	Rueil-Malmaison	48.887346	2.185862	0616298143					gmaps_idf_20260323_92
+Charlotte	WILLOT SCHNEIDER	charlotte-willot-schneider-rueil-malmaison	77 Rue Gallieni	92500	Rueil-Malmaison	48.8662343	2.2041402	0675487765					gmaps_idf_20260323_92
+Julie	BLUYSEN	julie-bluysen-saint-cloud	12 Av. de Longchamp	92210	Saint-Cloud	48.8568211	2.2217444	0623183851					gmaps_idf_20260323_92
+Delphine	GOLDSZTEJN	delphine-goldsztejn-saint-cloud	45 Quai du Président Carnot	92210	Saint-Cloud	48.8500691	2.2234998	0663113086					gmaps_idf_20260323_92
+Pascale	JOLY	pascale-joly-saint-cloud	21 Rue d'Orléans	92210	Saint-Cloud	48.8415753	2.2190628	0686937441					gmaps_idf_20260323_92
+Valérie	PAPAUD	valerie-papaud-saint-cloud	3 Rue des Écoles	92210	Saint-Cloud	48.8433704	2.2182476	0686552379					gmaps_idf_20260323_92
+Tea	CHANAUD DE LESTANG	tea-chanaud-de-lestang-sceaux	2 Rue des Écoles	92330	Sceaux	48.7769318	2.2952579	0650441305					gmaps_idf_20260323_92
+Pierre	DE LUNE	pierre-de-lune-sceaux	26 Rue des Écoles	92330	Sceaux	48.7773134	2.2929914	0769033416					gmaps_idf_20260323_92
+Erika	GALLIERO	erika-galliero-sceaux	20 Rue Louis Aubeux	92330	Sceaux	48.7779353	2.2868769	0744415373					gmaps_idf_20260323_92
+Agnès	LOISON	agnes-loison-sceaux	22 Sq. Robinson	92330	Sceaux	48.7797087	2.2820555	0769045115					gmaps_idf_20260323_92
+Drainage	LYMPHATIQUE MANUEL VODDER À SCEAUX	drainage-lymphatique-manuel-vodder-a-sceaux-sceaux	10 Rue Gaston Lévy	92330	Sceaux	48.7779353	2.2868769	0771150448					gmaps_idf_20260323_92
+Franck	MANGIN	franck-mangin-sceaux	Chez Pierre de lune, 26 Rue des Écoles	92330	Sceaux	48.7773354	2.2929373	0624660838					gmaps_idf_20260323_92
+Fabienne	NIESS GERBER	fabienne-niess-gerber-sceaux	54 Av. le Notre	92330	Sceaux	48.7697454	2.3056719	0608403215					gmaps_idf_20260323_92
+Les	SOINS DU BONHEUR	les-soins-du-bonheur-sceaux	155 Rue Houdan	92330	Sceaux	48.7788804	2.2807015	0641283308					gmaps_idf_20260323_92
+Joelle	CHEVRIN	joelle-chevrin-sevres	3 Rue des Bois	92310	Sèvres	48.8218386	2.206995	0620583056					gmaps_idf_20260323_92
+Isabelle	DAUGE	isabelle-dauge-sevres	23 Rue Maurice Berteaux	92310	Sèvres	48.8219167	2.2147874	0681035838					gmaps_idf_20260323_92
+Anaïs	GESCHALS	anais-geschals-sevres	31 Grande Rue	92310	Sèvres	48.8260643	2.2188809	0617645946					gmaps_idf_20260323_92
+Virginie	GIARD	virginie-giard-sevres	5 Rue du Bocage	92310	Sèvres	48.8252945	2.2060873	0789795429					gmaps_idf_20260323_92
+Fatima	KHALLOUFI	fatima-khalloufi-sevres	18 Rue des Bas Tillets	92310	Sèvres	48.8182429	2.2030925	0615023759					gmaps_idf_20260323_92
+Marion	LELONG	marion-lelong-sevres	2 Rue de la Châtaigneraie	92310	Sèvres	48.8181508	2.2067241	0764259304					gmaps_idf_20260323_92
+Emmanuelle	LERBRET	emmanuelle-lerbret-suresnes	67 Rue des Bas Rogers	92150	Suresnes	48.8812723	2.225971	0650459391					gmaps_idf_20260323_92
+Caroline	MAMELLI-BURNS	caroline-mamelli-burns-suresnes	38 Bd Henri Sellier	92150	Suresnes	48.868653	2.2244871	0686313732					gmaps_idf_20260323_92
+Elisabeth	MOREAU	elisabeth-moreau-suresnes	Avenue Sisley	92150	Suresnes	48.873994	2.2319254	0774253884					gmaps_idf_20260323_92
+Ds	NATURO	ds-naturo-suresnes	2 Rue du Clos des Ermites	92150	Suresnes	48.8714913	2.2248902	0645841790					gmaps_idf_20260323_92
+Accompagnement	TDAH	accompagnement-tdah-suresnes	26, bis Bd Henri Sellier	92150	Suresnes	48.8680861	2.2259033	0768864929					gmaps_idf_20260323_92
+Virginie	DE FORCADE	virginie-de-forcade-vanves	10 Villa Franco Russe	92170	Vanves	48.8163242	2.2841226						gmaps_idf_20260323_92
+Patricia	NOTTEBART	patricia-nottebart-vanves	10 Rue du Moulin	92170	Vanves	48.826536	2.2903731	0676337051					gmaps_idf_20260323_92
+Ouahida	REMACHE SADOKI	ouahida-remache-sadoki-vanves	4ter Av. Victor Basch	92170	Vanves	48.8227704	2.2913575						gmaps_idf_20260323_92
+Rodolphe	BOHEC	rodolphe-bohec-ville-d-avray	2 Rue Grange Fontenelle	92410	Ville-d'Avray	48.8253007	2.1868533	0147099583					gmaps_idf_20260323_92
+Sendao	CARLOS-MANUEL	sendao-carlos-manuel-ville-d-avray	2 Rue Grange Fontenelle	92410	Ville-d'Avray	48.8253007	2.1868533	0147095201					gmaps_idf_20260323_92
+Délia	CAUCHOIX	delia-cauchoix-ville-d-avray	37 Rue de Saint-Cloud	92410	Ville-d'Avray	48.8286844	2.1914121	0622429444					gmaps_idf_20260323_92
+Victoire	DEBAY	victoire-debay-ville-d-avray	11 Rue des Bois	92410	Ville-d'Avray	48.8251224	2.1947334	0698779038					gmaps_idf_20260323_92
+Emilie	VAN GINKEL COACH EXECUTIVE ET YOGA TEACHER DES DIRIGEANTS	emilie-van-ginkel-coach-executive-et-yoga-teacher-des-dirigeants-ville-d-avray	73 Rue de Sèvres	92410	Ville-d'Avray	48.8261956	2.1972655	0652184056					gmaps_idf_20260323_92
+Clémence	ZELLER	clemence-zeller-ville-d-avray	73 Rue de Sèvres	92410	Ville-d'Avray	48.8261962	2.1972626	0620744506					gmaps_idf_20260323_92

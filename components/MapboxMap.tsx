@@ -225,6 +225,8 @@ export default function MapboxMap({
   const autoGeoAttemptedRef = useRef(false);
 
   const [geoError, setGeoError] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [canUseFullscreen, setCanUseFullscreen] = useState(false);
 
   useEffect(() => {
     onSelectSlugRef.current = onSelectSlug;
@@ -237,6 +239,11 @@ export default function MapboxMap({
   useEffect(() => {
     pointsRef.current = points;
   }, [points]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    setCanUseFullscreen(typeof document.documentElement.requestFullscreen === "function");
+  }, []);
 
   const requestGeolocation = (isManual = false) => {
     const map = mapRef.current;
@@ -506,6 +513,47 @@ export default function MapboxMap({
     }
   }, [searchCenter]);
 
+  useEffect(() => {
+    const frameElement = containerRef.current?.closest(".map-frame");
+    if (!frameElement || typeof document === "undefined") return;
+
+    const handleFullscreenChange = () => {
+      const isCurrentFrameFullscreen = document.fullscreenElement === frameElement;
+      setIsFullscreen(isCurrentFrameFullscreen);
+
+      window.requestAnimationFrame(() => {
+        mapRef.current?.resize();
+      });
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    const frameElement = containerRef.current?.closest(".map-frame") as HTMLElement | null;
+    if (
+      !frameElement ||
+      typeof document === "undefined" ||
+      typeof frameElement.requestFullscreen !== "function"
+    ) {
+      return;
+    }
+
+    try {
+      if (document.fullscreenElement === frameElement) {
+        await document.exitFullscreen();
+      } else {
+        await frameElement.requestFullscreen();
+      }
+    } catch {
+      setIsFullscreen(false);
+    }
+  };
+
   if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN) {
     return <div className="map-fallback">Carte indisponible: token Mapbox manquant.</div>;
   }
@@ -514,9 +562,16 @@ export default function MapboxMap({
     <div className="map-root" aria-label="Carte des praticiens">
       <div ref={containerRef} className="map-canvas" />
       <div className="map-overlay">
-        <button type="button" className="map-locate-btn" onClick={() => requestGeolocation(true)}>
-          Me localiser
-        </button>
+        <div className="map-overlay-controls">
+          <button type="button" className="map-locate-btn" onClick={() => requestGeolocation(true)}>
+            Me localiser
+          </button>
+          {canUseFullscreen ? (
+            <button type="button" className="map-fullscreen-btn" onClick={toggleFullscreen}>
+              {isFullscreen ? "Quitter le plein écran" : "Plein écran"}
+            </button>
+          ) : null}
+        </div>
         {geoError ? <p className="map-overlay-error">{geoError}</p> : null}
       </div>
     </div>

@@ -93,9 +93,6 @@ export default async function CartePage() {
     };
   });
 
-  const practitionerCount = practitioners.length;
-  const contactableCount = practitioners.filter((p) => Boolean(p.phone || p.email)).length;
-
   return (
     <article className="article-shell article-shell--map">
       <section className="map-page-shell">
@@ -105,15 +102,6 @@ export default async function CartePage() {
             <p className="map-page-lead">
               Recherchez une adresse, recentrez la carte puis ouvrez une fiche en un clic.
             </p>
-          </div>
-
-          <div className="map-page-meta">
-            <span className="meta-pill">{practitionerCount} praticiens</span>
-            <span className="meta-pill">{mapPoints.length} adresses</span>
-            <span className="meta-pill">{contactableCount} contacts</span>
-            <Link className="meta-link" href="/naturopathe-paris">
-              Voir l’annuaire Paris
-            </Link>
           </div>
         </div>
 

@@ -311,26 +311,12 @@ export default async function PractitionerPage({
             </section>
           ) : null}
 
-          <section className="practitioner-card">
-            <h2>Vous êtes ce praticien ?</h2>
-            <p>
-              Vous pouvez demander la correction ou la revendication de cette fiche.
-            </p>
-            <p>
-              <Link
-                className="btn btn-secondary"
-                href={`/praticiens?claim=${encodeURIComponent(practitioner.slug)}`}
-              >
-                Revendiquer / corriger cette fiche
-              </Link>
-            </p>
-          </section>
-
-          <section className="practitioner-card">
-            <h2>Description</h2>
-            <p>{practitionerDescription || "Description non renseignée."}</p>
-          </section>
-
+          {practitionerDescription ? (
+            <section className="practitioner-card">
+              <h2>Description</h2>
+              <p>{practitionerDescription}</p>
+            </section>
+          ) : null}
         </div>
       </div>
 

@@ -18,7 +18,8 @@ function parseArgs(argv) {
     detailConcurrency: 4,
     minQueries: 0,
     staleQueryLimit: null,
-    staleRelevantThreshold: 0
+    staleRelevantThreshold: 0,
+    minPopulation: 0
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -67,6 +68,12 @@ function parseArgs(argv) {
 
     if (arg === "--stale-relevant-threshold") {
       options.staleRelevantThreshold = Number(argv[i + 1] ?? options.staleRelevantThreshold);
+      i += 1;
+      continue;
+    }
+
+    if (arg === "--min-population") {
+      options.minPopulation = Number(argv[i + 1] ?? options.minPopulation);
       i += 1;
     }
   }
@@ -204,6 +211,8 @@ function parseName(title, knownFirstNames = new Set()) {
   const stopKeywords = [
     "naturopathe",
     "naturopathie",
+    "naturo",
+    "naturoyoga",
     "réflexologue",
     "reflexologue",
     "nutritionniste",
@@ -218,7 +227,19 @@ function parseName(title, knownFirstNames = new Set()) {
     "formation",
     "consultation",
     "thérapeute",
-    "therapeute"
+    "therapeute",
+    "coach",
+    "wellness",
+    "yoga",
+    "teacher",
+    "executive",
+    "shop",
+    "école",
+    "ecole",
+    "academy",
+    "jeûne",
+    "jeune",
+    "et"
   ];
 
   const segments = normalized
@@ -289,6 +310,15 @@ function parseName(title, knownFirstNames = new Set()) {
   }
 
   if (!bestCandidate) {
+    return null;
+  }
+
+  const invalidNameFragments = ["naturo", "yoga", "wellness", "shop", "coach"];
+  if (
+    invalidNameFragments.some((fragment) =>
+      `${normalizeText(bestCandidate.first_name)} ${normalizeText(bestCandidate.last_name)}`.includes(fragment)
+    )
+  ) {
     return null;
   }
 
@@ -557,6 +587,11 @@ async function main() {
 
   const searchPlan = readTsv(SEARCH_PLAN_PATH)
     .filter((row) => row.department_code === options.department)
+    .filter((row) =>
+      Number.isFinite(options.minPopulation) && options.minPopulation > 0
+        ? Number(row.population) >= options.minPopulation
+        : true
+    )
     .sort((a, b) => Number(a.priority_in_department) - Number(b.priority_in_department));
 
   const selectedQueries =
@@ -579,7 +614,10 @@ async function main() {
       "fanny",
       "marie-alix",
       "eulalie",
-      "eleana"
+      "eleana",
+      "martine",
+      "emilie",
+      "pauline"
     ])
   );
 

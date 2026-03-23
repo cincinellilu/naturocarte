@@ -1,11 +1,9 @@
 first_name	last_name	slug	adresse	postal_code	city	lat	lng	phone	email	website	booking_url	description	status
-Nathalie	ALEXANDRE	nathalie-alexandre-boulogne-billancourt	13 bis Rue Neuve Saint-Germain	92100	Boulogne-Billancourt	48.8277931	2.248198	0651120930		https://www.nathalie-alexandre-naturopathe.fr/			gmaps_idf_20260323_92
-Isabelle	ARNOLD BOURDON MADAME NATURO	isabelle-arnold-bourdon-madame-naturo-boulogne-billancourt	61 Rue Emile Landrin	92100	Boulogne-Billancourt	48.836676	2.245702	0622075901		https://liberlo.com/profil/isabelle-arnold-bourdon/			gmaps_idf_20260323_92
-Eulalie	COURTHÉOUX CHANEL	eulalie-courtheoux-chanel-boulogne-billancourt	11 Rue de la Pyramide	92100	Boulogne-Billancourt	48.8346878	2.238434	0672811342		https://eulalienaturopathe.com/			gmaps_idf_20260323_92
-Marie	DEFOORT	marie-defoort-boulogne-billancourt	73 Rue Marcel Dassault	92100	Boulogne-Billancourt	48.8342429	2.2499771	0749516303		http://mariedefoort.com/			gmaps_idf_20260323_92
-Marie-alix	DES COURTILS	marie-alix-des-courtils-boulogne-billancourt	rez de chaussée, 10 Sq. du Pont de Sèvres	92100	Boulogne-Billancourt	48.8305055	2.2290544	0668524284		https://malix-naturopathe.fr/			gmaps_idf_20260323_92
-Patricia	GONET-LAPOUS	patricia-gonet-lapous-boulogne-billancourt	69 Rue de la Saussière	92100	Boulogne-Billancourt	48.8361276	2.241378	0146050921					gmaps_idf_20260323_92
-Alexandra	KOUKLEVSKY	alexandra-kouklevsky-boulogne-billancourt	21 Rue des Peupliers	92100	Boulogne-Billancourt	48.832271	2.256965	0616048184		https://www.therapiejoyeuse.com/			gmaps_idf_20260323_92
-Eleana	MAHTALLAH	eleana-mahtallah-boulogne-billancourt	119 Av. André Morizet	92100	Boulogne-Billancourt	48.8394217	2.2293228	0650460449		https://eleana-naturopathe.com/			gmaps_idf_20260323_92
-Maryline	MAZÉ	maryline-maze-boulogne-billancourt	26 Rue d'Aguesseau	92100	Boulogne-Billancourt	48.8437825	2.2364232	0695404296		https://www.resalib.fr/praticien/115011-maryline-maze-naturopathe-boulogne-billancourt			gmaps_idf_20260323_92
-Chi	NEI TSANG & KOBIDO	chi-nei-tsang-kobido-boulogne-billancourt	10 Sq. du Pont de Sèvres	92100	Boulogne-Billancourt	48.8305055	2.2290544	0673151651		https://www.estellepautret.fr/			gmaps_idf_20260323_92
+Nathalie	ALEXANDRE	nathalie-alexandre-boulogne-billancourt	13 bis Rue Neuve Saint-Germain	92100	Boulogne-Billancourt	48.8277931	2.248198	0651120930					gmaps_idf_20260323_92
+Eulalie	COURTHÉOUX CHANEL	eulalie-courtheoux-chanel-boulogne-billancourt	11 Rue de la Pyramide	92100	Boulogne-Billancourt	48.8346878	2.238434	0672811342					gmaps_idf_20260323_92
+Marie	DEFOORT	marie-defoort-boulogne-billancourt	73 Rue Marcel Dassault	92100	Boulogne-Billancourt	48.8342429	2.2499771	0749516303					gmaps_idf_20260323_92
+Marie-Alix	DES COURTILS	marie-alix-des-courtils-boulogne-billancourt	rez de chaussée, 10 Sq. du Pont de Sèvres	92100	Boulogne-Billancourt	48.8305055	2.2290544	0668524284					gmaps_idf_20260323_92
+Alexandra	KOUKLEVSKY	alexandra-kouklevsky-boulogne-billancourt	21 Rue des Peupliers	92100	Boulogne-Billancourt	48.832271	2.256965	0616048184					gmaps_idf_20260323_92
+Eleana	MAHTALLAH	eleana-mahtallah-boulogne-billancourt	119 Av. André Morizet	92100	Boulogne-Billancourt	48.8394217	2.2293228	0650460449					gmaps_idf_20260323_92
+Maryline	MAZÉ	maryline-maze-boulogne-billancourt	26 Rue d'Aguesseau	92100	Boulogne-Billancourt	48.8437825	2.2364232	0695404296					gmaps_idf_20260323_92
+Estelle	PAUTRET	estelle-pautret-boulogne-billancourt	10 Sq. du Pont de Sèvres	92100	Boulogne-Billancourt	48.8305055	2.2290544	0673151651					gmaps_idf_20260323_92

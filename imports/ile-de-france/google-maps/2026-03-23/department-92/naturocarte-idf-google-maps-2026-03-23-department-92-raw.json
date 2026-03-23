@@ -1,5 +1,39 @@
 [
   {
+    "title": "Christophe ETIENNE - Naturopathe - santé intestinale - SIBO - Phytothérapeute",
+    "href": "https://www.google.com/maps/place/Christophe+ETIENNE+-+Naturopathe+-+sant%C3%A9+intestinale+-+SIBO+-+Phytoth%C3%A9rapeute/data=!4m7!3m6!1s0x47e66f4c98e9ca2f:0x3f42c2f2d4e808d5!8m2!3d48.878068!4d2.285569!16s%2Fg%2F11j23w62s6!19sChIJL8rpmExv5kcR1Qjo1PLCQj8?authuser=0&hl=fr&rclk=1",
+    "text": "SponsoriséChristophe ETIENNE - Naturopathe - santé intestinale - SIBO - Phytothérapeute 4,9Naturopathe · 20 Rue du DébarcadèreOuvert · Ferme à 20:00 · 06 58 89 82 99Site WebItinéraires Spécialiste Troubles DigestifsChristophe ETIENNE - Naturopathe À ParisVisiter le site",
+    "commune_name": "Boulogne-Billancourt",
+    "department_code": "92",
+    "department_name": "Hauts-de-Seine",
+    "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "20 Rue du Débarcadère",
+      "postal_code": "75017",
+      "city": "Paris",
+      "label": "20 Rue du Débarcadère 75017 Paris",
+      "distance": 7
+    }
+  },
+  {
+    "title": "Mon Réflexo Naturo - Naturopathe et Réflexologue",
+    "href": "https://www.google.com/maps/place/Mon+R%C3%A9flexo+Naturo+-+Naturopathe+et+R%C3%A9flexologue/data=!4m7!3m6!1s0x2a770b9ebb518ff1:0x8fe933c9d60c15e3!8m2!3d48.873344!4d2.321738!16s%2Fg%2F11k4xxk2jc!19sChIJ8Y9Ru54LdyoR4xUM1skz6Y8?authuser=0&hl=fr&rclk=1",
+    "text": "SponsoriséMon Réflexo Naturo - Naturopathe et Réflexologue 5,0Naturopathe · 57 Rue des MathurinsOuvert · Ferme à 20:00Site WebItinéraires Maëlys BaryUne amélioration concrète de vos troubles digestifs et hormonauxVisiter le site",
+    "commune_name": "Boulogne-Billancourt",
+    "department_code": "92",
+    "department_name": "Hauts-de-Seine",
+    "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "57 Rue des Mathurins",
+      "postal_code": "75008",
+      "city": "Paris",
+      "label": "57 Rue des Mathurins 75008 Paris",
+      "distance": 6
+    }
+  },
+  {
     "title": "Nathalie Alexandre Naturopathe",
     "href": "https://www.google.com/maps/place/Nathalie+Alexandre+Naturopathe/data=!4m7!3m6!1s0x47e67b0a255156e9:0x19aaba4bb054d356!8m2!3d48.8277931!4d2.248198!16s%2Fg%2F11r5w_42sd!19sChIJ6VZRJQp75kcRVtNUsEu6qhk?authuser=0&hl=fr&rclk=1",
     "text": "Nathalie Alexandre Naturopathe 5,0Naturopathe · 13 bis Rue Neuve Saint-GermainOuvert · Ferme à 19:30 · 06 51 12 09 30Site WebItinéraires",
@@ -7,12 +41,13 @@
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Nathalie Alexandre Naturopathe",
-      "website": "https://www.nathalie-alexandre-naturopathe.fr/",
-      "phone": "0651120930",
-      "addressLabel": "13 bis Rue Neuve Saint-Germain, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "13 Rue Neuve Saint-Germain",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "13 Rue Neuve Saint-Germain 92100 Boulogne-Billancourt",
+      "distance": 15
     }
   },
   {
@@ -23,76 +58,81 @@
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Naturopathe & Psycho-Praticienne \" FANNY CONSEILS DE VIE \"",
-      "website": "https://www.resalib.fr/praticien/105612-fanny-conseils-de-vie-naturopathe-boulogne-billancourt",
-      "phone": "0682061882",
-      "addressLabel": "41 Av. du Général Leclerc, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "41 Avenue du Général Leclerc",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "41 Avenue du Général Leclerc 92100 Boulogne-Billancourt",
+      "distance": 8
     }
   },
   {
     "title": "Isabelle ARNOLD BOURDON \"Madame Naturo\" Réflexologue & Naturopathe. Kyokuté: massage japonais du visage-Drainage.",
     "href": "https://www.google.com/maps/place/Isabelle+ARNOLD+BOURDON+%22Madame+Naturo%22+R%C3%A9flexologue+%26+Naturopathe.+Kyokut%C3%A9:+massage+japonais+du+visage-Drainage./data=!4m7!3m6!1s0x47e67bbe2e651ce7:0x20ae162dc8e914b9!8m2!3d48.836676!4d2.245702!16s%2Fg%2F11sx4sh5ch!19sChIJ5xxlLr575kcRuRTpyC0WriA?authuser=0&hl=fr&rclk=1",
-    "text": "Isabelle ARNOLD BOURDON \"Madame Naturo\" Réflexologue & Naturopathe. Kyokuté: massage japonais du visage-Drainage. 5,0Naturopathe ·  · 61 Rue Emile LandrinOuvert · Ferme à 19:00 · 06 22 07 59 01Site WebItinéraires",
+    "text": "Isabelle ARNOLD BOURDON \"Madame Naturo\" Réflexologue & Naturopathe. Kyokuté: massage japonais du visage-Drainage. 5,0Naturopathe ·  · 61 Rue Emile LandrinFerme bientôt · 19:00 · Ouvre à 09:00 mar. · 06 22 07 59 01Site WebItinéraires",
     "commune_name": "Boulogne-Billancourt",
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Isabelle ARNOLD BOURDON \"Madame Naturo\" Réflexologue & Naturopathe. Kyokuté: massage japonais du visage-Drainage.",
-      "website": "https://liberlo.com/profil/isabelle-arnold-bourdon/",
-      "phone": "0622075901",
-      "addressLabel": "61 Rue Emile Landrin, 92100 Boulogne-Billancourt",
-      "category": "Réflexologue"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "61 Rue Emile Landrin",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "61 Rue Emile Landrin 92100 Boulogne-Billancourt",
+      "distance": 1
     }
   },
   {
     "title": "Marie Defoort Naturopathe",
     "href": "https://www.google.com/maps/place/Marie+Defoort+Naturopathe/data=!4m7!3m6!1s0xf55b15c5a799373:0x59f35ddd59395d0b!8m2!3d48.8342429!4d2.2499771!16s%2Fg%2F11wvhfw9rz!19sChIJc5N5WlyxVQ8RC105Wd1d81k?authuser=0&hl=fr&rclk=1",
-    "text": "Marie Defoort Naturopathe 5,0Naturopathe · 73 Rue Marcel DassaultOuvert · Ferme à 19:00 · 07 49 51 63 03Site WebItinéraires",
+    "text": "Marie Defoort Naturopathe 5,0Naturopathe · 73 Rue Marcel DassaultFerme bientôt · 19:00 · Ouvre à 08:30 mar. · 07 49 51 63 03Site WebItinéraires",
     "commune_name": "Boulogne-Billancourt",
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Marie Defoort Naturopathe",
-      "website": "http://mariedefoort.com/",
-      "phone": "0749516303",
-      "addressLabel": "73 Rue Marcel Dassault, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "73 Rue Marcel Dassault",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "73 Rue Marcel Dassault 92100 Boulogne-Billancourt",
+      "distance": 8
     }
   },
   {
     "title": "Eulalie Courthéoux Chanel Naturopathe Bilans de vitalité et massages Enveloppements aux huiles essentielles Boulogne",
     "href": "https://www.google.com/maps/place/Eulalie+Courth%C3%A9oux+Chanel+Naturopathe+Bilans+de+vitalit%C3%A9+et+massages+Enveloppements+aux+huiles+essentielles+Boulogne/data=!4m7!3m6!1s0x47e67ba748f2107b:0xd9b902a32985a7d8!8m2!3d48.8346878!4d2.238434!16s%2Fg%2F11w_rljy94!19sChIJexDySKd75kcR2KeFKaMCudk?authuser=0&hl=fr&rclk=1",
-    "text": "Eulalie Courthéoux Chanel Naturopathe Bilans de vitalité et massages Enveloppements aux huiles essentielles Boulogne 5,0Naturopathe · 11 Rue de la PyramideOuvert · Ferme à 19:00 · 06 72 81 13 42Site WebItinéraires",
+    "text": "Eulalie Courthéoux Chanel Naturopathe Bilans de vitalité et massages Enveloppements aux huiles essentielles Boulogne 5,0Naturopathe · 11 Rue de la PyramideFerme bientôt · 19:00 · Ouvre à 14:00 mar. · 06 72 81 13 42Site WebItinéraires",
     "commune_name": "Boulogne-Billancourt",
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Eulalie Courthéoux Chanel Naturopathe Bilans de vitalité et massages Enveloppements aux huiles essentielles Boulogne",
-      "website": "https://eulalienaturopathe.com/",
-      "phone": "0672811342",
-      "addressLabel": "11 Rue de la Pyramide, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "11 Rue de la Pyramide",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "11 Rue de la Pyramide 92100 Boulogne-Billancourt",
+      "distance": 3
     }
   },
   {
     "title": "Eleana Mahtallah Naturopathe",
     "href": "https://www.google.com/maps/place/Eleana+Mahtallah+Naturopathe/data=!4m7!3m6!1s0x47e67be95710384b:0x8075693da250173f!8m2!3d48.8394217!4d2.2293228!16s%2Fg%2F11wv451m59!19sChIJSzgQV-l75kcRPxdQoj1pdYA?authuser=0&hl=fr&rclk=1",
-    "text": "Eleana Mahtallah Naturopathe 5,0Naturopathe · 119 Av. André MorizetOuvert · Ferme à 19:00 · 06 50 46 04 49Site WebItinéraires",
+    "text": "Eleana Mahtallah Naturopathe 5,0Naturopathe · 119 Av. André MorizetFerme bientôt · 19:00 · Ouvre à 09:00 mar. · 06 50 46 04 49Site WebItinéraires",
     "commune_name": "Boulogne-Billancourt",
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Eleana Mahtallah Naturopathe",
-      "website": "https://eleana-naturopathe.com/",
-      "phone": "0650460449",
-      "addressLabel": "119 Av. André Morizet, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "1ter Rue de Sèvres",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "1ter Rue de Sèvres 92100 Boulogne-Billancourt",
+      "distance": 62
     }
   },
   {
@@ -103,12 +143,13 @@
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Naturopathe - Drainage lymphatique- Boulogne Billancourt - Marie-Alix des Courtils",
-      "website": "https://malix-naturopathe.fr/",
-      "phone": "0668524284",
-      "addressLabel": "rez de chaussée, 10 Sq. du Pont de Sèvres, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "10 Square du Pont de Sèvres",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "10 Square du Pont de Sèvres 92100 Boulogne-Billancourt",
+      "distance": 8
     }
   },
   {
@@ -119,12 +160,13 @@
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Estelle Pautret Naturopathe - Chi Nei Tsang & Kobido",
-      "website": "https://www.estellepautret.fr/",
-      "phone": "0673151651",
-      "addressLabel": "10 Sq. du Pont de Sèvres, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "10 Square du Pont de Sèvres",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "10 Square du Pont de Sèvres 92100 Boulogne-Billancourt",
+      "distance": 8
     }
   },
   {
@@ -135,12 +177,13 @@
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Naturopathe et Reiki Paris - Thérapie Joyeuse - Alexandra Kouklevsky",
-      "website": "https://www.therapiejoyeuse.com/",
-      "phone": "0616048184",
-      "addressLabel": "21 Rue des Peupliers, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "21 Rue des Peupliers",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "21 Rue des Peupliers 92100 Boulogne-Billancourt",
+      "distance": 1
     }
   },
   {
@@ -151,44 +194,13 @@
     "department_code": "92",
     "department_name": "Hauts-de-Seine",
     "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Maryline Mazé - Réflexologue & Naturopathe",
-      "website": "https://www.resalib.fr/praticien/115011-maryline-maze-naturopathe-boulogne-billancourt",
-      "phone": "0695404296",
-      "addressLabel": "26 Rue d'Aguesseau, 92100 Boulogne-Billancourt",
-      "category": "Réflexologue"
-    }
-  },
-  {
-    "title": "Marie Naturopathie",
-    "href": "https://www.google.com/maps/place/Marie+Naturopathie/data=!4m7!3m6!1s0x47e67add9ff7d089:0x4f040acb028ad639!8m2!3d48.8393804!4d2.239412!16s%2Fg%2F11h31z4z8k!19sChIJidD3n9165kcROdaKAssKBE8?authuser=0&hl=fr&rclk=1",
-    "text": "Marie Naturopathie 5,0Naturopathe · 81 Rte de la Reine06 85 72 70 70Itinéraires",
-    "commune_name": "Boulogne-Billancourt",
-    "department_code": "92",
-    "department_name": "Hauts-de-Seine",
-    "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Marie Naturopathie",
-      "website": "",
-      "phone": "0685727070",
-      "addressLabel": "81 Rte de la Reine, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
-    }
-  },
-  {
-    "title": "Gonet-Lapous Patricia",
-    "href": "https://www.google.com/maps/place/Gonet-Lapous+Patricia/data=!4m7!3m6!1s0x47e67ae7d6aa33d7:0x98ec96ea9c416d4!8m2!3d48.8361276!4d2.241378!16s%2Fg%2F1tj3kd0s!19sChIJ1zOq1ud65kcR1BbEqW7Jjgk?authuser=0&hl=fr&rclk=1",
-    "text": "Gonet-Lapous Patricia 5,0Naturopathe · 69 Rue de la Saussière01 46 05 09 21Itinéraires",
-    "commune_name": "Boulogne-Billancourt",
-    "department_code": "92",
-    "department_name": "Hauts-de-Seine",
-    "query": "naturopathe Boulogne-Billancourt Hauts-de-Seine",
-    "detail": {
-      "title": "Gonet-Lapous Patricia",
-      "website": "",
-      "phone": "0146050921",
-      "addressLabel": "69 Rue de la Saussière, 92100 Boulogne-Billancourt",
-      "category": "Naturopathe"
+    "is_relevant_candidate": true,
+    "reverse_geocode": {
+      "adresse": "26 Rue d'Aguesseau",
+      "postal_code": "92100",
+      "city": "Boulogne-Billancourt",
+      "label": "26 Rue d'Aguesseau 92100 Boulogne-Billancourt",
+      "distance": 1
     }
   }
 ]

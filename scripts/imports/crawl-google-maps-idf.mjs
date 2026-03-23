@@ -408,78 +408,126 @@ async function collectSearchResults(page, searchUrl) {
   );
 }
 
-async function collectPlaceDetails(page, placeUrl) {
-  await page.goto(placeUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await page.waitForURL(/google\.com\/maps/, { timeout: 120000 });
-  await Promise.race([
-    page.locator("h1").first().waitFor({ state: "visible", timeout: 6000 }),
-    page.locator('button[aria-label^="Adresse:"]').first().waitFor({ state: "visible", timeout: 6000 })
-  ]).catch(() => null);
-  await page.waitForTimeout(1200);
+function extractPhoneFromCardText(text) {
+  const match = (text ?? "").match(/(?:\+33\s?[1-9]|0[1-9])(?:[\s.]*\d{2}){4}/);
+  if (!match) return "";
 
-  const title = (
-    (await page.locator("h1").first().textContent().catch(() => "")) ||
-    (await page.getByRole("button", { name: /.+/ }).nth(0).textContent().catch(() => ""))
-  )
-    .replace(/\s+/g, " ")
-    .trim();
+  const digits = match[0].replace(/[^\d]/g, "");
+  if (digits.startsWith("33")) {
+    return `0${digits.slice(2)}`;
+  }
 
-  const websiteLink =
-    (await page.locator('a[aria-label^="Site Web:"]').first().getAttribute("href").catch(() => null)) ||
-    (await page.locator('a[aria-label="Accéder au site Web"]').first().getAttribute("href").catch(() => null)) ||
-    "";
-
-  const phoneHref = await page.locator('a[href^="tel:"]').first().getAttribute("href").catch(() => null);
-  const phoneButtonText = (
-    (await page.locator('button[aria-label^="Numéro de téléphone:"]').first().textContent().catch(() => "")) ||
-    ""
-  )
-    .replace(/\s+/g, " ")
-    .trim();
-
-  const addressButtonText = (
-    (await page.locator('button[aria-label^="Adresse:"]').first().textContent().catch(() => "")) ||
-    ""
-  )
-    .replace(/\s+/g, " ")
-    .trim();
-
-  const category = (
-    (await page.locator("button.DkEaL").first().textContent().catch(() => "")) ||
-    (await page.locator("button").evaluateAll((buttons) => {
-      const match = buttons.find((button) => /naturopathe/i.test(button.textContent || ""));
-      return match?.textContent || "";
-    }).catch(() => ""))
-  )
-    .replace(/\s+/g, " ")
-    .trim();
-
-  return {
-    title,
-    website: websiteLink,
-    phone: phoneHref ? phoneHref.replace(/^tel:/, "").trim() : phoneButtonText.replace(/[^\d+]/g, ""),
-    addressLabel: addressButtonText,
-    category
-  };
+  return digits;
 }
 
-function toPractitionerRow(detail, placeUrl, departmentCode, knownFirstNames) {
-  const parsedName = parseName(detail.title, knownFirstNames);
-  if (!parsedName) return null;
+function extractAddressFromCardText(text, title) {
+  const normalizedText = (text ?? "").replace(/\s+/g, " ").trim();
+  const normalizedTitle = (title ?? "").replace(/\s+/g, " ").trim();
+  const rest = normalizedText.startsWith(normalizedTitle)
+    ? normalizedText.slice(normalizedTitle.length).trim()
+    : normalizedText;
 
-  const address = parseAddress(detail.addressLabel);
+  const cleanedSegments = rest
+    .split("·")
+    .map((segment, index) =>
+      segment
+        .replace(/[\uE000-\uF8FF]/g, " ")
+        .replace(index === 0 ? /^\s*[0-9]+(?:[.,][0-9]+)?\s*/ : /^/, "")
+        .replace(/(?:Ouvert|Fermé|Ferme bientôt|Ferme à|Ouvre à).*$/i, "")
+        .replace(/(?:\+33\s?[1-9]|0[1-9])(?:[\s.]*\d{2}){4}.*$/, "")
+        .replace(/Site Web.*$/i, "")
+        .replace(/Itinéraires.*$/i, "")
+        .replace(/\s+/g, " ")
+        .trim()
+    )
+    .filter(Boolean);
+
+  for (const segment of cleanedSegments) {
+    if (!/\d/.test(segment) || !/[\p{L}]/u.test(segment)) continue;
+    if (/^(naturopathe|réflexologue|reflexologue|nutritionniste)$/i.test(segment)) continue;
+    return segment;
+  }
+
+  return "";
+}
+
+function extractCategoryFromCardText(text) {
+  const categories = [
+    "Naturopathe",
+    "Réflexologue",
+    "Nutritionniste",
+    "Praticien en médecine holistique",
+    "Praticien de médecine alternative",
+    "Conseiller santé",
+    "Massothérapeute"
+  ];
+
+  for (const category of categories) {
+    if (new RegExp(category, "i").test(text ?? "")) {
+      return category;
+    }
+  }
+
+  return "";
+}
+
+async function reverseGeocode(lat, lng, cache) {
+  const cacheKey = `${lat},${lng}`;
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+
+  const url = new URL("https://api-adresse.data.gouv.fr/reverse/");
+  url.searchParams.set("lon", lng);
+  url.searchParams.set("lat", lat);
+
+  const response = await fetch(url, {
+    headers: {
+      accept: "application/json"
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Reverse geocode failed: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  const feature = Array.isArray(payload.features) ? payload.features[0] ?? null : null;
+  const properties = feature?.properties ?? {};
+  const result = {
+    adresse: (properties.name ?? "").trim(),
+    postal_code: (properties.postcode ?? "").trim(),
+    city: (properties.city ?? "").trim(),
+    label: (properties.label ?? "").trim(),
+    distance: properties.distance ?? null
+  };
+
+  cache.set(cacheKey, result);
+  return result;
+}
+
+function toPractitionerRowFromCard(place, geocodedAddress, departmentCode, knownFirstNames) {
+  const parsedName = parseName(place.title, knownFirstNames);
+  if (!parsedName) return null;
+  const mapMeta = extractHexId(place.href);
+  const cardAddress = extractAddressFromCardText(place.text, place.title);
+  const address = {
+    adresse: cardAddress || geocodedAddress?.adresse || "",
+    postal_code: geocodedAddress?.postal_code ?? "",
+    city: geocodedAddress?.city ?? ""
+  };
+  const category = extractCategoryFromCardText(place.text);
+  const phone = extractPhoneFromCardText(place.text);
   if (!address.postal_code || !address.city) return null;
   if (normalizeText(address.city) === "paris" || address.postal_code.startsWith("75")) return null;
   if (!/^(77|78|91|92|93|94|95)/.test(address.postal_code)) return null;
   if (!address.postal_code.startsWith(departmentCode)) return null;
-  if (!/naturopathe/i.test(`${detail.category} ${detail.title}`)) return null;
+  if (!/naturopathe/i.test(`${category} ${place.title} ${place.text}`)) return null;
 
-  const mapMeta = extractHexId(placeUrl);
   const slug = [parsedName.first_name, parsedName.last_name, address.city]
     .map(slugify)
     .filter(Boolean)
     .join("-");
-  const links = splitWebsiteAndBookingUrl(detail.website);
 
   return {
     first_name: parsedName.first_name,
@@ -490,16 +538,16 @@ function toPractitionerRow(detail, placeUrl, departmentCode, knownFirstNames) {
     city: address.city,
     lat: mapMeta.lat,
     lng: mapMeta.lng,
-    phone: detail.phone,
+    phone,
     email: "",
-    website: links.website,
-    booking_url: links.booking_url,
+    website: "",
+    booking_url: "",
     description: "",
     status: `gmaps_idf_${CAMPAIGN_DATE.replace(/-/g, "")}_${departmentCode}`,
     source_google_hexid: mapMeta.hexid,
-    source_google_maps_url: placeUrl,
-    source_google_title: detail.title,
-    source_google_category: detail.category
+    source_google_maps_url: place.href,
+    source_google_title: place.title,
+    source_google_category: category
   };
 }
 
@@ -538,7 +586,7 @@ async function main() {
   const browser = await chromium.launch({ headless: !options.headful });
   const context = await browser.newContext({ locale: "fr-FR" });
   const listPage = await context.newPage();
-  const detailConcurrency =
+  const processingConcurrency =
     Number.isFinite(options.detailConcurrency) && options.detailConcurrency > 0
       ? Math.min(Math.floor(options.detailConcurrency), 8)
       : 4;
@@ -610,16 +658,14 @@ async function main() {
       ? likelyRelevantPlaces.slice(0, options.maxDetails)
       : likelyRelevantPlaces;
 
+  await browser.close();
+
   const rawDetails = new Array(selectedDetails.length);
   const candidateRows = new Array(selectedDetails.length);
-  const detailPages = await Promise.all(
-    Array.from({ length: Math.min(detailConcurrency, Math.max(selectedDetails.length, 1)) }, () =>
-      context.newPage()
-    )
-  );
+  const reverseGeocodeCache = new Map();
   let nextIndex = 0;
 
-  async function runDetailWorker(page) {
+  async function runProcessingWorker() {
     while (true) {
       const currentIndex = nextIndex;
       nextIndex += 1;
@@ -629,29 +675,33 @@ async function main() {
       }
 
       const place = selectedDetails[currentIndex];
-      console.log(`Detail ${currentIndex + 1}/${selectedDetails.length} ${place.title}`);
+      console.log(`Resolve ${currentIndex + 1}/${selectedDetails.length} ${place.title}`);
 
       try {
-        const detail = await collectPlaceDetails(page, place.href);
+        const mapMeta = extractHexId(place.href);
+        const geocodedAddress =
+          mapMeta.lat && mapMeta.lng
+            ? await reverseGeocode(mapMeta.lat, mapMeta.lng, reverseGeocodeCache)
+            : null;
         rawDetails[currentIndex] = {
           ...place,
-          detail
+          reverse_geocode: geocodedAddress
         };
-        candidateRows[currentIndex] = toPractitionerRow(
-          detail,
-          place.href,
+        candidateRows[currentIndex] = toPractitionerRowFromCard(
+          place,
+          geocodedAddress,
           options.department,
           knownFirstNames
         );
       } catch (error) {
         rawDetails[currentIndex] = {
           ...place,
-          detail: {
-            title: "",
-            website: "",
-            phone: "",
-            addressLabel: "",
-            category: "",
+          reverse_geocode: {
+            adresse: "",
+            postal_code: "",
+            city: "",
+            label: "",
+            distance: null,
             error: error instanceof Error ? error.message : String(error)
           }
         };
@@ -660,9 +710,12 @@ async function main() {
     }
   }
 
-  await Promise.all(detailPages.map((page) => runDetailWorker(page)));
-  await Promise.all(detailPages.map((page) => page.close()));
-  await browser.close();
+  await Promise.all(
+    Array.from(
+      { length: Math.min(processingConcurrency, Math.max(selectedDetails.length, 1)) },
+      () => runProcessingWorker()
+    )
+  );
 
   const finalRows = [];
   const seenIdentity = new Set();

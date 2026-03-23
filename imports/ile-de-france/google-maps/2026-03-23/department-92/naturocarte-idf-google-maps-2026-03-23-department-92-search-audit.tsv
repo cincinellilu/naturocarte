@@ -1,0 +1,4 @@
+department_code	commune_name	priority_in_department	new_unique_places	new_relevant_places	total_unique_places	stale_query_count
+92	Boulogne-Billancourt	1	22	21	22	0
+92	Nanterre	2	53	51	75	0
+92	Asnières-sur-Seine	3	91	85	166	0

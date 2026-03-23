@@ -116,30 +116,18 @@ export function SiteHeaderNav() {
   return (
     <div className="site-header-inner">
       <Link href="/carte" className="site-brand" aria-label="NaturoCarte, retour a la carte">
-        <span className="site-brand-mark" aria-hidden="true">
-          N
-        </span>
-        <span className="site-brand-copy">
-          <span className="site-brand-name">NaturoCarte</span>
-          <span className="site-brand-tagline">Recherche locale claire pour naturopathes</span>
-        </span>
+        <span className="site-brand-name">NaturoCarte</span>
       </Link>
 
-      <div className="site-header-actions">
-        <nav className="site-nav" aria-label="Navigation principale">
-          <ul className="site-nav-list">
-            {navigationItems.map((item) => (
-              <li key={item.href}>
-                <NavigationLink item={item} pathname={pathname} />
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <Link href="/carte" className="site-header-cta">
-          Explorer
-        </Link>
-      </div>
+      <nav className="site-nav" aria-label="Navigation principale">
+        <ul className="site-nav-list">
+          {navigationItems.map((item) => (
+            <li key={item.href}>
+              <NavigationLink item={item} pathname={pathname} />
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 }

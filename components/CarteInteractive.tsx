@@ -298,167 +298,159 @@ export default function CarteInteractive({
     suggestions.length === 0;
 
   return (
-    <div className="directory-explorer">
-      <section className="surface-card map-stage">
-        <div className="map-stage-head">
-          <div>
-            <p className="section-eyebrow">Carte active</p>
-            <h3>Repérez les cabinets directement sur la carte</h3>
-          </div>
-          <p className="map-stage-intro">
-            Zoomez, géolocalisez-vous ou recherchez une adresse précise pour repositionner
-            automatiquement les résultats.
-          </p>
-        </div>
+    <div className="map-experience">
+      <div ref={mapSectionRef} className="map-stage">
+        <div className="map-frame">
+          <div ref={searchWrapperRef} className="search-box search-box--overlay">
+            <div className="search-card">
+              <label htmlFor="address-search" className="search-label">
+                Rechercher une adresse
+              </label>
+              <input
+                id="address-search"
+                type="text"
+                className="search-input"
+                placeholder="10 Rue de Rivoli, Paris"
+                value={searchQuery}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setIsSuggestionsOpen(true);
+                }}
+                onFocus={() => {
+                  if (searchQuery.trim().length >= 3) setIsSuggestionsOpen(true);
+                }}
+                autoComplete="off"
+              />
 
-        <div ref={mapSectionRef} className="map-section">
-          <div className="map-frame">
-            <div ref={searchWrapperRef} className="search-box search-box--overlay">
-              <div className="search-card">
-                <span className="search-kicker">Adresse</span>
-                <label htmlFor="address-search" className="search-label">
-                  Rechercher autour d’un point précis
-                </label>
-                <input
-                  id="address-search"
-                  type="text"
-                  className="search-input"
-                  placeholder="Ex: 10 Rue de Rivoli, Paris"
-                  value={searchQuery}
-                  onChange={(event) => {
-                    setSearchQuery(event.target.value);
-                    setIsSuggestionsOpen(true);
-                  }}
-                  onFocus={() => {
-                    if (searchQuery.trim().length >= 3) setIsSuggestionsOpen(true);
-                  }}
-                  autoComplete="off"
-                />
-                <p className="search-caption">
-                  Saisissez au moins 3 caractères pour déclencher la recherche.
-                </p>
-
-                {isSuggestionsOpen ? (
-                  <div className="search-dropdown">
-                    {isLoadingSuggestions ? <p className="search-status">Recherche...</p> : null}
-                    {showNoResults ? <p className="search-status">Aucun résultat</p> : null}
-                    {!isLoadingSuggestions && suggestions.length > 0 ? (
-                      <ul className="search-suggestions">
-                        {suggestions.map((suggestion) => (
-                          <li key={suggestion.id}>
-                            <button
-                              type="button"
-                              className="search-suggestion-btn"
-                              onClick={() => handleSelectSuggestion(suggestion)}
-                            >
-                              {suggestion.label}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
+              {isSuggestionsOpen ? (
+                <div className="search-dropdown">
+                  {isLoadingSuggestions ? <p className="search-status">Recherche...</p> : null}
+                  {showNoResults ? <p className="search-status">Aucun résultat</p> : null}
+                  {!isLoadingSuggestions && suggestions.length > 0 ? (
+                    <ul className="search-suggestions">
+                      {suggestions.map((suggestion) => (
+                        <li key={suggestion.id}>
+                          <button
+                            type="button"
+                            className="search-suggestion-btn"
+                            onClick={() => handleSelectSuggestion(suggestion)}
+                          >
+                            {suggestion.label}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
-
-            <MapboxMap
-              points={mapPoints}
-              selectedSlug={selectedSlug}
-              selectionSource={selectionSource}
-              onSelectSlug={handleMapSelect}
-              searchCenter={searchCenter ? { lng: searchCenter.lng, lat: searchCenter.lat } : null}
-              onReady={() => setIsMapReady(true)}
-            />
           </div>
+
+          <MapboxMap
+            points={mapPoints}
+            selectedSlug={selectedSlug}
+            selectionSource={selectionSource}
+            onSelectSlug={handleMapSelect}
+            searchCenter={searchCenter ? { lng: searchCenter.lng, lat: searchCenter.lat } : null}
+            onReady={() => setIsMapReady(true)}
+          />
         </div>
-      </section>
+      </div>
 
-      <section className="surface-card directory-stage">
-        <div className="directory-stage-head">
+      <section className="results-panel">
+        <div className="results-panel-head">
           <div>
-            <p className="section-eyebrow">Liste triée</p>
-            <h3>Praticiens référencés</h3>
+            <h2>Praticiens</h2>
+            <p className="directory-caption">
+              Sélectionnez un point sur la carte ou utilisez la recherche pour trier les
+              résultats par proximité.
+            </p>
           </div>
-          <span className="directory-count">{filteredPractitioners.length} profils</span>
+          <span className="directory-count">{filteredPractitioners.length}</span>
         </div>
 
         {searchCenter ? (
           <div className="search-results-head" aria-live="polite">
-            <p>Tri par proximité autour de: {searchCenter.label}</p>
+            <p>Autour de {searchCenter.label}</p>
             <button type="button" className="search-clear-btn" onClick={handleClearSearch}>
               Effacer
             </button>
           </div>
-        ) : (
-          <p className="directory-caption">
-            La liste se trie automatiquement selon votre position lorsque la localisation est
-            disponible.
-          </p>
-        )}
+        ) : null}
 
         {!isMapReady ? <ListSkeleton /> : null}
 
-        <ul className="practitioner-list">
-          {filteredPractitioners.map((p, index) => {
-            const isActive = selectedSlug === p.slug;
-            const distanceKm =
-              typeof p.searchDistanceKm === "number"
-                ? p.searchDistanceKm
-                : typeof p.userDistanceKm === "number"
-                  ? p.userDistanceKm
-                  : null;
-            const distanceLabel =
-              typeof distanceKm === "number"
-                ? `${distanceKm.toFixed(1).replace(".", ",")} km`
-                : null;
-            const isHidden = !showAll && index >= 5;
+        {filteredPractitioners.length === 0 ? (
+          <div className="results-empty">
+            <p>Aucun praticien publié pour le moment.</p>
+          </div>
+        ) : (
+          <>
+            <ul className="practitioner-list">
+              {filteredPractitioners.map((p, index) => {
+                const isActive = selectedSlug === p.slug;
+                const distanceKm =
+                  typeof p.searchDistanceKm === "number"
+                    ? p.searchDistanceKm
+                    : typeof p.userDistanceKm === "number"
+                      ? p.userDistanceKm
+                      : null;
+                const distanceLabel =
+                  typeof distanceKm === "number"
+                    ? `${distanceKm.toFixed(1).replace(".", ",")} km`
+                    : null;
+                const isHidden = !showAll && index >= 5;
 
-            return (
-              <li
-                key={p.slug}
-                className={[
-                  isActive ? "practitioner-item--active" : null,
-                  isHidden ? "practitioner-item--hidden" : null
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-hidden={isHidden ? "true" : undefined}
-              >
+                return (
+                  <li
+                    key={p.slug}
+                    className={[
+                      isActive ? "practitioner-item--active" : null,
+                      isHidden ? "practitioner-item--hidden" : null
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    aria-hidden={isHidden ? "true" : undefined}
+                  >
+                    <button
+                      type="button"
+                      className="practitioner-item-button"
+                      onClick={() => handleListSelect(p.slug)}
+                      aria-pressed={isActive}
+                    >
+                      <span className="practitioner-item-head">
+                        <span className="practitioner-item-name">
+                          {p.first_name} {p.last_name}
+                        </span>
+                        {distanceLabel ? (
+                          <span className="practitioner-item-distance">{distanceLabel}</span>
+                        ) : null}
+                      </span>
+                      <span className="practitioner-item-meta">
+                        {[p.adresse, p.city].filter(Boolean).join(", ") || "Adresse non renseignée"}
+                      </span>
+                    </button>
+                    <Link href={`/naturopathe/${p.slug}`} className="practitioner-item-link">
+                      Fiche
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {!showAll && filteredPractitioners.length > 5 ? (
+              <div className="practitioner-list-cta">
                 <button
                   type="button"
-                  className="practitioner-item-button"
-                  onClick={() => handleListSelect(p.slug)}
-                  aria-pressed={isActive}
+                  className="btn btn-secondary"
+                  onClick={() => setShowAll(true)}
                 >
-                  <span className="practitioner-item-head">
-                    <span className="practitioner-item-name">
-                      {p.first_name} {p.last_name}
-                    </span>
-                    {distanceLabel ? (
-                      <span className="practitioner-item-distance">{distanceLabel}</span>
-                    ) : null}
-                  </span>
-                  <span className="practitioner-item-meta">
-                    {p.adresse ?? "Adresse non renseignée"}
-                  </span>
-                  <span className="practitioner-item-submeta">{p.city ?? "Paris"}</span>
+                  Voir plus
                 </button>
-                <Link href={`/naturopathe/${p.slug}`} className="practitioner-item-link">
-                  Voir la fiche
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-
-        {!showAll && filteredPractitioners.length > 5 ? (
-          <div className="practitioner-list-cta">
-            <button type="button" className="btn btn-secondary" onClick={() => setShowAll(true)}>
-              Voir toute la liste
-            </button>
-          </div>
-        ) : null}
+              </div>
+            ) : null}
+          </>
+        )}
       </section>
     </div>
   );

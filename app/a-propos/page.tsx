@@ -4,14 +4,14 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "À propos",
   description:
-    "Découvrez la mission de NaturoCarte, annuaire cartographique de naturopathes avec une approche neutre, descriptive et inscrite dans un cadre professionnel.",
+    "Découvrez comment NaturoCarte aide les utilisateurs à trouver un naturopathe en Île-de-France avec une recherche simple et des fiches claires.",
   alternates: {
     canonical: "/a-propos"
   },
   openGraph: {
     title: "À propos | NaturoCarte",
     description:
-      "Découvrez la mission de NaturoCarte, annuaire cartographique de naturopathes avec une approche neutre, descriptive et inscrite dans un cadre professionnel.",
+      "Découvrez comment NaturoCarte aide les utilisateurs à trouver un naturopathe en Île-de-France avec une recherche simple et des fiches claires.",
     url: "/a-propos",
     type: "website"
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "À propos | NaturoCarte",
     description:
-      "Découvrez la mission de NaturoCarte, annuaire cartographique de naturopathes avec une approche neutre, descriptive et inscrite dans un cadre professionnel."
+      "Découvrez comment NaturoCarte aide les utilisateurs à trouver un naturopathe en Île-de-France avec une recherche simple et des fiches claires."
   }
 };
 
@@ -30,22 +30,19 @@ export default function AProposPage() {
         <p className="about-eyebrow">NaturoCarte</p>
         <h1>À propos de NaturoCarte</h1>
         <p className="about-intro">
-          NaturoCarte référence des naturopathes dans un annuaire cartographique conçu
-          pour rendre la recherche plus lisible et plus rapide, avec une approche basée
-          sur la géolocalisation.
+          NaturoCarte aide les utilisateurs à trouver un naturopathe plus rapidement,
+          grâce à une recherche par carte, par département et par arrondissement à Paris.
         </p>
       </header>
 
       <section className="about-card">
         <h2 className="about-title">Mission</h2>
         <p>
-          NaturoCarte a pour objectif de faciliter l&apos;accès à des informations claires
-          sur les naturopathes, dans un format cartographique simple à consulter. La
-          géolocalisation permet d&apos;identifier rapidement les praticiens proches d&apos;une
-          adresse ou d&apos;une zone recherchée, afin d&apos;aider les utilisateurs à trouver un
-          naturopathe près de chez eux. Le service couvre aujourd&apos;hui Paris et les
-          départements d&apos;Île-de-France, avec une logique de recherche par proximité et
-          par territoire.
+          NaturoCarte a pour objectif d’aider les utilisateurs à trouver un naturopathe
+          près de chez eux, sans perdre de temps dans des listes confuses. Le site permet
+          de partir d’une adresse, d’un département ou d’un arrondissement à Paris pour
+          accéder rapidement aux fiches utiles. Le service couvre aujourd&apos;hui Paris et
+          les départements d&apos;Île-de-France.
         </p>
       </section>
 
@@ -53,19 +50,18 @@ export default function AProposPage() {
         <h2 className="about-title">Un annuaire spécialisé</h2>
         <p>
           NaturoCarte est un annuaire spécialisé, conçu pour présenter des fiches
-          professionnelles et des données pratiques. Le service n&apos;est pas un comparateur
-          ni un système de notation. Les contenus publiés sont descriptifs et visent à
-          aider l&apos;orientation des utilisateurs, tout en améliorant la visibilité en ligne
-          des naturopathes grâce à des fiches structurées et facilement accessibles.
+          professionnelles avec des informations pratiques: localisation, coordonnées et
+          accès à la prise de rendez-vous quand elle est disponible. Le service n&apos;est ni
+          un comparateur, ni un système de notation.
         </p>
       </section>
 
       <section className="about-card">
         <h2 className="about-title">Neutralité et cadre professionnel</h2>
         <p>
-          NaturoCarte adopte une ligne éditoriale neutre, sans hiérarchisation des
-          praticiens et sans mise en avant de promesses. Les informations sont fournies à
-          titre informatif.
+          NaturoCarte adopte une ligne éditoriale neutre, sans hiérarchisation artificielle
+          des praticiens et sans promesses de résultats. Les informations sont fournies à
+          titre informatif pour aider à choisir un point de départ clair.
         </p>
       </section>
 
@@ -83,13 +79,11 @@ export default function AProposPage() {
       </section>
 
       <section className="about-card">
-        <h2 className="about-title">Référencement et visibilité</h2>
+        <h2 className="about-title">Des pages locales claires</h2>
         <p>
-          NaturoCarte renforce le référencement des fiches en proposant un contenu lisible
-          et des liens internes cohérents autour de la carte et des pages praticiens. Cette
-          organisation aide les utilisateurs à trouver plus facilement un naturopathe à
-          proximité, et permet aux naturopathes d&apos;être plus visibles dans les recherches
-          locales à Paris comme dans les autres départements franciliens.
+          NaturoCarte organise les fiches autour de la carte, des départements et des
+          pages locales pour aider les utilisateurs à trouver plus facilement un
+          naturopathe à proximité, à Paris comme dans les autres départements franciliens.
         </p>
       </section>
 

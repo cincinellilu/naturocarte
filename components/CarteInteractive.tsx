@@ -3,8 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import MapSkeleton from "@/components/MapSkeleton";
 import ListSkeleton from "@/components/ListSkeleton";
+import {
+  IDF_DEPARTMENTS,
+  getDepartmentByCode,
+  getDepartmentCodeFromPostalCode
+} from "@/lib/locations";
 
 const MapboxMap = dynamic(() => import("@/components/MapboxMap"), {
   ssr: false,
@@ -19,6 +25,7 @@ type Practitioner = {
   first_name: string;
   last_name: string;
   adresse: string | null;
+  postal_code: string | null;
   city: string | null;
   lat: number;
   lng: number;
@@ -28,6 +35,7 @@ type MapPoint = {
   slug: string;
   first_name: string;
   last_name: string;
+  postal_code: string | null;
   lat: number;
   lng: number;
   phone?: string | null;
@@ -76,6 +84,7 @@ export default function CarteInteractive({
   practitioners: Practitioner[];
   mapPoints: MapPoint[];
 }) {
+  const searchParams = useSearchParams();
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [selectionSource, setSelectionSource] = useState<"map" | "list" | null>(null);
 
@@ -97,6 +106,18 @@ export default function CarteInteractive({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  const zoneParam = searchParams.get("zone");
+  const activeDepartment = zoneParam ? getDepartmentByCode(zoneParam) : null;
+  const activeZoneLabel = activeDepartment?.name ?? "Île-de-France";
+
+  const visibleMapPoints = useMemo(() => {
+    if (!activeDepartment) return mapPoints;
+
+    return mapPoints.filter(
+      (point) => getDepartmentCodeFromPostalCode(point.postal_code) === activeDepartment.code
+    );
+  }, [activeDepartment, mapPoints]);
+
   const filteredPractitioners = useMemo(() => {
     const referenceCenter = searchCenter
       ? { lat: searchCenter.lat, lng: searchCenter.lng }
@@ -104,6 +125,10 @@ export default function CarteInteractive({
 
     return practitioners
       .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng))
+      .filter((p) => {
+        if (!activeDepartment) return true;
+        return getDepartmentCodeFromPostalCode(p.postal_code) === activeDepartment.code;
+      })
       .map((p) => {
         const distanceKm = haversineDistanceKm(referenceCenter, {
           lat: p.lat,
@@ -121,7 +146,21 @@ export default function CarteInteractive({
         const distanceB = b.searchDistanceKm ?? b.userDistanceKm ?? Number.POSITIVE_INFINITY;
         return distanceA - distanceB;
       });
-  }, [practitioners, searchCenter, userLocation]);
+  }, [activeDepartment, practitioners, searchCenter, userLocation]);
+
+  useEffect(() => {
+    setShowAll(false);
+  }, [activeDepartment?.code]);
+
+  useEffect(() => {
+    if (!selectedSlug) return;
+
+    const selectedStillVisible = visibleMapPoints.some((point) => point.slug === selectedSlug);
+    if (!selectedStillVisible) {
+      setSelectedSlug(null);
+      setSelectionSource(null);
+    }
+  }, [selectedSlug, visibleMapPoints]);
 
   useEffect(() => {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
@@ -346,8 +385,70 @@ export default function CarteInteractive({
     searchQuery.trim().length >= 3 &&
     suggestions.length === 0;
 
+  const resultsTitle = activeDepartment
+    ? activeDepartment.code === "75"
+      ? "Praticiens à Paris"
+      : `Praticiens en ${activeDepartment.name}`
+    : "Praticiens en Île-de-France";
+
+  const resultsCaption = activeDepartment
+    ? `Les résultats sont limités à ${activeZoneLabel}. Utilisez ensuite la recherche d’adresse pour classer les fiches autour de vous.`
+    : "Commencez par une zone ou entrez directement votre adresse pour faire remonter les praticiens les plus proches.";
+
   return (
     <div className="map-experience">
+      <section className="zone-filter-panel">
+        <div className="zone-filter-head">
+          <div>
+            <h2>Choisir une zone</h2>
+            <p className="directory-caption">
+              Réduisez d’abord la recherche à un département, puis affinez autour d’une
+              adresse si besoin.
+            </p>
+          </div>
+          {activeDepartment ? (
+            <Link className="search-clear-btn" href="/carte">
+              Voir toute l’Île-de-France
+            </Link>
+          ) : (
+            <Link className="search-clear-btn" href="/annuaire-naturopathes">
+              Explorer l’annuaire
+            </Link>
+          )}
+        </div>
+
+        <div className="zone-filter-links">
+          <Link
+            href="/carte"
+            className={["zone-filter-link", !activeDepartment ? "zone-filter-link--active" : null]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            Toute l’Île-de-France
+          </Link>
+
+          {IDF_DEPARTMENTS.map((department) => (
+            <Link
+              key={department.code}
+              href={`/carte?zone=${department.code}`}
+              className={[
+                "zone-filter-link",
+                activeDepartment?.code === department.code ? "zone-filter-link--active" : null
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              {department.code === "75" ? "Paris" : department.name}
+            </Link>
+          ))}
+        </div>
+
+        <p className="zone-filter-note">
+          Pour Paris, vous pouvez aussi parcourir les arrondissements depuis{" "}
+          <Link href="/naturopathe-paris">la page dédiée</Link>.
+        </p>
+      </section>
+
       <div ref={mapSectionRef} className="map-stage">
         <div
           ref={mapFrameRef}
@@ -414,7 +515,7 @@ export default function CarteInteractive({
           </div>
 
           <MapboxMap
-            points={mapPoints}
+            points={visibleMapPoints}
             selectedSlug={selectedSlug}
             selectionSource={selectionSource}
             onSelectSlug={handleMapSelect}
@@ -476,14 +577,22 @@ export default function CarteInteractive({
       <section className="results-panel">
         <div className="results-panel-head">
           <div>
-            <h2>Praticiens</h2>
-            <p className="directory-caption">
-              Sélectionnez un point sur la carte ou utilisez la recherche pour trier les
-              résultats par proximité.
-            </p>
+            <h2>{resultsTitle}</h2>
+            <p className="directory-caption">{resultsCaption}</p>
           </div>
           <span className="directory-count">{filteredPractitioners.length}</span>
         </div>
+
+        {activeDepartment ? (
+          <div className="zone-summary" aria-live="polite">
+            <p>
+              Vous consultez actuellement la zone <strong>{activeZoneLabel}</strong>.
+            </p>
+            <Link className="meta-link" href="/annuaire-naturopathes">
+              Revenir au choix des zones
+            </Link>
+          </div>
+        ) : null}
 
         {searchCenter ? (
           <div className="search-results-head" aria-live="polite">
@@ -498,7 +607,11 @@ export default function CarteInteractive({
 
         {filteredPractitioners.length === 0 ? (
           <div className="results-empty">
-            <p>Aucun praticien publié pour le moment.</p>
+            <p>
+              {activeDepartment
+                ? `Aucun praticien publié pour le moment dans ${activeZoneLabel}.`
+                : "Aucun praticien publié pour le moment."}
+            </p>
           </div>
         ) : (
           <>

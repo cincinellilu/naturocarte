@@ -41,6 +41,12 @@ const WEBSITE_HEADERS = [
   "error"
 ];
 
+function extractHexId(placeUrl) {
+  const match = (placeUrl ?? "").match(/!1s([^!]+)!8m2!3d([^!]+)!4d([^!]+)!/);
+  if (!match) return "";
+  return match[1];
+}
+
 function parseArgs(argv) {
   const options = {
     limit: null,
@@ -109,6 +115,35 @@ function writeTsv(filePath, headers, rows) {
     .join("\n");
 
   fs.writeFileSync(filePath, [headers.join("\t"), body].filter(Boolean).join("\n") + "\n", "utf8");
+}
+
+function loadRawHints() {
+  const rawFiles = fs
+    .readdirSync(BASE_DIR, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name.startsWith("department-"))
+    .map((entry) =>
+      path.join(BASE_DIR, entry.name, `${OUTPUT_PREFIX.replace("-link-enrichment", "")}-${entry.name}-raw.json`)
+    )
+    .filter((filePath) => fs.existsSync(filePath));
+
+  const hints = new Map();
+
+  for (const filePath of rawFiles) {
+    const rows = readJson(filePath, []);
+
+    for (const row of rows) {
+      const hexid = extractHexId(row.href);
+      if (!hexid) continue;
+
+      const text = row.text ?? "";
+      hints.set(hexid, {
+        source_had_site_hint: /site web/i.test(text),
+        source_had_booking_hint: /r[ée]server en ligne|rendez-vous/i.test(text)
+      });
+    }
+  }
+
+  return hints;
 }
 
 function sleep(ms) {
@@ -228,6 +263,27 @@ async function waitForDetailPanel(page) {
   await page.waitForTimeout(1500);
 }
 
+async function extractFromPlacePage(page, row) {
+  await page.goto(row.source_google_maps_url, {
+    waitUntil: "domcontentloaded",
+    timeout: 120000
+  });
+  await rejectConsent(page);
+  await page.waitForURL(/google\.[^/]+\/maps/, { timeout: 120000 }).catch(() => null);
+  await waitForDetailPanel(page);
+
+  let anchors = await collectAnchors(page);
+  let extracted = classifyLinks(anchors);
+
+  if (!extracted.website && !extracted.booking_url) {
+    await page.waitForTimeout(4500);
+    anchors = await collectAnchors(page);
+    extracted = classifyLinks(anchors);
+  }
+
+  return extracted;
+}
+
 function scoreWebsiteCandidate(anchor, url) {
   let score = 0;
   const combined = normalizeText(
@@ -333,22 +389,7 @@ async function enrichRow(page, row) {
     };
   }
 
-  await page.goto(row.source_google_maps_url, {
-    waitUntil: "domcontentloaded",
-    timeout: 120000
-  });
-  await rejectConsent(page);
-  await page.waitForURL(/google\.[^/]+\/maps/, { timeout: 120000 }).catch(() => null);
-  await waitForDetailPanel(page);
-
-  let anchors = await collectAnchors(page);
-  let extracted = classifyLinks(anchors);
-
-  if (!extracted.website && !extracted.booking_url) {
-    await page.waitForTimeout(4500);
-    anchors = await collectAnchors(page);
-    extracted = classifyLinks(anchors);
-  }
+  const extracted = await extractFromPlacePage(page, row);
   const result =
     extracted.website || extracted.booking_url
       ? extracted.website && extracted.booking_url
@@ -368,6 +409,51 @@ async function enrichRow(page, row) {
     result,
     error: ""
   };
+}
+
+function shouldRetryInFreshBrowser(row, enriched) {
+  return (
+    (row.source_had_site_hint && !enriched.website) ||
+    (row.source_had_booking_hint && !enriched.booking_url)
+  );
+}
+
+async function retryInFreshBrowser(row, headful) {
+  const browser = await chromium.launch({
+    headless: !headful
+  });
+  const context = await browser.newContext({
+    locale: "fr-FR"
+  });
+  const page = await context.newPage();
+
+  try {
+    const extracted = await extractFromPlacePage(page, row);
+    const result =
+      extracted.website || extracted.booking_url
+        ? extracted.website && extracted.booking_url
+          ? "website_and_booking_found"
+          : extracted.booking_url
+            ? "booking_found"
+            : "website_found"
+        : "no_external_link_found";
+
+    return {
+      ...row,
+      website: extracted.website,
+      booking_url: extracted.booking_url,
+      website_candidate: extracted.website_candidate,
+      booking_candidate: extracted.booking_candidate,
+      external_link_count: extracted.external_link_count,
+      result,
+      error: "",
+      retried_in_fresh_browser: true
+    };
+  } finally {
+    await page.close().catch(() => null);
+    await context.close().catch(() => null);
+    await browser.close().catch(() => null);
+  }
 }
 
 function escapeSqlLiteral(value) {
@@ -452,7 +538,14 @@ function persistArtifacts(rows, startedAt) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  const sourceRows = readJson(SOURCE_PATH, []);
+  const rawHints = loadRawHints();
+  const sourceRows = readJson(SOURCE_PATH, []).map((row) => ({
+    ...row,
+    ...(rawHints.get(row.source_google_hexid) ?? {
+      source_had_site_hint: false,
+      source_had_booking_hint: false
+    })
+  }));
   const slugFilter = new Set(options.slugs);
   const filteredRows = slugFilter.size
     ? sourceRows.filter((row) => slugFilter.has(row.slug))
@@ -491,12 +584,17 @@ async function main() {
       const page = await context.newPage();
 
       try {
-        const enriched = await enrichRow(page, row);
+        let enriched = await enrichRow(page, row);
+
+        if (shouldRetryInFreshBrowser(row, enriched)) {
+          enriched = await retryInFreshBrowser(row, options.headful);
+        }
+
         existingMap.set(row.slug, enriched);
         completed += 1;
 
         console.log(
-          `[${completed}/${total}] worker=${workerIndex} ${row.slug} website=${Boolean(enriched.website)} booking=${Boolean(enriched.booking_url)} result=${enriched.result}`
+          `[${completed}/${total}] worker=${workerIndex} ${row.slug} website=${Boolean(enriched.website)} booking=${Boolean(enriched.booking_url)} result=${enriched.result}${enriched.retried_in_fresh_browser ? " retry=fresh" : ""}`
         );
       } catch (error) {
         const failed = {

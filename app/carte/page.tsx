@@ -1,29 +1,32 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import CarteInteractive from "@/components/CarteInteractive";
+import ListSkeleton from "@/components/ListSkeleton";
+import MapSkeleton from "@/components/MapSkeleton";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Carte des naturopathes en Île-de-France",
+  title: "Naturopathe Île-de-France | Carte des praticiens",
   description:
-    "Consultez la carte des naturopathes en Île-de-France et accédez aux profils des praticiens.",
+    "Cherchez un naturopathe en Île-de-France autour de votre adresse, comparez les fiches et contactez le praticien qui vous convient.",
   alternates: {
     canonical: "/carte"
   },
   openGraph: {
-    title: "Carte des naturopathes en Île-de-France | NaturoCarte",
+    title: "Naturopathe Île-de-France | Carte des praticiens | NaturoCarte",
     description:
-      "Consultez la carte des naturopathes en Île-de-France et accédez aux profils des praticiens.",
+      "Cherchez un naturopathe en Île-de-France autour de votre adresse, comparez les fiches et contactez le praticien qui vous convient.",
     url: "/carte",
     type: "website"
   },
   twitter: {
     card: "summary",
-    title: "Carte des naturopathes en Île-de-France | NaturoCarte",
+    title: "Naturopathe Île-de-France | Carte des praticiens | NaturoCarte",
     description:
-      "Consultez la carte des naturopathes en Île-de-France et accédez aux profils des praticiens."
+      "Cherchez un naturopathe en Île-de-France autour de votre adresse, comparez les fiches et contactez le praticien qui vous convient."
   }
 };
 
@@ -32,6 +35,7 @@ type PractitionerRow = {
   last_name: string;
   slug: string;
   adresse: string | null;
+  postal_code: string | null;
   city: string | null;
   lat: number | null;
   lng: number | null;
@@ -48,7 +52,9 @@ export default async function CartePage() {
     const supabase = getSupabaseServerClient();
     const { data, error } = await supabase
       .from("practitioners")
-      .select("first_name, last_name, slug, adresse, city, lat, lng, phone, email, booking_url")
+      .select(
+        "first_name, last_name, slug, adresse, postal_code, city, lat, lng, phone, email, booking_url"
+      )
       .eq("status", "published")
       .order("last_name", { ascending: true });
 
@@ -73,6 +79,7 @@ export default async function CartePage() {
       slug: p.slug,
       first_name: p.first_name,
       last_name: p.last_name,
+      postal_code: p.postal_code,
       lat: p.lat as number,
       lng: p.lng as number,
       phone: p.phone,
@@ -87,6 +94,7 @@ export default async function CartePage() {
       first_name: p.first_name,
       last_name: p.last_name,
       adresse: practitioner?.adresse ?? null,
+      postal_code: practitioner?.postal_code ?? null,
       city: practitioner?.city ?? null,
       lat: p.lat,
       lng: p.lng
@@ -98,11 +106,21 @@ export default async function CartePage() {
       <section className="map-page-shell">
         <div className="map-page-header">
           <div className="map-page-copy">
-            <h1 className="map-page-title">Carte des naturopathes en Île-de-France</h1>
+            <h1 className="map-page-title">Trouver un naturopathe près de chez vous</h1>
             <p className="map-page-lead">
-              Recherchez une adresse en Île-de-France, recentrez la carte puis ouvrez une
-              fiche en un clic.
+              Entrez votre adresse, comparez les praticiens autour de vous et ouvrez les
+              fiches les plus utiles en quelques clics.
             </p>
+          </div>
+
+          <div className="map-page-meta">
+            <span className="meta-pill">{mapPoints.length} praticiens</span>
+            <Link className="meta-link" href="/annuaire-naturopathes">
+              Choisir par zone
+            </Link>
+            <Link className="meta-link" href="/naturopathe-paris">
+              Paris par arrondissement
+            </Link>
           </div>
         </div>
 
@@ -113,7 +131,16 @@ export default async function CartePage() {
           </p>
         ) : null}
 
-        <CarteInteractive practitioners={practitionerItems} mapPoints={mapPoints} />
+        <Suspense
+          fallback={
+            <div className="map-experience">
+              <MapSkeleton />
+              <ListSkeleton />
+            </div>
+          }
+        >
+          <CarteInteractive practitioners={practitionerItems} mapPoints={mapPoints} />
+        </Suspense>
       </section>
 
       <section aria-labelledby="faq-title" className="faq-section section-shell section-shell--compact">
@@ -122,38 +149,34 @@ export default async function CartePage() {
             <h2 id="faq-title">Questions fréquentes</h2>
           </div>
           <p className="faq-intro">
-            Réponses rapides sur l’usage de la carte, la mise à jour des fiches et la prise
-            de rendez-vous.
+            Réponses rapides pour chercher plus vite et comparer plusieurs praticiens.
           </p>
         </div>
 
         <details className="faq-item">
-          <summary className="faq-question">
-            Comment trouver rapidement un naturopathe autour de moi ?
-          </summary>
+          <summary className="faq-question">Dois-je commencer par la carte ou l’annuaire ?</summary>
           <p className="faq-answer">
-            Utilisez la recherche d’adresse sur la <Link href="/carte">carte</Link> pour
-            recentrer l’affichage puis comparer les praticiens les plus proches.
+            Commencez par la <Link href="/carte">carte</Link> si vous avez déjà une adresse
+            précise. Si vous préférez partir d’un département ou de Paris, utilisez
+            l’<Link href="/annuaire-naturopathes">annuaire</Link>.
           </p>
         </details>
 
         <details className="faq-item">
-          <summary className="faq-question">
-            Que faire si une information de fiche est inexacte ?
-          </summary>
+          <summary className="faq-question">Comment chercher seulement dans un département ?</summary>
           <p className="faq-answer">
-            Vous pouvez demander une mise à jour via la page{" "}
-            <Link href="/praticiens">praticiens</Link> en indiquant le praticien concerné.
+            Utilisez les filtres de zone au-dessus de la carte, ou commencez par la page{" "}
+            <Link href="/annuaire-naturopathes">annuaire</Link> pour ouvrir directement le
+            bon territoire.
           </p>
         </details>
 
         <details className="faq-item">
-          <summary className="faq-question">
-            Comment prendre rendez-vous avec un praticien ?
-          </summary>
+          <summary className="faq-question">Comment comparer plusieurs praticiens ?</summary>
           <p className="faq-answer">
-            Ouvrez sa fiche depuis la <Link href="/carte">carte</Link>, puis utilisez le
-            lien de réservation quand il est disponible.
+            Ouvrez 2 ou 3 fiches depuis la <Link href="/carte">carte</Link> pour vérifier
+            l’adresse, les coordonnées et le lien de prise de rendez-vous quand il est
+            disponible.
           </p>
         </details>
       </section>

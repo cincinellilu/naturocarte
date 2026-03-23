@@ -11,24 +11,24 @@ import {
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Naturopathe Paris | Annuaire naturopathes",
+  title: "Naturopathe Paris | Trouver par arrondissement",
   description:
-    "Trouvez un naturopathe à Paris avec un annuaire clair par arrondissement, adresses et liens de contact.",
+    "Cherchez un naturopathe à Paris par arrondissement, comparez les fiches et repérez rapidement les praticiens proches de votre secteur.",
   alternates: {
     canonical: "/naturopathe-paris"
   },
   openGraph: {
-    title: "Naturopathe Paris | Annuaire naturopathes | NaturoCarte",
+    title: "Naturopathe Paris | Trouver par arrondissement | NaturoCarte",
     description:
-      "Annuaire de naturopathes à Paris avec fiches détaillées et accès par arrondissement.",
+      "Cherchez un naturopathe à Paris par arrondissement et ouvrez rapidement les fiches des praticiens.",
     url: "/naturopathe-paris",
     type: "website"
   },
   twitter: {
     card: "summary",
-    title: "Naturopathe Paris | Annuaire naturopathes | NaturoCarte",
+    title: "Naturopathe Paris | Trouver par arrondissement | NaturoCarte",
     description:
-      "Annuaire de naturopathes à Paris avec fiches détaillées et accès par arrondissement."
+      "Cherchez un naturopathe à Paris par arrondissement et ouvrez rapidement les fiches des praticiens."
   }
 };
 
@@ -98,17 +98,19 @@ export default async function NaturopatheParisPage() {
       <section className="page-hero page-hero--directory">
         <div className="page-hero-grid">
           <div className="page-hero-copy">
-            <p className="page-eyebrow">Paris • annuaire éditorial</p>
-            <h1>Naturopathe Paris: un annuaire plus lisible par arrondissement</h1>
+            <p className="page-eyebrow">Paris • recherche locale</p>
+            <h1>Trouver un naturopathe à Paris</h1>
             <p className="page-lead">
-              Cette page regroupe les fiches de naturopathes à Paris pour faciliter la
-              recherche par quartier et arrondissement, avec accès rapide à la carte et aux
-              fiches détaillées.
+              Choisissez votre arrondissement si vous savez déjà où chercher, ou utilisez
+              la carte pour comparer les praticiens autour d’une adresse précise.
             </p>
 
             <div className="hero-actions">
               <Link className="btn" href="/carte">
-                Voir la carte des naturopathes
+                Rechercher autour d’une adresse
+              </Link>
+              <Link className="btn btn-secondary" href="/annuaire-naturopathes">
+                Voir toutes les zones
               </Link>
             </div>
           </div>
@@ -126,8 +128,8 @@ export default async function NaturopatheParisPage() {
               </div>
             </div>
             <p className="hero-note">
-              Pour une recherche plus directe, la carte permet aussi de trier les profils
-              autour d’une adresse précise.
+              Si vous hésitez entre plusieurs secteurs, la carte permet de recentrer la
+              recherche et d’ouvrir rapidement plusieurs fiches.
             </p>
           </div>
         </div>
@@ -136,11 +138,12 @@ export default async function NaturopatheParisPage() {
       <section className="section-shell">
         <div className="section-heading section-heading--stacked">
           <div>
-            <p className="section-eyebrow">Navigation locale</p>
-            <h2>Rechercher par arrondissement</h2>
+            <p className="section-eyebrow">Choisir votre secteur</p>
+            <h2>Commencez par l’arrondissement</h2>
           </div>
           <p className="section-intro">
-            Accédez directement aux pages locales, de Paris 1 à Paris 20.
+            Accédez directement aux pages locales, de Paris 1 à Paris 20, pour aller plus
+            vite vers les fiches utiles.
           </p>
         </div>
         <ul className="practitioner-list">
@@ -166,9 +169,13 @@ export default async function NaturopatheParisPage() {
       <section className="paris-practitioners-section section-shell">
         <div className="section-heading section-heading--stacked">
           <div>
-            <p className="section-eyebrow">Référencement</p>
-            <h2>Naturopathes référencés à Paris</h2>
+            <p className="section-eyebrow">Praticiens disponibles</p>
+            <h2>Voir les praticiens publiés à Paris</h2>
           </div>
+          <p className="section-intro">
+            Affichez la liste si vous préférez parcourir l’ensemble des fiches publiées
+            avant de choisir un arrondissement précis.
+          </p>
         </div>
         <details className="faq-item">
           <summary className="faq-question">Afficher la liste ({practitioners.length})</summary>

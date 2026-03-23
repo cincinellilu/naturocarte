@@ -12,15 +12,15 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Annuaire naturopathes en Île-de-France",
+    default: "Trouver un naturopathe en Île-de-France",
     template: "%s | NaturoCarte"
   },
   description:
-    "Annuaire cartographique de naturopathes en Île-de-France. Trouvez un naturopathe par ville, département ou arrondissement à Paris.",
+    "Cherchez un naturopathe en Île-de-France par adresse, département ou arrondissement à Paris, puis comparez les fiches en quelques clics.",
   openGraph: {
-    title: "NaturoCarte | Annuaire des naturopathes en Île-de-France",
+    title: "NaturoCarte | Trouver un naturopathe en Île-de-France",
     description:
-      "Annuaire cartographique de naturopathes en Île-de-France. Trouvez un naturopathe par ville, département ou arrondissement à Paris.",
+      "Cherchez un naturopathe en Île-de-France par adresse, département ou arrondissement à Paris, puis comparez les fiches en quelques clics.",
     url: siteUrl,
     siteName: "NaturoCarte",
     locale: "fr_FR",
@@ -54,8 +54,8 @@ export default function RootLayout({
                 <div className="site-footer-branding">
                   <p className="site-footer-brand">NaturoCarte</p>
                   <p className="site-footer-copy">
-                    Carte et annuaire des naturopathes en Île-de-France, avec navigation
-                    locale pour Paris et les départements franciliens.
+                    Cherchez un naturopathe près de chez vous en Île-de-France, par carte,
+                    département ou arrondissement à Paris.
                   </p>
                 </div>
 

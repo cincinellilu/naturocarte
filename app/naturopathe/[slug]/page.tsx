@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDepartmentFromPostalCode } from "@/lib/locations";
+import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
 
@@ -34,7 +35,7 @@ async function getPublishedPractitioner(slug: string): Promise<Practitioner | nu
       "slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, description, status"
     )
     .eq("slug", slug)
-    .eq("status", "published")
+    .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
     .maybeSingle();
 
   if (error || !data) return null;

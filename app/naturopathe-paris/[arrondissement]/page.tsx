@@ -7,6 +7,7 @@ import {
   parseParisArrondissement,
   toParisArrondissementLabel
 } from "@/lib/paris";
+import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -39,7 +40,7 @@ async function getArrondissementPractitioners(
     const { data } = await supabase
       .from("practitioners")
       .select("slug, first_name, last_name, city, postal_code, adresse")
-      .eq("status", "published")
+      .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
       .eq("postal_code", formatParisPostalCode(arrondissement))
       .order("last_name", { ascending: true });
 

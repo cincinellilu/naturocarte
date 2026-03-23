@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import {
@@ -49,7 +50,7 @@ export default async function NaturopatheParisPage() {
     const { data } = await supabase
       .from("practitioners")
       .select("slug, first_name, last_name, city, postal_code, adresse")
-      .eq("status", "published")
+      .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
       .or("city.ilike.%paris%,postal_code.like.75%")
       .order("last_name", { ascending: true });
 

@@ -5,30 +5,31 @@ import {
   IDF_DEPARTMENTS,
   getDepartmentFromPostalCode
 } from "@/lib/locations";
+import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Naturopathe Île-de-France | Trouver près de chez vous",
+  title: "Naturopathe Île-de-France | Choisir une zone",
   description:
-    "Cherchez un naturopathe en Île-de-France par département. Paris par arrondissement, Hauts-de-Seine, Yvelines, Seine-Saint-Denis, Val-de-Marne, Essonne, Seine-et-Marne et Val-d’Oise.",
+    "Trouvez un naturopathe en Île-de-France en partant de Paris ou d’un département: Hauts-de-Seine, Yvelines, Seine-Saint-Denis, Val-de-Marne, Essonne, Seine-et-Marne et Val-d’Oise.",
   alternates: {
     canonical: "/annuaire-naturopathes"
   },
   openGraph: {
-    title: "Naturopathe Île-de-France | Trouver près de chez vous | NaturoCarte",
+    title: "Naturopathe Île-de-France | Choisir une zone | NaturoCarte",
     description:
-      "Choisissez votre département, ouvrez les fiches des praticiens et lancez une recherche rapide autour de votre adresse en Île-de-France.",
+      "Choisissez simplement votre zone puis ouvrez les praticiens publiés à Paris ou dans votre département d’Île-de-France.",
     url: "/annuaire-naturopathes",
     type: "website"
   },
   twitter: {
     card: "summary",
-    title: "Naturopathe Île-de-France | Trouver près de chez vous | NaturoCarte",
+    title: "Naturopathe Île-de-France | Choisir une zone | NaturoCarte",
     description:
-      "Choisissez votre département, ouvrez les fiches des praticiens et lancez une recherche rapide autour de votre adresse en Île-de-France."
+      "Choisissez simplement votre zone puis ouvrez les praticiens publiés à Paris ou dans votre département d’Île-de-France."
   }
 };
 
@@ -44,15 +45,11 @@ type DepartmentBucket = {
 
 type DepartmentSummary = {
   department: DepartmentInfo;
-  anchorId: string;
   keyword: string;
   count: number;
   description: string;
-  sampleCities: string[];
-  primaryHref: string;
-  primaryLabel: string;
-  secondaryHref?: string;
-  secondaryLabel?: string;
+  href: string;
+  ctaLabel: string;
 };
 
 function normalizeCity(value: string | null | undefined): string | null {
@@ -77,21 +74,20 @@ function buildDepartmentDescription(
   sampleCities: string[]
 ): string {
   if (department.code === "75") {
-    if (count === 0) {
-      return "Commencez par votre arrondissement si vous savez déjà où chercher, ou utilisez la carte pour une recherche autour d’une adresse.";
-    }
-
-    return `${count} praticiens publiés à Paris. Commencez par votre arrondissement pour aller plus vite.`;
+    return count > 0
+      ? `${count} praticiens publiés à Paris.`
+      : "Parcourez Paris par arrondissement.";
   }
 
   if (count === 0) {
-    return `Le ${department.name} est en cours d’enrichissement. Vous pouvez déjà lancer une recherche sur la carte pour explorer cette zone.`;
+    return `Recherche disponible dans ${department.name}.`;
   }
 
-  const sampleCitiesLabel =
-    sampleCities.length > 0 ? `, notamment à ${formatInlineList(sampleCities)}` : "";
+  if (sampleCities.length === 0) {
+    return `${count} praticiens publiés dans ${department.name}.`;
+  }
 
-  return `${count} praticiens publiés dans ${department.name}${sampleCitiesLabel}.`;
+  return `${count} praticiens publiés, notamment à ${formatInlineList(sampleCities)}.`;
 }
 
 export default async function AnnuaireNaturopathesPage() {
@@ -102,7 +98,7 @@ export default async function AnnuaireNaturopathesPage() {
     const { data } = await supabase
       .from("practitioners")
       .select("city, postal_code")
-      .eq("status", "published");
+      .in("status", [...PUBLIC_PRACTITIONER_STATUSES]);
 
     practitioners = (data ?? []) as PractitionerRow[];
   } catch {
@@ -146,15 +142,11 @@ export default async function AnnuaireNaturopathesPage() {
 
     return {
       department,
-      anchorId: `departement-${department.code}`,
       keyword: buildDepartmentKeyword(department),
       count: bucket.count,
       description: buildDepartmentDescription(department, bucket.count, sampleCities),
-      sampleCities,
-      primaryHref: department.code === "75" ? "/naturopathe-paris" : `/carte?zone=${department.code}`,
-      primaryLabel: department.code === "75" ? "Choisir un arrondissement" : "Voir les praticiens",
-      secondaryHref: department.code === "75" ? "/carte?zone=75" : undefined,
-      secondaryLabel: department.code === "75" ? "Voir Paris sur la carte" : undefined
+      href: department.code === "75" ? "/naturopathe-paris" : `/carte?zone=${department.code}`,
+      ctaLabel: department.code === "75" ? "Voir Paris" : "Voir les praticiens"
     };
   });
 
@@ -177,43 +169,9 @@ export default async function AnnuaireNaturopathesPage() {
         "@type": "ListItem",
         position: index + 1,
         name: item.keyword,
-        item:
-          item.department.code === "75"
-            ? `${siteUrl}/naturopathe-paris`
-            : `${siteUrl}/carte?zone=${item.department.code}`
+        item: item.department.code === "75" ? `${siteUrl}/naturopathe-paris` : `${siteUrl}${item.href}`
       }))
     }
-  };
-
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Comment choisir un naturopathe dans ma zone ?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Choisissez d’abord votre département, puis ouvrez quelques fiches pour comparer l’adresse, les coordonnées et la disponibilité d’un lien de prise de rendez-vous."
-        }
-      },
-      {
-        "@type": "Question",
-        name: "Comment chercher à Paris ?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Paris dispose d’une page dédiée avec une entrée par arrondissement, utile si vous savez déjà dans quel secteur vous cherchez."
-        }
-      },
-      {
-        "@type": "Question",
-        name: "Dois-je passer par la carte ou par l’annuaire ?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Utilisez l’annuaire pour choisir rapidement une zone, puis la carte pour affiner la recherche autour d’une adresse précise."
-        }
-      }
-    ]
   };
 
   return (
@@ -231,40 +189,32 @@ export default async function AnnuaireNaturopathesPage() {
       <section className="page-hero page-hero--directory">
         <div className="page-hero-grid">
           <div className="page-hero-copy">
-            <p className="page-eyebrow">Trouver près de chez vous</p>
-            <h1>Trouver un naturopathe en Île-de-France</h1>
+            <p className="page-eyebrow">Annuaire naturopathes</p>
+            <h1>Choisissez simplement votre zone</h1>
             <p className="page-lead">
-              Choisissez votre département, ouvrez quelques fiches puis contactez le
-              praticien qui vous convient. Pour Paris, vous pouvez aussi partir
-              directement de l’arrondissement.
+              Paris ou un département d’Île-de-France, puis ouvrez les praticiens publiés
+              dans la zone qui vous intéresse.
             </p>
 
             <div className="hero-actions">
               <Link className="btn" href="/carte">
                 Rechercher autour d’une adresse
               </Link>
-              <Link className="btn btn-secondary" href="/naturopathe-paris">
-                Chercher à Paris
-              </Link>
             </div>
           </div>
 
           <div className="hero-panel">
-            <p className="hero-panel-label">Repères rapides</p>
+            <p className="hero-panel-label">En ce moment</p>
             <div className="hero-metrics">
               <div className="hero-metric">
                 <strong>{IDF_DEPARTMENTS.length}</strong>
-                <span>départements couverts</span>
+                <span>zones</span>
               </div>
               <div className="hero-metric">
                 <strong>{totalCount}</strong>
                 <span>fiches publiées</span>
               </div>
             </div>
-            <p className="hero-note">
-              La carte peut être ouverte avec une zone déjà présélectionnée, pour aller
-              plus vite dès le premier clic.
-            </p>
           </div>
         </div>
       </section>
@@ -272,30 +222,14 @@ export default async function AnnuaireNaturopathesPage() {
       <section className="section-shell">
         <div className="section-heading section-heading--stacked">
           <div>
-            <p className="section-eyebrow">Choisir votre zone</p>
-            <h2>Commencez par le bon territoire</h2>
+            <p className="section-eyebrow">Zones disponibles</p>
+            <h2>Ouvrir les praticiens par zone</h2>
           </div>
-          <p className="section-intro">
-            Si vous cherchez d’abord par département, utilisez les raccourcis ci-dessous.
-            Chaque carte mène vers une vue directement exploitable.
-          </p>
-        </div>
-
-        <div className="zone-filter-links zone-filter-links--static">
-          {departmentSummaries.map((item) => (
-            <Link key={item.anchorId} href={`#${item.anchorId}`} className="zone-filter-link">
-              {item.department.code === "75" ? "Paris" : item.department.name}
-            </Link>
-          ))}
         </div>
 
         <div className="department-grid">
           {departmentSummaries.map((item) => (
-            <article
-              key={item.department.code}
-              id={item.anchorId}
-              className="surface-card department-card"
-            >
+            <article key={item.department.code} className="surface-card department-card">
               <div>
                 <p className="section-eyebrow">Département {item.department.code}</p>
                 <h3>{item.keyword}</h3>
@@ -305,114 +239,43 @@ export default async function AnnuaireNaturopathesPage() {
                 <span className="directory-count">
                   {item.count} fiche{item.count > 1 ? "s" : ""}
                 </span>
-                {item.sampleCities.length > 0 ? (
-                  <span className="department-card-cities">
-                    {formatInlineList(item.sampleCities)}
-                  </span>
-                ) : null}
               </div>
 
               <p className="practitioner-item-meta">{item.description}</p>
 
               <div className="department-card-actions">
-                <Link className="practitioner-item-link" href={item.primaryHref}>
-                  {item.primaryLabel}
+                <Link className="practitioner-item-link" href={item.href}>
+                  {item.ctaLabel}
                 </Link>
-                {item.secondaryHref && item.secondaryLabel ? (
-                  <Link className="practitioner-item-link" href={item.secondaryHref}>
-                    {item.secondaryLabel}
-                  </Link>
-                ) : null}
               </div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="section-shell">
+      <section className="section-shell section-shell--compact">
         <div className="section-heading section-heading--stacked">
           <div>
-            <p className="section-eyebrow">Comment faire</p>
-            <h2>Trouver plus vite le bon praticien</h2>
+            <p className="section-eyebrow">Recherche précise</p>
+            <h2>Vous avez déjà une adresse ?</h2>
           </div>
           <p className="section-intro">
-            Le site est pensé pour aller à l’essentiel: choisir une zone, comparer
-            quelques profils, puis contacter le praticien.
+            Utilisez directement la carte pour classer les praticiens autour d’une rue,
+            d’un quartier ou d’une commune.
           </p>
         </div>
 
-        <div className="feature-grid">
-          <article className="feature-card">
-            <p className="feature-card-label">1. Zone</p>
-            <h2>Choisissez votre département</h2>
-            <p>
-              Commencez par Paris, les Hauts-de-Seine, les Yvelines ou le territoire qui
-              vous intéresse pour éviter de parcourir toute l’Île-de-France.
-            </p>
-          </article>
-
-          <article className="feature-card">
-            <p className="feature-card-label">2. Fiches</p>
-            <h2>Ouvrez 2 ou 3 profils</h2>
-            <p>
-              Vérifiez l’adresse, les coordonnées et les informations disponibles sur
-              chaque fiche avant de faire votre choix.
-            </p>
-          </article>
-
-          <article className="feature-card">
-            <p className="feature-card-label">3. Contact</p>
-            <h2>Passez à l’action</h2>
-            <p>
-              Quand un lien de réservation est disponible, vous pouvez prendre rendez-vous
-              directement depuis la fiche du praticien.
-            </p>
-          </article>
+        <div className="hero-actions">
+          <Link className="btn" href="/carte">
+            Ouvrir la carte
+          </Link>
         </div>
-      </section>
-
-      <section aria-labelledby="faq-title" className="faq-section section-shell section-shell--compact">
-        <div className="section-heading section-heading--stacked">
-          <div>
-            <p className="section-eyebrow">Questions fréquentes</p>
-            <h2 id="faq-title">Besoin d’un point de départ simple ?</h2>
-          </div>
-        </div>
-
-        <details className="faq-item">
-          <summary className="faq-question">Comment choisir un naturopathe dans ma zone ?</summary>
-          <p className="faq-answer">
-            Choisissez d’abord votre département, puis ouvrez quelques fiches pour comparer
-            l’adresse, les coordonnées et les éventuelles options de prise de rendez-vous.
-          </p>
-        </details>
-
-        <details className="faq-item">
-          <summary className="faq-question">Comment chercher à Paris ?</summary>
-          <p className="faq-answer">
-            Utilisez la page <Link href="/naturopathe-paris">Naturopathe Paris</Link> si
-            vous savez déjà dans quel arrondissement vous souhaitez chercher.
-          </p>
-        </details>
-
-        <details className="faq-item">
-          <summary className="faq-question">Dois-je passer par la carte ou par l’annuaire ?</summary>
-          <p className="faq-answer">
-            L’annuaire sert à choisir rapidement une zone. La <Link href="/carte">carte</Link>{" "}
-            est ensuite la meilleure option pour affiner autour d’une adresse précise.
-          </p>
-        </details>
       </section>
 
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
     </article>
   );

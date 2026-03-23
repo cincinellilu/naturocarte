@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { PARIS_ARRONDISSEMENTS } from "@/lib/paris";
+import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -16,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const { data } = await supabase
       .from("practitioners")
       .select("slug, updated_at:created_at") // pas de updated_at => on prend created_at
-      .eq("status", "published");
+      .in("status", [...PUBLIC_PRACTITIONER_STATUSES]);
 
     practitionerEntries = (data ?? []).map((p) => ({
       url: `${siteUrl}/naturopathe/${p.slug}`,

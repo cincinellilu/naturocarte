@@ -53,7 +53,8 @@ function parseArgs(argv) {
     concurrency: 3,
     headful: false,
     fresh: false,
-    slugs: []
+    slugs: [],
+    rerun: false
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -87,6 +88,11 @@ function parseArgs(argv) {
         options.slugs.push(slug);
       }
       index += 1;
+      continue;
+    }
+
+    if (arg === "--rerun") {
+      options.rerun = true;
     }
   }
 
@@ -555,6 +561,13 @@ async function main() {
   const outputPath = path.join(BASE_DIR, `${OUTPUT_PREFIX}.json`);
   const existingRows = options.fresh ? [] : readJson(outputPath, []);
   const existingMap = new Map(existingRows.map((row) => [row.slug, row]));
+
+  if (options.rerun && slugFilter.size) {
+    for (const slug of slugFilter) {
+      existingMap.delete(slug);
+    }
+  }
+
   const pendingRows = selectedRows.filter((row) => !existingMap.has(row.slug));
   const startedAt = Date.now();
 
@@ -621,12 +634,15 @@ async function main() {
   await context.close();
   await browser.close();
 
-  const finalRows = Array.from(existingMap.values()).filter((row) =>
-    selectedRows.some((selectedRow) => selectedRow.slug === row.slug)
-  );
-  persistArtifacts(finalRows, startedAt);
+  const persistedRows =
+    !options.fresh && slugFilter.size
+      ? Array.from(existingMap.values())
+      : Array.from(existingMap.values()).filter((row) =>
+          selectedRows.some((selectedRow) => selectedRow.slug === row.slug)
+        );
+  persistArtifacts(persistedRows, startedAt);
 
-  const summary = buildSummary(finalRows, startedAt);
+  const summary = buildSummary(persistedRows, startedAt);
   console.log(`Website found: ${summary.website_found_count}`);
   console.log(`Booking found: ${summary.booking_found_count}`);
   console.log(`Errors: ${summary.error_count}`);

@@ -121,7 +121,7 @@ async function fetchPublishedPractitioners() {
   const { data, error } = await supabase
     .from("practitioners")
     .select("slug, first_name, last_name, adresse, postal_code, city, status, created_at")
-    .eq("status", "published")
+    .in("status", ["published", "published_contacted"])
     .order("slug", { ascending: true });
 
   if (error) {

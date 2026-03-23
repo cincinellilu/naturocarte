@@ -4,6 +4,7 @@ import Link from "next/link";
 import CarteInteractive from "@/components/CarteInteractive";
 import ListSkeleton from "@/components/ListSkeleton";
 import MapSkeleton from "@/components/MapSkeleton";
+import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 export const revalidate = 300;
@@ -55,7 +56,7 @@ export default async function CartePage() {
       .select(
         "first_name, last_name, slug, adresse, postal_code, city, lat, lng, phone, email, booking_url"
       )
-      .eq("status", "published")
+      .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
       .order("last_name", { ascending: true });
 
     if (error) {

@@ -2978,13 +2978,17 @@ h3,
   flex-wrap: nowrap;
 }
 
-.map-overlay {
+.map-frame-controls {
+  position: absolute;
   left: 0.75rem;
   right: auto;
   bottom: 0.75rem;
-  align-items: flex-start;
-  max-width: calc(100% - 1.5rem);
   z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  max-width: calc(100% - 1.5rem);
 }
 
 .practitioner-item-button,
@@ -2994,54 +2998,21 @@ h3,
 
 .practitioner-item-button {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.45rem;
   align-content: start;
+  text-align: left;
 }
 
 .practitioner-item-head {
-  align-items: flex-start;
-}
-
-.practitioner-item-name-wrap {
-  display: grid;
-  gap: 0.2rem;
-  min-width: 0;
-}
-
-.practitioner-item-hint {
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-
-.practitioner-item-address {
   display: flex;
+  justify-content: space-between;
   align-items: flex-start;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-.practitioner-item-icon {
-  display: inline-flex;
-  width: 1rem;
-  height: 1rem;
-  flex: 0 0 auto;
-  margin-top: 0.1rem;
-  color: var(--accent);
-}
-
-.practitioner-item-icon svg {
-  width: 100%;
-  height: 100%;
+  gap: 0.75rem;
 }
 
 .practitioner-item--active {
   border-color: rgba(15, 118, 110, 0.28) !important;
   box-shadow: 0 0 0 1px rgba(15, 118, 110, 0.12), var(--shadow-md) !important;
-}
-
-.practitioner-item--active .practitioner-item-hint {
-  color: var(--accent-strong);
-  font-weight: 600;
 }
 
 .practitioner-item--active .practitioner-item-link {
@@ -3124,7 +3095,7 @@ h3,
   max-width: 340px;
 }
 
-.map-frame:fullscreen .map-overlay {
+.map-frame:fullscreen .map-frame-controls {
   left: 1rem;
   right: auto;
   bottom: 1rem;
@@ -3144,24 +3115,26 @@ h3,
 
 @media (max-width: 760px) {
   .search-box--hidden-mobile,
-  .map-overlay--hidden-mobile {
+  .map-frame-controls--hidden-mobile {
     display: none;
   }
 
-  .map-overlay {
+  .map-frame-controls {
     left: 0.5rem;
-    right: auto;
+    right: 0.5rem;
     bottom: calc(5.8rem + env(safe-area-inset-bottom));
-    align-items: flex-start;
-    max-width: calc(100% - 1rem);
+    align-items: stretch;
+    max-width: none;
   }
 
   .map-overlay-controls {
-    width: auto;
+    display: grid;
+    grid-template-columns: 2.45rem minmax(0, 1fr);
+    width: 100%;
   }
 
   .map-locate-btn,
   .map-fullscreen-btn {
-    flex: 0 0 auto;
+    width: 100%;
   }
 }

@@ -1,0 +1,109 @@
+first_name	last_name	slug	adresse	postal_code	city	lat	lng	phone	email	website	booking_url	description	status
+Serena	FAVREAU	serena-favreau-argenteuil	21 Rue Ernest Renan	95100	Argenteuil	48.9546376	2.2653944	0625180937					gmaps_idf_20260323_95
+Sabri	MANOUBI	sabri-manoubi-argenteuil	4 Rue Paul Vaillant Couturier	95100	Argenteuil	48.9463444	2.254111	0652019235					gmaps_idf_20260323_95
+Myriam	MAYOUF	myriam-mayouf-argenteuil	25 Bd Jeanne d'Arc	95100	Argenteuil	48.9444015	2.2460574	0608550772					gmaps_idf_20260323_95
+Guemmouri	RABIA	guemmouri-rabia-argenteuil	3 Rue de Seine	95100	Argenteuil	48.9393619	2.2464716	0768492453					gmaps_idf_20260323_95
+Miquolaou	BRIGITTE L’ ESPACE SPA	miquolaou-brigitte-l-espace-spa-asnieres-sur-oise	17 Rue de Gouvieux	95270	Asnières-sur-Oise	49.1331017	2.3515436	0616883809					gmaps_idf_20260323_95
+Léonie	BOITTIN	leonie-boittin-beauchamp	155 Chau. Jules César	95250	Beauchamp	49.0095379	2.1956128						gmaps_idf_20260323_95
+Julie	PLANTEFEVE	julie-plantefeve-beauchamp	Maison Cocon & Papillons, 2 Av. Pierre Brossolette	95250	Beauchamp	49.0107118	2.2035003	0768560960					gmaps_idf_20260323_95
+Luc	BIENETRE	luc-bienetre-bessancourt	50 Av. de ParisDéfinitivement	95550	Bessancourt	49.0330624	2.2153704	0615150322					gmaps_idf_20260323_95
+Luc	MARCIA	luc-marcia-bessancourt	50 Av. de ParisDéfinitivement	95550	Bessancourt	49.0330829	2.2154421	0615150322					gmaps_idf_20260323_95
+Aurora	ARAUJO	aurora-araujo-bezons	113 Rue Edouard Vaillant	95870	Bezons	48.925306	2.2110055	0757851825					gmaps_idf_20260323_95
+Sylvie	CLEMENT	sylvie-clement-bruyeres-sur-oise	4 Imp. des Bergeronnettes	95820	Bruyères-sur-Oise	49.157728	2.3234876	0766595110					gmaps_idf_20260323_95
+Myriem	Ô NATUREL	myriem-o-naturel-cergy	8 Rue des Linandes Beiges	95000	Cergy	49.0438852	2.0686131	0616509749					gmaps_idf_20260323_95
+Safya	OKBA	safya-okba-cergy	12 Rue de la Prairie	95000	Cergy	49.0384134	2.058723	0625681408					gmaps_idf_20260323_95
+Sabine	PETIT	sabine-petit-cergy	12 Rle Lévêque	95000	Cergy	49.0362253	2.0599354	0664573441					gmaps_idf_20260323_95
+Sihem	THABET	sihem-thabet-cergy	12 Rue de la Prairie	95000	Cergy	49.0384134	2.058723	0674532423					gmaps_idf_20260323_95
+Reflet	ZEN	reflet-zen-cergy	1 Rue de la Justice Verte	95000	Cergy	49.0450865	2.0551688	0770438461					gmaps_idf_20260323_95
+Magali	BAGOT	magali-bagot-cormeilles-en-parisis	(22)Naturopathe	95240	Cormeilles-en-Parisis	48.9670605	2.1944986	0695548604					gmaps_idf_20260323_95
+Julie	BLUYSEN	julie-bluysen-cormeilles-en-parisis	13 Rue Montalant	95240	Cormeilles-en-Parisis	48.9759164	2.2049918	0623183851					gmaps_idf_20260323_95
+Emilie	GARCIA	emilie-garcia-cormeilles-en-parisis	17 Rue Thibault Chabrand	95240	Cormeilles-en-Parisis	48.9764344	2.2022266	0789398410					gmaps_idf_20260323_95
+Pépite	EN SOIE	pepite-en-soie-deuil-la-barre	14 Rue Bourgeois	95170	Deuil-la-Barre	48.9767078	2.3275111	0134177622					gmaps_idf_20260323_95
+Natalia	MROZEC	natalia-mrozec-deuil-la-barre	Place Victimes du V2	95170	Deuil-la-Barre	48.9758915	2.3271925	0611641242					gmaps_idf_20260323_95
+Assan	AGCHARIOU	assan-agchariou-domont	16 Rue de Paris	95330	Domont	49.0259748	2.3403042	0651091387					gmaps_idf_20260323_95
+Sophie	CHEMLA	sophie-chemla-domont	9 Rue Auguste et André Rouzée	95330	Domont	49.0304395	2.3255057	0603865022					gmaps_idf_20260323_95
+Camille	FARCIGNY	camille-farcigny-eaubonne	109 Bd de la République	95600	Eaubonne	48.9830001	2.2844176	0668006730					gmaps_idf_20260323_95
+Véronique	LI	veronique-li-eaubonne	81 Rue du Général Leclerc	95600	Eaubonne	48.9840232	2.2725912	0769147419					gmaps_idf_20260323_95
+Eglantine	MÉZIÈRE-ROUILLÈS	eglantine-meziere-rouilles-eaubonne	41 Av. de Paris	95600	Eaubonne	48.9917248	2.2882222						gmaps_idf_20260323_95
+Laurence	VALPARAISO	laurence-valparaiso-ecouen	1 Rue Christine	95440	Écouen	49.0256315	2.3690877						gmaps_idf_20260323_95
+Corinne	BERTRAND	corinne-bertrand-enghien-les-bains	12 bis Bd d'Ormesson	95880	Enghien-les-Bains	48.9707809	2.3095586	0681129899					gmaps_idf_20260323_95
+Amandine	CHANCEAU DIETETICIENNE-NUTRITIONNISTE DRAINAGE LYMPHATIQUE RENATA FRANÇA	amandine-chanceau-dieteticienne-nutritionniste-drainage-lymphatique-renata-franca-enghien-les-bains	52 Rue du Général de Gaulle	95880	Enghien-les-Bains	48.9698947	2.305842	0662093928					gmaps_idf_20260323_95
+Philippine	FRILEUX	philippine-frileux-enghien-les-bains	7 Rue de l'Arrivée	95880	Enghien-les-Bains	48.9720395	2.3075086	0629669084					gmaps_idf_20260323_95
+Eva	GANEM	eva-ganem-enghien-les-bains	5 bis Rue Blanche	95880	Enghien-les-Bains	48.9727384	2.3086973	0626094553					gmaps_idf_20260323_95
+Hypnose	HUMANISTE ERICKSONIENNE VINCENT ADAM DE VILLIERS ENGHIEN-LES-BAINS VAL-D'OISE HYPNOTHÉRAPEUTE	hypnose-humaniste-ericksonienne-vincent-adam-de-villiers-enghien-les-bains-val-d-oise-hypnotherapeute-enghien-les-bains	(2)Naturopathe	95880	Enghien-les-Bains	48.9710289	2.3085334	0629764682					gmaps_idf_20260323_95
+Akli	NAIT CHABANE	akli-nait-chabane-enghien-les-bains	28 Rue du Général de Gaulle	95880	Enghien-les-Bains	48.9713633	2.3075272	0612129595					gmaps_idf_20260323_95
+Chrystelle	BERGER	chrystelle-berger-eragny	7 Rue des Charmilles	95610	Éragny	49.0326076	2.0979387	0765189175					gmaps_idf_20260323_95
+Pharmacie	EN COULEURS	pharmacie-en-couleurs-eragny	6 All. des Coquelicots	95610	Éragny	49.0182101	2.1118559	0130375966					gmaps_idf_20260323_95
+Béatrice	JACOB	beatrice-jacob-eragny	5 Rue Bernardin de Saint-Pierre	95610	Éragny	49.0242385	2.0945209	0675075665					gmaps_idf_20260323_95
+Lise	MONNERAIS	lise-monnerais-eragny	2 Rue Léo Lagrange	95610	Éragny	49.028525	2.1018746						gmaps_idf_20260323_95
+Ophélie	SIMIAN	ophelie-simian-ermont	(5)Naturopathe	95120	Ermont	48.9899984	2.2580796						gmaps_idf_20260323_95
+Nahnâa	BOUTICHE	nahnaa-boutiche-ezanville	21 All. Jean-Baptiste Corot	95460	Ézanville	49.0378709	2.3421964	0749505463					gmaps_idf_20260323_95
+Kao	CHI-HSIA	kao-chi-hsia-ezanville	43 Av. de Verdun	95460	Ézanville	49.0286599	2.3563044	0783518868					gmaps_idf_20260323_95
+Acupuncture	PAR LUMIÈRE	acupuncture-par-lumiere-ezanville	43 Av. de Verdun	95460	Ézanville	49.0286599	2.3563044	0783518868					gmaps_idf_20260323_95
+Abbies	MY BIEN ETRE	abbies-my-bien-etre-fosses	8 Av. Henri Barbusse Etage 1	95470	Fosses	49.0991505	2.5220125						gmaps_idf_20260323_95
+Aurore	VERDIER	aurore-verdier-fosses	2 All. Adrienne Bolland	95470	Fosses	49.0989603	2.511563	0613763697					gmaps_idf_20260323_95
+Alexandra	AUVRAY FRANCONVILLE	alexandra-auvray-franconville-franconville	6 Allee Hector Berlioz	95130	Franconville	48.985489	2.228522	0625644884					gmaps_idf_20260323_95
+Pépite	EN SOIE	pepite-en-soie-franconville	10 All. Marie Laurent	95130	Franconville	48.9920994	2.2344378	0662114438					gmaps_idf_20260323_95
+Agnès	MC VEAN	agnes-mc-vean-franconville	13 Av. des Marais	95130	Franconville	48.9893943	2.221018	0673473739					gmaps_idf_20260323_95
+Rousset	STEPHANIE MA SANTÉ O NATUREL	rousset-stephanie-ma-sante-o-naturel-franconville	44 Pt Chem. du Bel Air	95130	Franconville	48.9867394	2.236449	0625180552					gmaps_idf_20260323_95
+Cindy	DELISLE	cindy-delisle-frepillon	24 Av. du Maréchal Leclerc	95740	Frépillon	49.0501206	2.2023375	0768870979					gmaps_idf_20260323_95
+Espace	SEBÈ KEÑEYA	espace-sebe-keneya-garges-les-gonesse	23 Rue des Doucettes	95140	Garges-lès-Gonesse	48.9667252	2.3951071	0767870779					gmaps_idf_20260323_95
+Les	CHEMINS DE LA VITALITÉ	les-chemins-de-la-vitalite-goussainville	6 Rue Branly	95190	Goussainville	49.0323767	2.4658283	0647693981					gmaps_idf_20260323_95
+Ilham	EL KHEYYAT	ilham-el-kheyyat-goussainville	34 Av. Leclerc	95190	Goussainville	49.0383279	2.4510549	0651851979					gmaps_idf_20260323_95
+Bina	VITA	bina-vita-goussainville	09 Av. de Genève	95190	Goussainville	49.0302799	2.460991	0664733604					gmaps_idf_20260323_95
+Benazzouz	FATIMA	benazzouz-fatima-groslay	12 Rue de Montmorency	95410	Groslay	48.9864223	2.343046	0652069382					gmaps_idf_20260323_95
+Laetitia	BEAUCOURT	laetitia-beaucourt-herblay-sur-seine	26 Rue Jean Leclaire	95220	Herblay-sur-Seine	48.9942832	2.1639685	0662101999					gmaps_idf_20260323_95
+Caroline	LEPREUX SANDREZ	caroline-lepreux-sandrez-herblay-sur-seine	1 Rue Pasteur	95220	Herblay-sur-Seine	48.994111	2.166228	0670551391					gmaps_idf_20260323_95
+Maxime	MARQUE	maxime-marque-herblay-sur-seine	18 Rue Jean Bordenave	95220	Herblay-sur-Seine	48.9909233	2.164339	0673700450					gmaps_idf_20260323_95
+Claire	NATHUROPATHE	claire-nathuropathe-herblay-sur-seine	45 Rue Henri Dunant	95220	Herblay-sur-Seine	48.989103	2.1724055						gmaps_idf_20260323_95
+Laetitia	PAYET	laetitia-payet-herblay-sur-seine	21 Bd du 11 Novembre 1918	95220	Herblay-sur-Seine	48.9891323	2.1649235	0666022365					gmaps_idf_20260323_95
+Aline	SABAH HANNA	aline-sabah-hanna-herblay-sur-seine	3 Rue Sainte-Honorine	95220	Herblay-sur-Seine	48.9937218	2.1658058	0626900168					gmaps_idf_20260323_95
+Alexandra	AUVRAY MON RÉFLEX' NATURE	alexandra-auvray-mon-reflex-nature-jouy-le-moutier	15 Rue des Noisetiers	95280	Jouy-le-Moutier	49.0096656	2.0349647	0625644884					gmaps_idf_20260323_95
+Sandrine	LOZAC'H SIMON	sandrine-lozac-h-simon-jouy-le-moutier	9 Rue Denis Papin	95280	Jouy-le-Moutier	49.0065786	2.03495	0673091195					gmaps_idf_20260323_95
+Corinne	BROSSIER ACCOMPAGNEMENTS ÉNERGÉTIQUES MAGNÉTISEUR GUIDANCE	corinne-brossier-accompagnements-energetiques-magnetiseur-guidance-l-isle-adam	Les Vingt Arpents, 371 Parc de Cassan	95290	L'Isle-Adam	49.1128079	2.2331452	0608063743					gmaps_idf_20260323_95
+Val	D'OISE	val-d-oise-l-isle-adam	72 Rue Saint-Lazare	95290	L'Isle-Adam	49.1047953	2.216769	0620920406					gmaps_idf_20260323_95
+Marie-Christine	FREIRE	marie-christine-freire-l-isle-adam	Cabinet Ressources, 5 Grande Rue	95290	L'Isle-Adam	49.1128527	2.2137902	0684647049					gmaps_idf_20260323_95
+Patricia	MONTFORT	patricia-montfort-l-isle-adam	1 A Rue Mellet	95290	L'Isle-Adam	49.1122312	2.21323	0660403659					gmaps_idf_20260323_95
+Mark	SANCHEZ	mark-sanchez-l-isle-adam	Résidence du bois de boulogne Bâtiment Armenonville 1	95290	L'Isle-Adam	49.1183824	2.2196721	0689093377					gmaps_idf_20260323_95
+Émilie	SCHNEIDER	emilie-schneider-le-plessis-bouchard	3 Mail de la Fontaine Martin	95130	Le Plessis-Bouchard	49.0038568	2.2335977	0631169735					gmaps_idf_20260323_95
+Florence	DOLHEN	florence-dolhen-magny-en-vexin	46 Rue de Crosne	95420	Magny-en-Vexin	49.1497097	1.7878802	0630173292					gmaps_idf_20260323_95
+Mimoun	MOUH	mimoun-mouh-magny-en-vexin	46 Rue de Crosne	95420	Magny-en-Vexin	49.1497097	1.7878802	0622613160					gmaps_idf_20260323_95
+Gaëll	DELPORTE	gaell-delporte-mery-sur-oise	19 Rue du Chêne Vert	95540	Méry-sur-Oise	49.0552828	2.1877106	0609734840					gmaps_idf_20260323_95
+Florence	PINHEIRO ORTOLAN	florence-pinheiro-ortolan-montlignon	64 Ter Rue des Rosiers	95680	Montlignon	49.0143152	2.2848293						gmaps_idf_20260323_95
+Camille	FISCHER	camille-fischer-montmorency	5 Rue Perquel	95160	Montmorency	48.9757798	2.3139229	0686829954					gmaps_idf_20260323_95
+Gwénaëlle	FOURNIER	gwenaelle-fournier-montmorency	23 Rue Carnot	95160	Montmorency	48.9887191	2.3207083	0665643389					gmaps_idf_20260323_95
+Christine	MAQUART	christine-maquart-montmorency	2 bis Rue Bianchetti	95160	Montmorency	48.9951578	2.3276292	0660477603					gmaps_idf_20260323_95
+Beata	CHAINAY SOPHROLOGUE	beata-chainay-sophrologue-neuville-sur-oise	24 Rue de Cergy	95000	Neuville-sur-Oise	49.0157028	2.0583308	0601954360					gmaps_idf_20260323_95
+Académie	EUROPÉENNE DES MÉDECINES NATURELLES	academie-europeenne-des-medecines-naturelles-neuville-sur-oise	29 Rue des Moulines	95000	Neuville-sur-Oise	49.0203293	2.0546616	0627032404					gmaps_idf_20260323_95
+Christelle	BECKER	christelle-becker-osny	ect, A distance (Par visioconférence, Skype, Téléphone, 9 Rue Pasteur	95520	Osny	49.0617068	2.0674688	0625062351					gmaps_idf_20260323_95
+Emmanuelle	DURAND	emmanuelle-durand-osny	3 All. Lazare Weiller	95520	Osny	49.0619458	2.0595141	0608065054					gmaps_idf_20260323_95
+Fatima	NADJEM	fatima-nadjem-osny	7 Rue Xavier Bichat	95520	Osny	49.0752984	2.0753646	0781937074					gmaps_idf_20260323_95
+Laurent	BEATRICE ÉNERGETICIENNE	laurent-beatrice-energeticienne-parmain	65 Avenue de Paris	95620	Parmain	49.0992291	2.2066378	0615521850					gmaps_idf_20260323_95
+Cybèle	GUICHARD	cybele-guichard-parmain	11 Rue de Nesles la Vallée	95620	Parmain	49.1121628	2.2045872	0620444303					gmaps_idf_20260323_95
+Florence	LINDEN FLO LA	florence-linden-flo-la-parmain	57 Chem. des Vallées	95620	Parmain	49.1041423	2.186337	0757900688					gmaps_idf_20260323_95
+Johanna'S	TREE	johanna-s-tree-persan	100 Av. Jacques Vogt	95340	Persan	49.1541063	2.2714723	0678641961					gmaps_idf_20260323_95
+Déborah	ABISDID	deborah-abisdid-pierrelaye	8 Chau. Jules César	95480	Pierrelaye	49.0208618	2.1609998	0680522426					gmaps_idf_20260323_95
+Sarah	BENCHERIF	sarah-bencherif-pierrelaye	56 Av. du Général Leclerc	95480	Pierrelaye	49.0175005	2.15251	0769553008					gmaps_idf_20260323_95
+Nouara	AREZKI	nouara-arezki-pontoise	22 Chem. des Bottes	95300	Pontoise	49.0579266	2.1015208	0664751571					gmaps_idf_20260323_95
+Stéphanie	BERRUET	stephanie-berruet-pontoise	41 bis Rue des Coteaux	95300	Pontoise	49.0616405	2.1189045	0621852662					gmaps_idf_20260323_95
+Sylvie	TOMAS	sylvie-tomas-pontoise	62 Rue Pierre Butin	95300	Pontoise	49.0493413	2.09775	0613028076					gmaps_idf_20260323_95
+Julie	PLANTEFEVE	julie-plantefeve-presles	68 Rue Danièle Casanova	95590	Presles	49.1177729	2.29	0768560960					gmaps_idf_20260323_95
+Valérie	BONNAIRE	valerie-bonnaire-saint-gratien	21 Rue Berthie Albrecht	95210	Saint-Gratien	48.967947	2.284984	0679940084					gmaps_idf_20260323_95
+Stephane	ROBIN	stephane-robin-saint-gratien	19 bis Av. Simon Hayem	95210	Saint-Gratien	48.9734174	2.2830754	0652448364					gmaps_idf_20260323_95
+Silvestre	EMILIA	silvestre-emilia-saint-leu-la-foret	36 Rue Edith Cavell	95320	Saint-Leu-la-Forêt	49.0137065	2.2534415	0782596692					gmaps_idf_20260323_95
+Masson	FRANÇOISE	masson-francoise-saint-leu-la-foret	7 Sente Petites Tannières	95320	Saint-Leu-la-Forêt	49.0110205	2.2482253	0607625114					gmaps_idf_20260323_95
+Roxana	HEIDENREICH PHARMACIEN	roxana-heidenreich-pharmacien-saint-leu-la-foret	2 Sq. Josquin des Prés	95320	Saint-Leu-la-Forêt	49.0110009	2.2402563	0663468364					gmaps_idf_20260323_95
+Saint	LEU LA FORET	saint-leu-la-foret-saint-leu-la-foret	2 Sq. Josquin des Prés	95320	Saint-Leu-la-Forêt	49.0109893	2.2402615						gmaps_idf_20260323_95
+Alexandra	TEXIER	alexandra-texier-saint-leu-la-foret	8 Rue Louis Blanc	95320	Saint-Leu-la-Forêt	49.0151895	2.2418137	0678947930					gmaps_idf_20260323_95
+Mila	BICHART	mila-bichart-saint-prix	3 Chem. de la Grande Sente	95390	Saint-Prix	49.0129362	2.2722059	0623052219					gmaps_idf_20260323_95
+Vitalys	PARIS	vitalys-paris-saint-prix	3 Chem. de la Grande Sente	95390	Saint-Prix	49.0129362	2.2722059	0623052219					gmaps_idf_20260323_95
+Sabrina	TALOT	sabrina-talot-sannois	14 Blvd Maurice Berteaux	95110	Sannois	48.9686005	2.2658796	0780945242					gmaps_idf_20260323_95
+Sarcelles	VILLAGE	sarcelles-village-sarcelles	5 Rue du Temple	95200	Sarcelles	48.9962344	2.3800321	0663011227					gmaps_idf_20260323_95
+Laura	THERAPY	laura-therapy-soisy-sous-montmorency	2 Av. Louis Blanc	95230	Soisy-sous-Montmorency	48.9765287	2.2995351						gmaps_idf_20260323_95
+Ecrin	DE DOUCEUR	ecrin-de-douceur-taverny	1 Rue Jean XXIII	95150	Taverny	49.0299845	2.2261297	0666510267					gmaps_idf_20260323_95
+Elodie	DEMARD	elodie-demard-taverny	(11)Naturopathe	95150	Taverny	49.0212397	2.2183546	0776788242					gmaps_idf_20260323_95
+Leticia	GATA	leticia-gata-taverny	4 Rue Xavier Bichat	95150	Taverny	49.0232151	2.2217929	0652765656					gmaps_idf_20260323_95
+Mathilde	PINZANO	mathilde-pinzano-taverny	138 Rue du Maréchal Foch	95150	Taverny	49.0243451	2.2261417	0769979115					gmaps_idf_20260323_95
+Tamara	PISSARD	tamara-pissard-taverny	27 Rue Terray de Vindé	95150	Taverny	49.0303153	2.2228749	0621436336					gmaps_idf_20260323_95
+Nathalie	GARRIVET ELAN	nathalie-garrivet-elan-vaureal	128 Bd de l'Oise	95490	Vauréal	49.029133	2.022102	0768683708					gmaps_idf_20260323_95
+Auris	LASER AURICULOTHÉRAPIE LASER	auris-laser-auriculotherapie-laser-villiers-le-bel	71 Rue de Paris	95400	Villiers-le-Bel	49.01055	2.3837443						gmaps_idf_20260323_95

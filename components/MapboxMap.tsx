@@ -201,7 +201,8 @@ export default function MapboxMap({
   onSelectSlug,
   searchCenter = null,
   onReady,
-  hideMobileControls = false
+  locateRequestNonce = 0,
+  onGeoErrorChange
 }: {
   points: MapPoint[];
   selectedSlug?: string | null;
@@ -209,7 +210,8 @@ export default function MapboxMap({
   onSelectSlug?: (slug: string | null) => void;
   searchCenter?: SearchCenter;
   onReady?: () => void;
-  hideMobileControls?: boolean;
+  locateRequestNonce?: number;
+  onGeoErrorChange?: (error: string | null) => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -227,8 +229,6 @@ export default function MapboxMap({
   const autoGeoAttemptedRef = useRef(false);
 
   const [geoError, setGeoError] = useState<string | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [canUseFullscreen, setCanUseFullscreen] = useState(false);
 
   useEffect(() => {
     onSelectSlugRef.current = onSelectSlug;
@@ -241,11 +241,6 @@ export default function MapboxMap({
   useEffect(() => {
     pointsRef.current = points;
   }, [points]);
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    setCanUseFullscreen(typeof document.documentElement.requestFullscreen === "function");
-  }, []);
 
   const requestGeolocation = (isManual = false) => {
     const map = mapRef.current;
@@ -304,6 +299,10 @@ export default function MapboxMap({
       }
     );
   };
+
+  useEffect(() => {
+    onGeoErrorChange?.(geoError);
+  }, [geoError, onGeoErrorChange]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -527,9 +526,6 @@ export default function MapboxMap({
     if (!frameElement || typeof document === "undefined") return;
 
     const handleFullscreenChange = () => {
-      const isCurrentFrameFullscreen = document.fullscreenElement === frameElement;
-      setIsFullscreen(isCurrentFrameFullscreen);
-
       window.requestAnimationFrame(() => {
         mapRef.current?.resize();
       });
@@ -542,105 +538,18 @@ export default function MapboxMap({
     };
   }, []);
 
-  const toggleFullscreen = async () => {
-    const frameElement = containerRef.current?.closest(".map-frame") as HTMLElement | null;
-    if (
-      !frameElement ||
-      typeof document === "undefined" ||
-      typeof frameElement.requestFullscreen !== "function"
-    ) {
-      return;
-    }
-
-    try {
-      if (document.fullscreenElement === frameElement) {
-        await document.exitFullscreen();
-      } else {
-        await frameElement.requestFullscreen();
-      }
-    } catch {
-      setIsFullscreen(false);
-    }
-  };
+  useEffect(() => {
+    if (locateRequestNonce <= 0) return;
+    requestGeolocation(true);
+  }, [locateRequestNonce]);
 
   if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN) {
-    return (
-      <div className="map-root" aria-label="Carte des praticiens">
-        <div className="map-fallback">Carte indisponible: token Mapbox manquant.</div>
-        <div
-          className={[
-            "map-overlay",
-            hideMobileControls ? "map-overlay--hidden-mobile" : null
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          <div className="map-overlay-controls">
-            {canUseFullscreen ? (
-              <button
-                type="button"
-                className="map-fullscreen-btn"
-                aria-label="Passer en plein écran"
-                title="Passer en plein écran"
-                disabled
-              >
-                <span className="map-control-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
-                    <path d="M9 5H5v4M15 5h4v4M19 15v4h-4M5 15v4h4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </button>
-            ) : null}
-
-            <button type="button" className="map-locate-btn" disabled>
-              Me localiser
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    return <div className="map-fallback">Carte indisponible: token Mapbox manquant.</div>;
   }
 
   return (
     <div className="map-root" aria-label="Carte des praticiens">
       <div ref={containerRef} className="map-canvas" />
-      <div
-        className={[
-          "map-overlay",
-          hideMobileControls ? "map-overlay--hidden-mobile" : null
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <div className="map-overlay-controls">
-          {canUseFullscreen ? (
-            <button
-              type="button"
-              className="map-fullscreen-btn"
-              onClick={toggleFullscreen}
-              aria-label={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
-              title={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
-            >
-              <span className="map-control-icon" aria-hidden="true">
-                {isFullscreen ? (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
-                    <path d="M9 15H5v4M15 9h4V5M19 15h-4v4M5 9h4V5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
-                    <path d="M9 5H5v4M15 5h4v4M19 15v4h-4M5 15v4h4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </span>
-            </button>
-          ) : null}
-
-          <button type="button" className="map-locate-btn" onClick={() => requestGeolocation(true)}>
-            Me localiser
-          </button>
-        </div>
-        {geoError ? <p className="map-overlay-error">{geoError}</p> : null}
-      </div>
     </div>
   );
 }

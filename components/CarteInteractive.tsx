@@ -87,8 +87,13 @@ export default function CarteInteractive({
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [isMapReady, setIsMapReady] = useState(!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN);
   const [showAll, setShowAll] = useState(false);
+  const [locateRequestNonce, setLocateRequestNonce] = useState(0);
+  const [geoError, setGeoError] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [canUseFullscreen, setCanUseFullscreen] = useState(false);
 
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
+  const mapFrameRef = useRef<HTMLDivElement | null>(null);
   const searchWrapperRef = useRef<HTMLDivElement | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -160,6 +165,26 @@ export default function CarteInteractive({
     return () => {
       document.removeEventListener("mousedown", handleDocumentClick);
       document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    setCanUseFullscreen(typeof document.documentElement.requestFullscreen === "function");
+  }, []);
+
+  useEffect(() => {
+    const frameElement = mapFrameRef.current;
+    if (!frameElement || typeof document === "undefined") return;
+
+    const handleFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === frameElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
 
@@ -297,6 +322,28 @@ export default function CarteInteractive({
     setIsSuggestionsOpen(false);
   };
 
+  const handleLocateClick = () => {
+    setLocateRequestNonce((current) => current + 1);
+  };
+
+  const handleToggleFullscreen = async () => {
+    const frameElement = mapFrameRef.current;
+    if (!frameElement || typeof document === "undefined") return;
+
+    try {
+      if (document.fullscreenElement === frameElement) {
+        await document.exitFullscreen();
+        return;
+      }
+
+      if (typeof frameElement.requestFullscreen === "function") {
+        await frameElement.requestFullscreen();
+      }
+    } catch {
+      setIsFullscreen(false);
+    }
+  };
+
   const showNoResults =
     isSuggestionsOpen &&
     !isLoadingSuggestions &&
@@ -307,6 +354,7 @@ export default function CarteInteractive({
     <div className="map-experience">
       <div ref={mapSectionRef} className="map-stage">
         <div
+          ref={mapFrameRef}
           className={[
             "map-frame",
             selectedSlug ? "map-frame--practitioner-open" : null
@@ -375,8 +423,55 @@ export default function CarteInteractive({
             onSelectSlug={handleMapSelect}
             searchCenter={searchCenter ? { lng: searchCenter.lng, lat: searchCenter.lat } : null}
             onReady={() => setIsMapReady(true)}
-            hideMobileControls={Boolean(selectedSlug)}
+            locateRequestNonce={locateRequestNonce}
+            onGeoErrorChange={setGeoError}
           />
+
+          <div
+            className={[
+              "map-frame-controls",
+              selectedSlug ? "map-frame-controls--hidden-mobile" : null
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <div className="map-overlay-controls">
+              <button
+                type="button"
+                className="map-fullscreen-btn"
+                onClick={handleToggleFullscreen}
+                aria-label={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
+                title={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
+                disabled={!canUseFullscreen}
+              >
+                <span className="map-control-icon" aria-hidden="true">
+                  {isFullscreen ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                      <path
+                        d="M9 15H5v4M15 9h4V5M19 15h-4v4M5 9h4V5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                      <path
+                        d="M9 5H5v4M15 5h4v4M19 15v4h-4M5 15v4h4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </span>
+              </button>
+
+              <button type="button" className="map-locate-btn" onClick={handleLocateClick}>
+                Me localiser
+              </button>
+            </div>
+
+            {geoError ? <p className="map-overlay-error">{geoError}</p> : null}
+          </div>
         </div>
       </div>
 
@@ -443,32 +538,15 @@ export default function CarteInteractive({
                       aria-label={`Afficher ${p.first_name} ${p.last_name} sur la carte`}
                     >
                       <span className="practitioner-item-head">
-                        <span className="practitioner-item-name-wrap">
-                          <span className="practitioner-item-name">
-                            {p.first_name} {p.last_name}
-                          </span>
-                          <span className="practitioner-item-hint">
-                            {isActive ? "Sélectionné sur la carte" : "Centrer sur la carte"}
-                          </span>
+                        <span className="practitioner-item-name">
+                          {p.first_name} {p.last_name}
                         </span>
                         {distanceLabel ? (
                           <span className="practitioner-item-distance">{distanceLabel}</span>
                         ) : null}
                       </span>
-                      <span className="practitioner-item-address">
-                        <span className="practitioner-item-icon" aria-hidden="true">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                            <path
-                              d="M12 20.25s6-5.4 6-10.125A6 6 0 0 0 6 10.125c0 4.725 6 10.125 6 10.125Z"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <circle cx="12" cy="10.125" r="2.25" />
-                          </svg>
-                        </span>
-                        <span className="practitioner-item-meta">
-                          {[p.adresse, p.city].filter(Boolean).join(", ") || "Adresse non renseignée"}
-                        </span>
+                      <span className="practitioner-item-meta">
+                        {[p.adresse, p.city].filter(Boolean).join(", ") || "Adresse non renseignée"}
                       </span>
                     </button>
                     <Link href={`/naturopathe/${p.slug}`} className="practitioner-item-link">

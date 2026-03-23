@@ -202,7 +202,8 @@ export default function MapboxMap({
   searchCenter = null,
   onReady,
   locateRequestNonce = 0,
-  onGeoErrorChange
+  onGeoErrorChange,
+  isFullscreen = false
 }: {
   points: MapPoint[];
   selectedSlug?: string | null;
@@ -212,6 +213,7 @@ export default function MapboxMap({
   onReady?: () => void;
   locateRequestNonce?: number;
   onGeoErrorChange?: (error: string | null) => void;
+  isFullscreen?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -522,21 +524,12 @@ export default function MapboxMap({
   }, [searchCenter]);
 
   useEffect(() => {
-    const frameElement = containerRef.current?.closest(".map-frame");
-    if (!frameElement || typeof document === "undefined") return;
+    if (!mapRef.current) return;
 
-    const handleFullscreenChange = () => {
-      window.requestAnimationFrame(() => {
-        mapRef.current?.resize();
-      });
-    };
-
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-  }, []);
+    window.requestAnimationFrame(() => {
+      mapRef.current?.resize();
+    });
+  }, [isFullscreen]);
 
   useEffect(() => {
     if (locateRequestNonce <= 0) return;

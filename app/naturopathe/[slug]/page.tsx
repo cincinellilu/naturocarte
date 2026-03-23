@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getDepartmentFromPostalCode } from "@/lib/locations";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
 
@@ -62,15 +63,35 @@ function getParisArrondissement(postalCode: string | null | undefined): string |
   return String(arrondissement);
 }
 
-function buildTitle(practitioner: Practitioner): string {
+function normalizeLocationSegment(value: string | null | undefined): string | null {
+  const raw = value?.trim();
+  return raw ? raw : null;
+}
+
+function areSameLocationLabel(left: string, right: string): boolean {
+  return left.localeCompare(right, "fr", { sensitivity: "base" }) === 0;
+}
+
+function getPractitionerLocationLabel(practitioner: Practitioner): string {
   const arrondissement = getParisArrondissement(practitioner.postal_code);
 
   if (arrondissement) {
-    return `${practitioner.first_name} ${practitioner.last_name} - Naturopathe à Paris ${arrondissement}`;
+    return `Paris ${arrondissement}`;
   }
 
-  const city = practitioner.city ?? "Paris";
-  return `${practitioner.first_name} ${practitioner.last_name} - Naturopathe à ${city}`;
+  const city = normalizeLocationSegment(practitioner.city);
+  const department = getDepartmentFromPostalCode(practitioner.postal_code);
+
+  if (city && department && !areSameLocationLabel(city, department.name)) {
+    return `${city} (${department.name})`;
+  }
+
+  return city ?? department?.name ?? "Île-de-France";
+}
+
+function buildTitle(practitioner: Practitioner): string {
+  const locationLabel = getPractitionerLocationLabel(practitioner);
+  return `${practitioner.first_name} ${practitioner.last_name} - Naturopathe à ${locationLabel}`;
 }
 
 function getAbsoluteSiteUrl(): string {
@@ -99,16 +120,18 @@ export async function generateMetadata({
     };
   }
 
-  const city = practitioner.city || "Paris";
+  const city = normalizeLocationSegment(practitioner.city);
+  const department = getDepartmentFromPostalCode(practitioner.postal_code);
+  const locationLabel = getPractitionerLocationLabel(practitioner);
   const title = buildTitle(practitioner);
   const metadataAddress = [
     practitioner.adresse?.trim(),
     practitioner.postal_code?.trim(),
-    city
+    city ?? department?.name ?? null
   ]
     .filter(Boolean)
     .join(", ");
-  const description = `Découvrez la fiche de ${practitioner.first_name} ${practitioner.last_name}, naturopathe à ${city}${metadataAddress ? ` (${metadataAddress})` : ""} : adresse, contact et prise de rendez-vous.`;
+  const description = `Découvrez la fiche de ${practitioner.first_name} ${practitioner.last_name}, naturopathe à ${locationLabel}${metadataAddress ? ` (${metadataAddress})` : ""} : adresse, contact et prise de rendez-vous.`;
 
   const siteUrl = getAbsoluteSiteUrl();
   const canonical = `${siteUrl}/naturopathe/${practitioner.slug}`;
@@ -140,7 +163,8 @@ export default async function PractitionerPage({
   const practitioner = await getPublishedPractitioner(decodeURIComponent(slug));
   if (!practitioner) notFound();
 
-  const city = practitioner.city || "Paris";
+  const city = normalizeLocationSegment(practitioner.city);
+  const department = getDepartmentFromPostalCode(practitioner.postal_code);
   const title = buildTitle(practitioner);
 
   const bookingUrl = isValidExternalUrl(practitioner.booking_url)
@@ -149,7 +173,11 @@ export default async function PractitionerPage({
 
   const websiteUrl = normalizeWebsiteUrl(practitioner.website);
 
-  const addressLine = [practitioner.adresse?.trim(), practitioner.postal_code?.trim(), city]
+  const addressLine = [
+    practitioner.adresse?.trim(),
+    practitioner.postal_code?.trim(),
+    city ?? department?.name ?? null
+  ]
     .filter(Boolean)
     .join(", ");
 
@@ -178,12 +206,12 @@ export default async function PractitionerPage({
       "@type": "PostalAddress",
       streetAddress: practitioner.adresse || undefined,
       postalCode: practitioner.postal_code || undefined,
-      addressLocality: city,
+      addressLocality: city || undefined,
       addressCountry: "FR"
     },
     areaServed: {
       "@type": "AdministrativeArea",
-      name: city
+      name: department?.name ?? city ?? "Île-de-France"
     },
     geo: {
       "@type": "GeoCoordinates",

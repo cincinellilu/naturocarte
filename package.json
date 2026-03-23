@@ -9,7 +9,9 @@
     "start:prod": "next start -H 0.0.0.0 -p ${PORT:-3000}",
     "imports:reconcile:paris": "node scripts/imports/reconcile-paris-lot.mjs",
     "imports:prepare:idf": "node scripts/imports/prepare-idf-campaign.mjs",
-    "imports:crawl:idf": "node scripts/imports/crawl-google-maps-idf.mjs"
+    "imports:crawl:idf": "node scripts/imports/crawl-google-maps-idf.mjs",
+    "imports:merge:idf": "node scripts/imports/merge-idf-lots.mjs",
+    "imports:enrich:idf": "node scripts/imports/enrich-idf-links.mjs"
   },
   "engines": {
     "node": ">=20.11.0 <25"

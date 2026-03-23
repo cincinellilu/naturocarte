@@ -43,8 +43,9 @@ export default function AProposPage() {
           sur les naturopathes, dans un format cartographique simple à consulter. La
           géolocalisation permet d&apos;identifier rapidement les praticiens proches d&apos;une
           adresse ou d&apos;une zone recherchée, afin d&apos;aider les utilisateurs à trouver un
-          naturopathe près de chez eux. La première zone couverte est actuellement Paris,
-          avec une extension progressive vers d&apos;autres territoires.
+          naturopathe près de chez eux. Le service couvre aujourd&apos;hui Paris et les
+          départements d&apos;Île-de-France, avec une logique de recherche par proximité et
+          par territoire.
         </p>
       </section>
 
@@ -88,7 +89,7 @@ export default function AProposPage() {
           et des liens internes cohérents autour de la carte et des pages praticiens. Cette
           organisation aide les utilisateurs à trouver plus facilement un naturopathe à
           proximité, et permet aux naturopathes d&apos;être plus visibles dans les recherches
-          locales.
+          locales à Paris comme dans les autres départements franciliens.
         </p>
       </section>
 

@@ -6,24 +6,24 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Carte des naturopathes à Paris",
+  title: "Carte des naturopathes en Île-de-France",
   description:
-    "Consultez la carte des naturopathes à Paris et accédez aux profils des praticiens.",
+    "Consultez la carte des naturopathes en Île-de-France et accédez aux profils des praticiens.",
   alternates: {
     canonical: "/carte"
   },
   openGraph: {
-    title: "Carte des naturopathes à Paris | NaturoCarte",
+    title: "Carte des naturopathes en Île-de-France | NaturoCarte",
     description:
-      "Consultez la carte des naturopathes à Paris et accédez aux profils des praticiens.",
+      "Consultez la carte des naturopathes en Île-de-France et accédez aux profils des praticiens.",
     url: "/carte",
     type: "website"
   },
   twitter: {
     card: "summary",
-    title: "Carte des naturopathes à Paris | NaturoCarte",
+    title: "Carte des naturopathes en Île-de-France | NaturoCarte",
     description:
-      "Consultez la carte des naturopathes à Paris et accédez aux profils des praticiens."
+      "Consultez la carte des naturopathes en Île-de-France et accédez aux profils des praticiens."
   }
 };
 
@@ -87,7 +87,7 @@ export default async function CartePage() {
       first_name: p.first_name,
       last_name: p.last_name,
       adresse: practitioner?.adresse ?? null,
-      city: practitioner?.city ?? "Paris",
+      city: practitioner?.city ?? null,
       lat: p.lat,
       lng: p.lng
     };
@@ -98,9 +98,10 @@ export default async function CartePage() {
       <section className="map-page-shell">
         <div className="map-page-header">
           <div className="map-page-copy">
-            <h1 className="map-page-title">Carte des naturopathes à Paris</h1>
+            <h1 className="map-page-title">Carte des naturopathes en Île-de-France</h1>
             <p className="map-page-lead">
-              Recherchez une adresse, recentrez la carte puis ouvrez une fiche en un clic.
+              Recherchez une adresse en Île-de-France, recentrez la carte puis ouvrez une
+              fiche en un clic.
             </p>
           </div>
         </div>

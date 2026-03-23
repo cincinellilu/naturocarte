@@ -1586,6 +1586,10 @@ a {
   line-height: 0.98;
 }
 
+.page-hero--directory h1 {
+  max-width: 14ch;
+}
+
 .page-lead,
 .section-intro,
 .hero-note,
@@ -1687,6 +1691,42 @@ a {
 
 .feature-card p:last-child {
   margin: 0;
+}
+
+.department-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.department-card {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.department-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.15;
+}
+
+.department-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.department-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: auto;
+}
+
+.department-card-actions .practitioner-item-link {
+  min-width: 0;
+  align-self: flex-start;
 }
 
 .section-shell {
@@ -2659,11 +2699,14 @@ h3,
 }
 
 .map-frame {
+  position: relative;
+  overflow: hidden;
   height: 31rem;
   border: 1px solid var(--line);
   border-radius: 1rem;
   background: #f8fafc;
   box-shadow: none;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
 .search-box--overlay {
@@ -2671,6 +2714,13 @@ h3,
   left: 0.75rem;
   width: min(320px, calc(100% - 1.5rem));
   max-width: 320px;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0s linear 0s;
 }
 
 .search-card {
@@ -2778,39 +2828,48 @@ h3,
 }
 
 .practitioner-list {
-  gap: 0.75rem;
+  gap: 0.8rem;
 }
 
 .practitioner-list li {
-  padding: 0.95rem 1rem;
-  border-radius: 0.9rem;
-  background: #ffffff;
-  box-shadow: none;
+  padding: 1rem;
+  border-radius: 1rem;
+  border-color: #dbe3ec;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
   min-width: 0;
   align-items: stretch;
+  gap: 0.95rem;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    transform 0.18s ease;
 }
 
 .practitioner-list li:hover {
-  transform: none;
-  border-color: var(--line-strong);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  border-color: #cbd5e1;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.07);
 }
 
 .practitioner-item-name {
   font-size: 1rem;
+  line-height: 1.35;
   min-width: 0;
   overflow-wrap: anywhere;
   word-break: break-word;
   color: var(--text-strong);
-  font-weight: 700;
+  font-weight: 650;
 }
 
 .practitioner-item-meta {
   font-size: 0.93rem;
+  line-height: 1.45;
   min-width: 0;
   overflow-wrap: anywhere;
   word-break: break-word;
-  color: var(--muted);
+  color: #5f6b7a;
 }
 
 .practitioner-item-submeta {
@@ -2821,23 +2880,47 @@ h3,
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
-  padding: 0.24rem 0.55rem;
+  padding: 0.28rem 0.58rem;
+  border: 1px solid rgba(15, 118, 110, 0.14);
   border-radius: 999px;
-  background: var(--accent-soft);
+  background: #f7fcfb;
   color: var(--accent-strong);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .practitioner-item-link {
-  min-width: 7.8rem;
-  padding: 0.55rem 0.8rem;
-  align-self: center;
-  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 8.3rem;
+  padding: 0.65rem 0.85rem;
+  align-self: stretch;
+  border: 1px solid #d7e0e8;
   color: var(--text-strong);
   font-weight: 600;
+  font-size: 0.92rem;
   text-align: center;
+  background: #f8fafc;
+}
+
+.practitioner-item-link:hover {
+  background: #ffffff;
+  border-color: #c5d0dc;
+}
+
+.practitioner-item-link-icon {
+  display: inline-flex;
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 auto;
+}
+
+.practitioner-item-link-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .practitioner-list-cta {
@@ -2989,6 +3072,13 @@ h3,
   align-items: flex-start;
   gap: 0.45rem;
   max-width: calc(100% - 1.5rem);
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0s linear 0s;
 }
 
 .practitioner-item-button,
@@ -3011,13 +3101,16 @@ h3,
 }
 
 .practitioner-item--active {
-  border-color: rgba(15, 118, 110, 0.28) !important;
-  box-shadow: 0 0 0 1px rgba(15, 118, 110, 0.12), var(--shadow-md) !important;
+  border-color: rgba(15, 118, 110, 0.3) !important;
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), #ffffff) !important;
+  box-shadow:
+    0 0 0 1px rgba(15, 118, 110, 0.08),
+    0 14px 28px rgba(15, 23, 42, 0.08) !important;
 }
 
 .practitioner-item--active .practitioner-item-link {
-  border-color: rgba(15, 118, 110, 0.22);
-  background: var(--accent-soft);
+  border-color: rgba(15, 118, 110, 0.2);
+  background: #ffffff;
 }
 
 .map-popup {
@@ -3080,25 +3173,29 @@ h3,
   height: 100%;
 }
 
-.map-frame:fullscreen {
+.map-frame--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   max-width: none;
   border: 0;
   border-radius: 0;
 }
 
-.map-frame:fullscreen .search-box--overlay {
+.map-frame--fullscreen .search-box--overlay {
   top: 1rem;
   left: 1rem;
   width: min(340px, calc(100vw - 2rem));
   max-width: 340px;
 }
 
-.map-frame:fullscreen .map-frame-controls {
+.map-frame--fullscreen .map-frame-controls {
   left: 1rem;
   right: auto;
-  bottom: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
 }
 
 @media (max-width: 860px) {
@@ -3114,15 +3211,10 @@ h3,
 }
 
 @media (max-width: 760px) {
-  .search-box--hidden-mobile,
-  .map-frame-controls--hidden-mobile {
-    display: none;
-  }
-
   .map-frame-controls {
     left: 0.5rem;
     right: 0.5rem;
-    bottom: calc(5.8rem + env(safe-area-inset-bottom));
+    bottom: calc(0.5rem + env(safe-area-inset-bottom));
     align-items: stretch;
     max-width: none;
   }
@@ -3136,5 +3228,21 @@ h3,
   .map-locate-btn,
   .map-fullscreen-btn {
     width: 100%;
+  }
+
+  .search-box--hidden-mobile {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-0.65rem);
+    transition-delay: 0s, 0s, 0.22s;
+  }
+
+  .map-frame-controls--hidden-mobile {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(0.7rem);
+    transition-delay: 0s, 0s, 0.22s;
   }
 }

@@ -12,15 +12,15 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Naturopathe Paris | Annuaire naturopathes | NaturoCarte",
+    default: "Annuaire naturopathes en Île-de-France",
     template: "%s | NaturoCarte"
   },
   description:
-    "Annuaire cartographique de naturopathes à Paris. Trouvez un naturopathe par arrondissement et consultez des fiches détaillées.",
+    "Annuaire cartographique de naturopathes en Île-de-France. Trouvez un naturopathe par ville, département ou arrondissement à Paris.",
   openGraph: {
-    title: "NaturoCarte",
+    title: "NaturoCarte | Annuaire des naturopathes en Île-de-France",
     description:
-      "Annuaire cartographique de naturopathes à Paris. Trouvez un naturopathe par arrondissement et consultez des fiches détaillées.",
+      "Annuaire cartographique de naturopathes en Île-de-France. Trouvez un naturopathe par ville, département ou arrondissement à Paris.",
     url: siteUrl,
     siteName: "NaturoCarte",
     locale: "fr_FR",
@@ -54,14 +54,14 @@ export default function RootLayout({
                 <div className="site-footer-branding">
                   <p className="site-footer-brand">NaturoCarte</p>
                   <p className="site-footer-copy">
-                    Carte des naturopathes à Paris, avec annuaire complémentaire pour la
-                    navigation locale.
+                    Carte et annuaire des naturopathes en Île-de-France, avec navigation
+                    locale pour Paris et les départements franciliens.
                   </p>
                 </div>
 
                 <nav className="site-footer-links" aria-label="Liens de pied de page">
                   <Link href="/carte">Carte</Link>
-                  <Link href="/naturopathe-paris">Annuaire Paris</Link>
+                  <Link href="/annuaire-naturopathes">Annuaire</Link>
                   <Link href="/praticiens">Espace praticiens</Link>
                   <Link href="/a-propos">À propos</Link>
                 </nav>
@@ -69,7 +69,7 @@ export default function RootLayout({
 
               <div className="site-footer-bottom">
                 <p className="site-footer-copy">
-                  Couverture initiale: Paris, avec extension progressive vers l’Île-de-France.
+                  Couverture actuelle: Paris et les départements d’Île-de-France.
                 </p>
                 <p className="site-footer-legal">
                   <Link href="/mentions-legales">Mentions légales</Link> ·{" "}

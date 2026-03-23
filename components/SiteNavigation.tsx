@@ -30,7 +30,7 @@ const navigationItems: NavItem[] = [
     isActive: (pathname) => pathname === "/" || pathname.startsWith("/carte")
   },
   {
-    href: "/naturopathe-paris",
+    href: "/annuaire-naturopathes",
     label: "Annuaire",
     mobileLabel: "Annuaire",
     icon: (
@@ -44,7 +44,9 @@ const navigationItems: NavItem[] = [
       </svg>
     ),
     isActive: (pathname) =>
-      pathname.startsWith("/naturopathe-paris") || pathname.startsWith("/naturopathe/")
+      pathname.startsWith("/annuaire-naturopathes") ||
+      pathname.startsWith("/naturopathe-paris") ||
+      pathname.startsWith("/naturopathe/")
   },
   {
     href: "/praticiens",

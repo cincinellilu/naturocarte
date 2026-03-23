@@ -90,7 +90,6 @@ export default function CarteInteractive({
   const [locateRequestNonce, setLocateRequestNonce] = useState(0);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [canUseFullscreen, setCanUseFullscreen] = useState(false);
 
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
   const mapFrameRef = useRef<HTMLDivElement | null>(null);
@@ -170,23 +169,34 @@ export default function CarteInteractive({
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    setCanUseFullscreen(typeof document.documentElement.requestFullscreen === "function");
-  }, []);
 
-  useEffect(() => {
-    const frameElement = mapFrameRef.current;
-    if (!frameElement || typeof document === "undefined") return;
+    if (!isFullscreen) {
+      return;
+    }
 
-    const handleFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === frameElement);
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverscroll = document.body.style.overscrollBehavior;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "contain";
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsFullscreen(false);
+      }
     };
 
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overscrollBehavior = previousBodyOverscroll;
+      document.removeEventListener("keydown", handleEscape);
     };
-  }, []);
+  }, [isFullscreen]);
 
   useEffect(() => {
     const query = searchQuery.trim();
@@ -326,22 +336,8 @@ export default function CarteInteractive({
     setLocateRequestNonce((current) => current + 1);
   };
 
-  const handleToggleFullscreen = async () => {
-    const frameElement = mapFrameRef.current;
-    if (!frameElement || typeof document === "undefined") return;
-
-    try {
-      if (document.fullscreenElement === frameElement) {
-        await document.exitFullscreen();
-        return;
-      }
-
-      if (typeof frameElement.requestFullscreen === "function") {
-        await frameElement.requestFullscreen();
-      }
-    } catch {
-      setIsFullscreen(false);
-    }
+  const handleToggleFullscreen = () => {
+    setIsFullscreen((current) => !current);
   };
 
   const showNoResults =
@@ -357,6 +353,7 @@ export default function CarteInteractive({
           ref={mapFrameRef}
           className={[
             "map-frame",
+            isFullscreen ? "map-frame--fullscreen" : null,
             selectedSlug ? "map-frame--practitioner-open" : null
           ]
             .filter(Boolean)
@@ -380,7 +377,7 @@ export default function CarteInteractive({
                 id="address-search"
                 type="text"
                 className="search-input"
-                placeholder="10 Rue de Rivoli, Paris"
+                placeholder="10 Rue de Rivoli, Paris ou Versailles"
                 value={searchQuery}
                 onChange={(event) => {
                   setSearchQuery(event.target.value);
@@ -425,6 +422,7 @@ export default function CarteInteractive({
             onReady={() => setIsMapReady(true)}
             locateRequestNonce={locateRequestNonce}
             onGeoErrorChange={setGeoError}
+            isFullscreen={isFullscreen}
           />
 
           <div
@@ -440,9 +438,9 @@ export default function CarteInteractive({
                 type="button"
                 className="map-fullscreen-btn"
                 onClick={handleToggleFullscreen}
-                aria-label={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
-                title={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
-                disabled={!canUseFullscreen}
+                aria-label={isFullscreen ? "Quitter le plein écran" : "Ouvrir la carte en plein écran"}
+                title={isFullscreen ? "Quitter le plein écran" : "Ouvrir la carte en plein écran"}
+                aria-pressed={isFullscreen}
               >
                 <span className="map-control-icon" aria-hidden="true">
                   {isFullscreen ? (
@@ -550,7 +548,13 @@ export default function CarteInteractive({
                       </span>
                     </button>
                     <Link href={`/naturopathe/${p.slug}`} className="practitioner-item-link">
-                      Voir la fiche
+                      <span>Voir la fiche</span>
+                      <span className="practitioner-item-link-icon" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7">
+                          <path d="M5 11 11 5" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M6 5h5v5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
                     </Link>
                   </li>
                 );

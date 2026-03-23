@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PARIS_ARRONDISSEMENTS } from "@/lib/paris";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
@@ -14,12 +15,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const supabase = getSupabaseServerClient();
-    const { data } = await supabase
-      .from("practitioners")
-      .select("slug, updated_at:created_at") // pas de updated_at => on prend created_at
-      .in("status", [...PUBLIC_PRACTITIONER_STATUSES]);
+    const data = await fetchAllSupabaseRows<{ slug: string; updated_at: string | null }>(
+      (from, to) =>
+        supabase
+          .from("practitioners")
+          .select("slug, updated_at:created_at") // pas de updated_at => on prend created_at
+          .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+          .order("slug", { ascending: true })
+          .range(from, to)
+    );
 
-    practitionerEntries = (data ?? []).map((p) => ({
+    practitionerEntries = data.map((p) => ({
       url: `${siteUrl}/naturopathe/${p.slug}`,
       lastModified: p.updated_at ? new Date(p.updated_at) : now,
       changeFrequency: "weekly",

@@ -6,6 +6,7 @@ import {
   hasAdminProspectsAccess,
   isAdminProspectsConfigured
 } from "@/lib/admin-prospects-auth";
+import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { MANAGED_PROSPECT_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -96,18 +97,15 @@ export default async function AdminProspectsPage({
 
   try {
     const supabase = getSupabaseAdminClient();
-    const { data, error } = await supabase
-      .from("practitioners")
-      .select("slug, first_name, last_name, adresse, postal_code, city, phone, email, website, status")
-      .in("status", [...MANAGED_PROSPECT_STATUSES])
-      .order("city", { ascending: true })
-      .order("last_name", { ascending: true });
-
-    if (error) {
-      hasError = true;
-    } else {
-      practitioners = (data ?? []) as AdminProspect[];
-    }
+    practitioners = await fetchAllSupabaseRows<AdminProspect>((from, to) =>
+      supabase
+        .from("practitioners")
+        .select("slug, first_name, last_name, adresse, postal_code, city, phone, email, website, status")
+        .in("status", [...MANAGED_PROSPECT_STATUSES])
+        .order("city", { ascending: true })
+        .order("last_name", { ascending: true })
+        .range(from, to)
+    );
   } catch {
     hasError = true;
   }

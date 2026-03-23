@@ -4,6 +4,7 @@ import Link from "next/link";
 import CarteInteractive from "@/components/CarteInteractive";
 import ListSkeleton from "@/components/ListSkeleton";
 import MapSkeleton from "@/components/MapSkeleton";
+import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -51,19 +52,16 @@ export default async function CartePage() {
 
   try {
     const supabase = getSupabaseServerClient();
-    const { data, error } = await supabase
-      .from("practitioners")
-      .select(
-        "first_name, last_name, slug, adresse, postal_code, city, lat, lng, phone, email, booking_url"
-      )
-      .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
-      .order("last_name", { ascending: true });
-
-    if (error) {
-      hasError = true;
-    } else {
-      practitioners = (data ?? []) as PractitionerRow[];
-    }
+    practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+      supabase
+        .from("practitioners")
+        .select(
+          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, phone, email, booking_url"
+        )
+        .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+        .order("last_name", { ascending: true })
+        .range(from, to)
+    );
   } catch {
     hasError = true;
   }

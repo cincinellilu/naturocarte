@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import {
   formatParisPostalCode,
   PARIS_ARRONDISSEMENTS,
@@ -37,14 +38,15 @@ async function getArrondissementPractitioners(
 ): Promise<PractitionerRow[]> {
   try {
     const supabase = getSupabaseServerClient();
-    const { data } = await supabase
-      .from("practitioners")
-      .select("slug, first_name, last_name, city, postal_code, adresse")
-      .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
-      .eq("postal_code", formatParisPostalCode(arrondissement))
-      .order("last_name", { ascending: true });
-
-    return (data ?? []) as PractitionerRow[];
+    return await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+      supabase
+        .from("practitioners")
+        .select("slug, first_name, last_name, city, postal_code, adresse")
+        .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+        .eq("postal_code", formatParisPostalCode(arrondissement))
+        .order("last_name", { ascending: true })
+        .range(from, to)
+    );
   } catch {
     return [];
   }

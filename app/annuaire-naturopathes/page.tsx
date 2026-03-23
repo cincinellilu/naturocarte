@@ -5,6 +5,7 @@ import {
   IDF_DEPARTMENTS,
   getDepartmentFromPostalCode
 } from "@/lib/locations";
+import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -95,12 +96,13 @@ export default async function AnnuaireNaturopathesPage() {
 
   try {
     const supabase = getSupabaseServerClient();
-    const { data } = await supabase
-      .from("practitioners")
-      .select("city, postal_code")
-      .in("status", [...PUBLIC_PRACTITIONER_STATUSES]);
-
-    practitioners = (data ?? []) as PractitionerRow[];
+    practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+      supabase
+        .from("practitioners")
+        .select("city, postal_code")
+        .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+        .range(from, to)
+    );
   } catch {
     practitioners = [];
   }

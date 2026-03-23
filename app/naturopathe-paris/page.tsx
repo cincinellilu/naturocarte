@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -47,14 +48,15 @@ export default async function NaturopatheParisPage() {
 
   try {
     const supabase = getSupabaseServerClient();
-    const { data } = await supabase
-      .from("practitioners")
-      .select("slug, first_name, last_name, city, postal_code, adresse")
-      .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
-      .or("city.ilike.%paris%,postal_code.like.75%")
-      .order("last_name", { ascending: true });
-
-    practitioners = (data ?? []) as PractitionerRow[];
+    practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+      supabase
+        .from("practitioners")
+        .select("slug, first_name, last_name, city, postal_code, adresse")
+        .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+        .or("city.ilike.%paris%,postal_code.like.75%")
+        .order("last_name", { ascending: true })
+        .range(from, to)
+    );
   } catch {
     practitioners = [];
   }

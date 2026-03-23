@@ -90,25 +90,37 @@ function buildPopupHtml(point: MapPoint): string {
     (point.booking_url.startsWith("http://") || point.booking_url.startsWith("https://"))
       ? point.booking_url
       : null;
+  const phoneHref = point.phone ? point.phone.replace(/[^\d+]/g, "") : "";
 
   const phoneLine = point.phone
-    ? `<p><strong>Tél :</strong> ${escapeHtml(point.phone)}</p>`
+    ? `<p class="map-popup-detail">
+        <span class="map-popup-label">Telephone</span>
+        <a class="map-popup-value" href="tel:${escapeHtml(phoneHref)}">${escapeHtml(point.phone)}</a>
+      </p>`
     : "";
   const emailLine = point.email
-    ? `<p><strong>Email :</strong> <a href="mailto:${encodeURIComponent(point.email)}">${escapeHtml(point.email)}</a></p>`
+    ? `<p class="map-popup-detail">
+        <span class="map-popup-label">Email</span>
+        <a class="map-popup-value" href="mailto:${encodeURIComponent(point.email)}">${escapeHtml(point.email)}</a>
+      </p>`
     : "";
   const bookingLine = bookingUrl
-    ? `<p><strong>Booking :</strong> <a href="${escapeHtml(
+    ? `<a class="map-popup-secondary" href="${escapeHtml(
         bookingUrl
-      )}" target="_blank" rel="noopener noreferrer">Prendre rendez-vous</a></p>`
+      )}" target="_blank" rel="noopener noreferrer">Prendre rendez-vous</a>`
     : "";
 
   return `<div class="map-popup">
     <p class="map-popup-name">${escapeHtml(point.first_name)} ${escapeHtml(point.last_name)}</p>
-    ${phoneLine}
-    ${emailLine}
-    ${bookingLine}
-    <a class="map-popup-link" href="/naturopathe/${encodeURIComponent(point.slug)}">Voir la fiche</a>
+    ${
+      phoneLine || emailLine
+        ? `<div class="map-popup-details">${phoneLine}${emailLine}</div>`
+        : ""
+    }
+    <div class="map-popup-actions">
+      <a class="map-popup-link" href="/naturopathe/${encodeURIComponent(point.slug)}">Voir la fiche</a>
+      ${bookingLine}
+    </div>
   </div>`;
 }
 

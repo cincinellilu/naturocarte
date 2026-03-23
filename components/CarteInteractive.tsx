@@ -99,6 +99,7 @@ export default function CarteInteractive({
   const [locateRequestNonce, setLocateRequestNonce] = useState(0);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isZoneFilterOpen, setIsZoneFilterOpen] = useState(false);
 
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
   const mapFrameRef = useRef<HTMLDivElement | null>(null);
@@ -151,6 +152,10 @@ export default function CarteInteractive({
   useEffect(() => {
     setShowAll(false);
   }, [activeDepartment?.code]);
+
+  useEffect(() => {
+    setIsZoneFilterOpen(false);
+  }, [zoneParam]);
 
   useEffect(() => {
     if (!selectedSlug) return;
@@ -395,58 +400,78 @@ export default function CarteInteractive({
     ? `Les résultats sont limités à ${activeZoneLabel}. Utilisez ensuite la recherche d’adresse pour classer les fiches autour de vous.`
     : "Commencez par une zone ou entrez directement votre adresse pour faire remonter les praticiens les plus proches.";
 
+  const zoneFilterDescription = activeDepartment
+    ? `Zone actuelle : ${activeZoneLabel}. Cliquez sur Filtrer pour changer de zone.`
+    : "Cliquez sur Filtrer pour limiter la recherche à un département.";
+
   return (
     <div className="map-experience">
       <section className="zone-filter-panel">
         <div className="zone-filter-head">
           <div>
             <h2>Choisir une zone</h2>
-            <p className="directory-caption">
-              Réduisez d’abord la recherche à un département, puis affinez autour d’une
-              adresse si besoin.
-            </p>
+            <p className="directory-caption">{zoneFilterDescription}</p>
           </div>
-          {activeDepartment ? (
-            <Link className="search-clear-btn" href="/carte">
-              Voir toute l’Île-de-France
-            </Link>
-          ) : (
-            <Link className="search-clear-btn" href="/annuaire-naturopathes">
-              Explorer l’annuaire
-            </Link>
-          )}
-        </div>
-
-        <div className="zone-filter-links">
-          <Link
-            href="/carte"
-            className={["zone-filter-link", !activeDepartment ? "zone-filter-link--active" : null]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            Toute l’Île-de-France
-          </Link>
-
-          {IDF_DEPARTMENTS.map((department) => (
-            <Link
-              key={department.code}
-              href={`/carte?zone=${department.code}`}
-              className={[
-                "zone-filter-link",
-                activeDepartment?.code === department.code ? "zone-filter-link--active" : null
-              ]
-                .filter(Boolean)
-                .join(" ")}
+          <div className="zone-filter-actions">
+            <button
+              type="button"
+              className="search-clear-btn"
+              onClick={() => setIsZoneFilterOpen((current) => !current)}
+              aria-expanded={isZoneFilterOpen}
+              aria-controls="zone-filter-options"
             >
-              {department.code === "75" ? "Paris" : department.name}
-            </Link>
-          ))}
+              Filtrer
+            </button>
+
+            {activeDepartment ? (
+              <Link className="search-clear-btn" href="/carte">
+                Réinitialiser
+              </Link>
+            ) : (
+              <Link className="search-clear-btn" href="/annuaire-naturopathes">
+                Annuaire
+              </Link>
+            )}
+          </div>
         </div>
 
-        <p className="zone-filter-note">
-          Pour Paris, vous pouvez aussi parcourir les arrondissements depuis{" "}
-          <Link href="/naturopathe-paris">la page dédiée</Link>.
-        </p>
+        {isZoneFilterOpen ? (
+          <>
+            <div id="zone-filter-options" className="zone-filter-links">
+              <Link
+                href="/carte"
+                className={[
+                  "zone-filter-link",
+                  !activeDepartment ? "zone-filter-link--active" : null
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                Toute l’Île-de-France
+              </Link>
+
+              {IDF_DEPARTMENTS.map((department) => (
+                <Link
+                  key={department.code}
+                  href={`/carte?zone=${department.code}`}
+                  className={[
+                    "zone-filter-link",
+                    activeDepartment?.code === department.code ? "zone-filter-link--active" : null
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  {department.code === "75" ? "Paris" : department.name}
+                </Link>
+              ))}
+            </div>
+
+            <p className="zone-filter-note">
+              Pour Paris, vous pouvez aussi parcourir les arrondissements depuis{" "}
+              <Link href="/naturopathe-paris">la page dédiée</Link>.
+            </p>
+          </>
+        ) : null}
       </section>
 
       <div ref={mapSectionRef} className="map-stage">

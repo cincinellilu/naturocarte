@@ -1,0 +1,58 @@
+first_name	last_name	slug	adresse	postal_code	city	lat	lng	phone	email	website	booking_url	description	status
+Blandine	PAPLORAY	blandine-paploray-aubervilliers	9 Rue des Noyers	93300	Aubervilliers	48.9157491	2.3828574	0766102464					gmaps_idf_20260323_93
+Elodie	BELLAHSENE	elodie-bellahsene-aulnay-sous-bois	48 Bd Charles Floquet	93600	Aulnay-sous-Bois	48.9336246	2.5032296	0621655917					gmaps_idf_20260323_93
+Sarah	DEHBI	sarah-dehbi-aulnay-sous-bois	5 Rue Berteaux	93600	Aulnay-sous-Bois	48.9327245	2.4974967	0664086147					gmaps_idf_20260323_93
+Fatima	EZ-ZAHRA BEN YESSEF	fatima-ez-zahra-ben-yessef-aulnay-sous-bois	62 Rue Maximilien Robespierre	93600	Aulnay-sous-Bois	48.9466255	2.5000714	0650046333					gmaps_idf_20260323_93
+Céline	SEGAILLAT	celine-segaillat-aulnay-sous-bois	21 bis Rue du Commandant Brasseur	93600	Aulnay-sous-Bois	48.9339239	2.4967619	0765151083					gmaps_idf_20260323_93
+Essentielle	SUNNA	essentielle-sunna-aulnay-sous-bois	9 Rue Severine	93600	Aulnay-sous-Bois	48.9272391	2.489209	0175915186					gmaps_idf_20260323_93
+Mervete	ALBERTUS	mervete-albertus-bobigny	18 Prom. Jean Rostand	93000	Bobigny	48.9089551	2.4547038	0659816185					gmaps_idf_20260323_93
+Céline	DUARTE	celine-duarte-drancy	17 Av. Henri Barbusse	93700	Drancy	48.915656	2.4421473						gmaps_idf_20260323_93
+Fatima	EZ-ZAHRA BEN YESSEF	fatima-ez-zahra-ben-yessef-drancy	47 Av. Henri Barbusse	93700	Drancy	48.9166326	2.4442665						gmaps_idf_20260323_93
+Camille	BRETELLE	camille-bretelle-epinay-sur-seine	1 All. Rodin	93800	Épinay-sur-Seine	48.9561262	2.3234527	0649373060					gmaps_idf_20260323_93
+Emma	SALAH	emma-salah-epinay-sur-seine	109 Rue de Saint-Gratien	93800	Épinay-sur-Seine	48.962786	2.2982929	0651269203					gmaps_idf_20260323_93
+Célia	BOURGEOIS	celia-bourgeois-gagny	1 Rue Maurice Druon	93220	Gagny	48.8859478	2.5322407	0617410607					gmaps_idf_20260323_93
+Marjana	BOZIC	marjana-bozic-gagny	16 Rue Parmentier	93220	Gagny	48.8837717	2.5325334	0617055546					gmaps_idf_20260323_93
+Alice	MARIE	alice-marie-gagny	6 Rue Berthomié	93220	Gagny	48.8772109	2.5292638	0629532336					gmaps_idf_20260323_93
+Pomme	CÉLARIÉ	pomme-celarie-l-ile-saint-denis	12 Rue Louis Bouxin	93450	L'Île-Saint-Denis	48.9338262	2.3393905	0663233274					gmaps_idf_20260323_93
+Boukhalil	CHRISTINE	boukhalil-christine-la-courneuve	16 Rue Beaufils	93120	La Courneuve	48.9263523	2.3832332						gmaps_idf_20260323_93
+Afiya	ESENCIAL	afiya-esencial-le-blanc-mesnil	28 Rue Georges Bizet	93150	Le Blanc-Mesnil	48.9379613	2.46858	0767065162					gmaps_idf_20260323_93
+Geoffrey	LARDENOIS	geoffrey-lardenois-le-blanc-mesnil	6 Rue de la Concorde	93150	Le Blanc-Mesnil	48.9359542	2.4619295	0637867013					gmaps_idf_20260323_93
+M	DUNG TRAN	m-dung-tran-les-lilas	38 Rue des Bruyères	93260	Les Lilas	48.8770294	2.4137788	0623993711					gmaps_idf_20260323_93
+Sabrina	MEURANT	sabrina-meurant-les-lilas	108 bis Rue Romain Rolland	93260	Les Lilas	48.8793546	2.4215512	0780966193					gmaps_idf_20260323_93
+Marie	TAMISIER	marie-tamisier-les-lilas	65 Rue Henri Barbusse	93260	Les Lilas	48.8831296	2.4167757	0689776731					gmaps_idf_20260323_93
+Naturellement	FAHRA	naturellement-fahra-livry-gargan	6 Av. de la Gare de Gargan	93190	Livry-Gargan	48.9072131	2.5182752	0622445134					gmaps_idf_20260323_93
+Christophe	ETIENNE	christophe-etienne-montfermeil	Residence Chat des Perriers	93370	Montfermeil	48.897871	2.569754	0658898299					gmaps_idf_20260323_93
+Gwendoline	LE BER	gwendoline-le-ber-montfermeil	192 Av. Gabriel Péri	93370	Montfermeil	48.8898714	2.5516906	0762247261					gmaps_idf_20260323_93
+Marine	BERT	marine-bert-montreuil	L'Opale, 2 Rue Franklin Bâtiment B	93100	Montreuil	48.8612038	2.4438314	0660478195					gmaps_idf_20260323_93
+Laetitia	BEVERINI	laetitia-beverini-montreuil	51 Ter Rue Edouard Vaillant	93100	Montreuil	48.8542264	2.4321986	0745200408					gmaps_idf_20260323_93
+Jessica	BRAIL	jessica-brail-montreuil	19 Rue Garibaldi	93100	Montreuil	48.8554232	2.427043	0664118852					gmaps_idf_20260323_93
+Ateliers	DOJO	ateliers-dojo-montreuil	16 Place de la Fraternite	93100	Montreuil	48.8570485	2.4230202	0148187158					gmaps_idf_20260323_93
+Elodie	FARJAUD	elodie-farjaud-montreuil	37b Rue Lebour	93100	Montreuil	48.8540083	2.4252063	0769429128					gmaps_idf_20260323_93
+Cyril	HAMOUDA	cyril-hamouda-montreuil	109 Rue de Rosny	93100	Montreuil	48.8641949	2.4518675						gmaps_idf_20260323_93
+Clémence	HÉNON	clemence-henon-montreuil	54 Rue du Capitaine Dreyfus	93100	Montreuil	48.8592237	2.4399886	0645952615					gmaps_idf_20260323_93
+Patricia	JOREAU	patricia-joreau-montreuil	34 Boulevard Paul Vaillant Couturier	93100	Montreuil	48.8657712	2.4447735	0624282173					gmaps_idf_20260323_93
+Maeva	POLAT	maeva-polat-montreuil	201 Rue Etienne Marcel	93100	Montreuil	48.8564376	2.4191988	0643147754					gmaps_idf_20260323_93
+Émilie	BOUTIN	emilie-boutin-neuilly-plaisance	33 Av. Danielle Casanova	93360	Neuilly-Plaisance	48.8585148	2.5007304	0756871089					gmaps_idf_20260323_93
+Camille	BRETELLE	camille-bretelle-neuilly-plaisance	53 Av. du Maréchal Foch	93360	Neuilly-Plaisance	48.8619113	2.5065149	0649373060					gmaps_idf_20260323_93
+Clémence	ENOU	clemence-enou-noisy-le-grand	30 Rue de la Croix Rouge	93160	Noisy-le-Grand	48.8469129	2.5673987	0768898716					gmaps_idf_20260323_93
+Sylvie	GUFFON	sylvie-guffon-noisy-le-grand	34 All. Alphonse Daudet	93160	Noisy-le-Grand	48.8344579	2.5523902	0752022718					gmaps_idf_20260323_93
+Silke	PATEL CONSEILLÈRE FLEURS DE BACH	silke-patel-conseillere-fleurs-de-bach-noisy-le-grand	19 Rue de Malnoue	93160	Noisy-le-Grand	48.8474476	2.5604906	0612486495					gmaps_idf_20260323_93
+Clara	CORNAERT	clara-cornaert-pantin	18 Rue Eugène et Marie-Louise Cornet	93500	Pantin	48.8934985	2.4056773	0627375172					gmaps_idf_20260323_93
+Maeva	POLAT	maeva-polat-pantin	(5)Naturopathe	93500	Pantin	48.8948907	2.4029758	0643147754					gmaps_idf_20260323_93
+Nawal	TAMIM	nawal-tamim-pantin	7 Av. Jean Lolive	93500	Pantin	48.8907572	2.3995091	0612891771					gmaps_idf_20260323_93
+David	FAHMI	david-fahmi-rosny-sous-bois	6 All. Gaspard Monge	93110	Rosny-sous-Bois	48.8831508	2.4885353	0749391585					gmaps_idf_20260323_93
+Powerstrips-	PATCHS ENERGIE	powerstrips-patchs-energie-rosny-sous-bois	10 All. des Tilleuls	93110	Rosny-sous-Bois	48.8749303	2.4713506						gmaps_idf_20260323_93
+Nathalie	RELIER EI	nathalie-relier-ei-rosny-sous-bois	5 Rue du Pré Gentil	93110	Rosny-sous-Bois	48.8694908	2.4916146	0766292961					gmaps_idf_20260323_93
+Rosny	SOUS BOIS 93	rosny-sous-bois-93-rosny-sous-bois	6 All. Gaspard Monge	93110	Rosny-sous-Bois	48.8831508	2.4885353	0170323241					gmaps_idf_20260323_93
+Naciba	ARRAD	naciba-arrad-saint-denis	9 Rue Francis de Pressensé	93210	Saint-Denis	48.9195971	2.3608613	0648179249					gmaps_idf_20260323_93
+Taoufik	BAROUN	taoufik-baroun-saint-denis	165 Av. du Président Wilson	93210	Saint-Denis	48.9103881	2.3574928	0662123760					gmaps_idf_20260323_93
+Chrystel	RIJA	chrystel-rija-saint-denis	22 Rue de la Légion d'Honneur	93200	Saint-Denis	48.9335577	2.3576757						gmaps_idf_20260323_93
+Genevieve	ARMENGAUD	genevieve-armengaud-saint-ouen-sur-seine	7 Rue Eugène Berthoud	93400	Saint-Ouen-sur-Seine	48.9064785	2.3450407						gmaps_idf_20260323_93
+Juliette	DELBREUVE	juliette-delbreuve-saint-ouen-sur-seine	93 Rue Ardoin	93400	Saint-Ouen-sur-Seine	48.9096541	2.3267213	0620891048					gmaps_idf_20260323_93
+Virginie	DELVERT	virginie-delvert-saint-ouen-sur-seine	54 Rue des Rosiers	93400	Saint-Ouen-sur-Seine	48.9057136	2.3364384	0786479767					gmaps_idf_20260323_93
+Nicolas	LAZAAR	nicolas-lazaar-saint-ouen-sur-seine	105 Bd Victor HugoDéfinitivement	93400	Saint-Ouen-sur-Seine	48.9064541	2.3252812	0670159806					gmaps_idf_20260323_93
+Laken	LIMA	laken-lima-saint-ouen-sur-seine	au sein du "Cabinet paramédical des Docks, 21 All. de Paris Bâtiment B1	93400	Saint-Ouen-sur-Seine	48.9133133	2.3255606						gmaps_idf_20260323_93
+Vera	MENRATH	vera-menrath-saint-ouen-sur-seine	24 Bd Victor Hugo	93400	Saint-Ouen-sur-Seine	48.9110642	2.3318835	0689051710					gmaps_idf_20260323_93
+Sandra	LEAL ROUSSEL	sandra-leal-roussel-villemomble	22 Av. Henri Dunant	93250	Villemomble	48.8835293	2.5168211	0619050650					gmaps_idf_20260323_93
+Naïma	GERMAIN	naima-germain-villepinte	2 All. Urbain le Verrier	93420	Villepinte	48.9631028	2.5404725	0662341329					gmaps_idf_20260323_93
+Laurent	GONÇALVES	laurent-goncalves-villepinte	26 Av. Auguste Blanqui	93420	Villepinte	48.9468653	2.5627008	0626363608					gmaps_idf_20260323_93

@@ -200,14 +200,16 @@ export default function MapboxMap({
   selectionSource = null,
   onSelectSlug,
   searchCenter = null,
-  onReady
+  onReady,
+  hideMobileControls = false
 }: {
   points: MapPoint[];
   selectedSlug?: string | null;
   selectionSource?: SelectionSource;
-  onSelectSlug?: (slug: string) => void;
+  onSelectSlug?: (slug: string | null) => void;
   searchCenter?: SearchCenter;
   onReady?: () => void;
+  hideMobileControls?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -365,6 +367,9 @@ export default function MapboxMap({
           popupRef.current = new mapboxgl.Popup({ closeButton: true, closeOnClick: true })
             .setLngLat(coordinates)
             .setHTML(buildPopupHtml(selectedPoint))
+            .on("close", () => {
+              onSelectSlugRef.current?.(null);
+            })
             .addTo(map);
 
           onSelectSlugRef.current?.(slug);
@@ -476,6 +481,9 @@ export default function MapboxMap({
     popupRef.current = new mapboxgl.Popup({ closeButton: true, closeOnClick: true })
       .setLngLat([selectedPoint.lng, selectedPoint.lat])
       .setHTML(buildPopupHtml(selectedPoint))
+      .on("close", () => {
+        onSelectSlugRef.current?.(null);
+      })
       .addTo(map);
   }, [selectedSlug, selectionSource]);
 
@@ -491,6 +499,7 @@ export default function MapboxMap({
 
     popupRef.current?.remove();
     popupRef.current = null;
+    onSelectSlugRef.current?.(null);
 
     moveMap(map, {
       center: [searchCenter.lng, searchCenter.lat],
@@ -555,22 +564,80 @@ export default function MapboxMap({
   };
 
   if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN) {
-    return <div className="map-fallback">Carte indisponible: token Mapbox manquant.</div>;
+    return (
+      <div className="map-root" aria-label="Carte des praticiens">
+        <div className="map-fallback">Carte indisponible: token Mapbox manquant.</div>
+        <div
+          className={[
+            "map-overlay",
+            hideMobileControls ? "map-overlay--hidden-mobile" : null
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <div className="map-overlay-controls">
+            {canUseFullscreen ? (
+              <button
+                type="button"
+                className="map-fullscreen-btn"
+                aria-label="Passer en plein écran"
+                title="Passer en plein écran"
+                disabled
+              >
+                <span className="map-control-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                    <path d="M9 5H5v4M15 5h4v4M19 15v4h-4M5 15v4h4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </button>
+            ) : null}
+
+            <button type="button" className="map-locate-btn" disabled>
+              Me localiser
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="map-root" aria-label="Carte des praticiens">
       <div ref={containerRef} className="map-canvas" />
-      <div className="map-overlay">
+      <div
+        className={[
+          "map-overlay",
+          hideMobileControls ? "map-overlay--hidden-mobile" : null
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <div className="map-overlay-controls">
+          {canUseFullscreen ? (
+            <button
+              type="button"
+              className="map-fullscreen-btn"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
+              title={isFullscreen ? "Quitter le plein écran" : "Passer en plein écran"}
+            >
+              <span className="map-control-icon" aria-hidden="true">
+                {isFullscreen ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                    <path d="M9 15H5v4M15 9h4V5M19 15h-4v4M5 9h4V5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                    <path d="M9 5H5v4M15 5h4v4M19 15v4h-4M5 15v4h4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </span>
+            </button>
+          ) : null}
+
           <button type="button" className="map-locate-btn" onClick={() => requestGeolocation(true)}>
             Me localiser
           </button>
-          {canUseFullscreen ? (
-            <button type="button" className="map-fullscreen-btn" onClick={toggleFullscreen}>
-              {isFullscreen ? "Quitter le plein écran" : "Plein écran"}
-            </button>
-          ) : null}
         </div>
         {geoError ? <p className="map-overlay-error">{geoError}</p> : null}
       </div>

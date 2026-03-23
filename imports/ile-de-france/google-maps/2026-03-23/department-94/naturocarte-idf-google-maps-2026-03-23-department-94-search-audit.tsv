@@ -1,0 +1,43 @@
+department_code	commune_name	priority_in_department	new_unique_places	new_relevant_places	total_unique_places	stale_query_count
+94	Vitry-sur-Seine	1	26	25	26	0
+94	Créteil	2	94	78	120	0
+94	Champigny-sur-Marne	3	23	23	143	0
+94	Saint-Maur-des-Fossés	4	37	22	180	0
+94	Ivry-sur-Seine	5	71	69	251	0
+94	Villejuif	6	12	9	263	0
+94	Maisons-Alfort	7	23	13	286	0
+94	Fontenay-sous-Bois	8	41	34	327	0
+94	Vincennes	9	38	35	365	0
+94	Choisy-le-Roi	10	26	20	391	0
+94	Alfortville	11	4	1	395	0
+94	Villeneuve-Saint-Georges	12	14	11	409	0
+94	Le Perreux-sur-Marne	13	15	4	424	0
+94	Villiers-sur-Marne	14	18	13	442	0
+94	Thiais	15	2	0	444	0
+94	Nogent-sur-Marne	16	5	1	449	0
+94	L'Haÿ-les-Roses	17	7	6	456	0
+94	Cachan	18	3	2	459	0
+94	Fresnes	19	13	10	472	0
+94	Charenton-le-Pont	20	0	0	472	0
+94	Sucy-en-Brie	21	34	27	506	0
+94	Limeil-Brévannes	22	1	0	507	0
+94	Orly	23	9	6	516	0
+94	Le Kremlin-Bicêtre	24	24	21	540	0
+94	Arcueil	25	17	11	557	0
+94	Le Plessis-Trévise	26	3	0	560	0
+94	Saint-Mandé	27	29	25	589	0
+94	Villeneuve-le-Roi	28	6	1	595	0
+94	Joinville-le-Pont	29	1	0	596	0
+94	Gentilly	30	3	2	599	0
+94	Chevilly-Larue	31	4	0	603	0
+94	Chennevières-sur-Marne	32	0	0	603	0
+94	Bry-sur-Marne	33	3	0	606	0
+94	Bonneuil-sur-Marne	34	6	6	612	0
+94	Boissy-Saint-Léger	35	0	0	612	0
+94	Saint-Maurice	36	1	0	613	0
+94	Valenton	37	1	0	614	0
+94	La Queue-en-Brie	38	4	2	618	0
+94	Villecresnes	39	0	0	618	0
+94	Ormesson-sur-Marne	40	39	37	657	0
+94	Ablon-sur-Seine	41	6	4	663	0
+94	Rungis	42	6	0	669	0

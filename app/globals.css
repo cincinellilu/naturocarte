@@ -2782,10 +2782,12 @@ h3,
 }
 
 .practitioner-list li {
-  padding: 0.85rem 1rem;
+  padding: 0.95rem 1rem;
   border-radius: 0.9rem;
   background: #ffffff;
   box-shadow: none;
+  min-width: 0;
+  align-items: stretch;
 }
 
 .practitioner-list li:hover {
@@ -2796,10 +2798,19 @@ h3,
 
 .practitioner-item-name {
   font-size: 1rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--text-strong);
+  font-weight: 700;
 }
 
 .practitioner-item-meta {
   font-size: 0.93rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--muted);
 }
 
 .practitioner-item-submeta {
@@ -2807,14 +2818,26 @@ h3,
 }
 
 .practitioner-item-distance {
-  padding: 0.18rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 0.24rem 0.55rem;
+  border-radius: 999px;
   background: var(--accent-soft);
+  color: var(--accent-strong);
   font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .practitioner-item-link {
-  min-width: auto;
-  padding: 0.4rem 0.7rem;
+  min-width: 7.8rem;
+  padding: 0.55rem 0.8rem;
+  align-self: center;
+  border: 1px solid var(--line);
+  color: var(--text-strong);
+  font-weight: 600;
+  text-align: center;
 }
 
 .practitioner-list-cta {
@@ -2952,14 +2975,99 @@ h3,
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+.map-overlay {
+  left: 0.75rem;
+  right: auto;
+  bottom: 0.75rem;
+  align-items: flex-start;
+  max-width: calc(100% - 1.5rem);
+  z-index: 90;
+}
+
+.practitioner-item-button,
+.practitioner-item-head {
+  min-width: 0;
+}
+
+.practitioner-item-button {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+.practitioner-item-head {
+  align-items: flex-start;
+}
+
+.practitioner-item-name-wrap {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.practitioner-item-hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.practitioner-item-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.practitioner-item-icon {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+  color: var(--accent);
+}
+
+.practitioner-item-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.practitioner-item--active {
+  border-color: rgba(15, 118, 110, 0.28) !important;
+  box-shadow: 0 0 0 1px rgba(15, 118, 110, 0.12), var(--shadow-md) !important;
+}
+
+.practitioner-item--active .practitioner-item-hint {
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.practitioner-item--active .practitioner-item-link {
+  border-color: rgba(15, 118, 110, 0.22);
+  background: var(--accent-soft);
+}
+
+.map-popup {
+  min-width: 0;
+  max-width: min(18rem, calc(100vw - 3rem));
+}
+
+.map-popup p,
+.map-popup a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .map-fullscreen-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.45rem;
-  padding: 0 0.8rem;
+  width: 2.45rem;
+  min-width: 2.45rem;
+  height: 2.45rem;
+  padding: 0;
   border: 1px solid var(--line);
   border-radius: 0.7rem;
   background: #ffffff;
@@ -2968,8 +3076,37 @@ h3,
   cursor: pointer;
 }
 
+.map-locate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.85rem;
+  border: 1px solid var(--line);
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
 .map-fullscreen-btn:hover {
   background: #f8fafc;
+}
+
+.map-locate-btn:disabled,
+.map-fullscreen-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.map-control-icon {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-control-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .map-frame:fullscreen {
@@ -2988,7 +3125,8 @@ h3,
 }
 
 .map-frame:fullscreen .map-overlay {
-  right: 1rem;
+  left: 1rem;
+  right: auto;
   bottom: 1rem;
 }
 
@@ -3005,12 +3143,25 @@ h3,
 }
 
 @media (max-width: 760px) {
+  .search-box--hidden-mobile,
+  .map-overlay--hidden-mobile {
+    display: none;
+  }
+
+  .map-overlay {
+    left: 0.5rem;
+    right: auto;
+    bottom: calc(5.8rem + env(safe-area-inset-bottom));
+    align-items: flex-start;
+    max-width: calc(100% - 1rem);
+  }
+
   .map-overlay-controls {
-    width: 100%;
+    width: auto;
   }
 
   .map-locate-btn,
   .map-fullscreen-btn {
-    flex: 1 1 0;
+    flex: 0 0 auto;
   }
 }

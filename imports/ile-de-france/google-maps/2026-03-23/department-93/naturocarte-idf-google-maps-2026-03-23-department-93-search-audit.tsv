@@ -1,0 +1,40 @@
+department_code	commune_name	priority_in_department	new_unique_places	new_relevant_places	total_unique_places	stale_query_count
+93	Saint-Denis	1	101	99	101	0
+93	Montreuil	2	79	79	180	0
+93	Aubervilliers	3	28	28	208	0
+93	Aulnay-sous-Bois	4	40	28	248	0
+93	Noisy-le-Grand	5	29	27	277	0
+93	Drancy	6	3	3	280	0
+93	Le Blanc-Mesnil	7	10	4	290	0
+93	Pantin	8	19	18	309	0
+93	Bobigny	9	19	13	328	0
+93	Saint-Ouen-sur-Seine	10	20	18	348	0
+93	Épinay-sur-Seine	11	10	9	358	0
+93	Sevran	12	14	3	372	0
+93	Bondy	13	8	6	380	0
+93	Livry-Gargan	14	8	6	388	0
+93	Rosny-sous-Bois	15	14	13	402	0
+93	La Courneuve	16	3	2	405	0
+93	Noisy-le-Sec	17	5	1	410	0
+93	Bagnolet	18	11	5	421	0
+93	Gagny	19	17	14	438	0
+93	Villepinte	20	3	3	441	0
+93	Stains	21	5	4	446	0
+93	Neuilly-sur-Marne	22	10	8	456	0
+93	Tremblay-en-France	23	2	2	458	0
+93	Romainville	24	11	4	469	0
+93	Villemomble	25	6	1	475	0
+93	Clichy-sous-Bois	26	5	5	480	0
+93	Montfermeil	27	6	3	486	0
+93	Les Pavillons-sous-Bois	28	4	1	490	0
+93	Les Lilas	29	4	0	494	0
+93	Neuilly-Plaisance	30	2	1	496	0
+93	Le Pré-Saint-Gervais	31	11	7	507	0
+93	Le Bourget	32	2	2	509	0
+93	Le Raincy	33	5	2	514	0
+93	Villetaneuse	34	3	3	517	0
+93	Dugny	35	1	1	518	0
+93	L'Île-Saint-Denis	36	1	1	519	0
+93	Vaujours	37	3	0	522	0
+93	Gournay-sur-Marne	38	6	3	528	0
+93	Coubron	39	0	0	528	0

@@ -265,7 +265,13 @@ export default function CarteInteractive({
     };
   }, [searchQuery]);
 
-  const handleMapSelect = (slug: string) => {
+  const handleMapSelect = (slug: string | null) => {
+    if (!slug) {
+      setSelectionSource(null);
+      setSelectedSlug(null);
+      return;
+    }
+
     setSelectionSource("map");
     setSelectedSlug(slug);
   };
@@ -300,8 +306,24 @@ export default function CarteInteractive({
   return (
     <div className="map-experience">
       <div ref={mapSectionRef} className="map-stage">
-        <div className="map-frame">
-          <div ref={searchWrapperRef} className="search-box search-box--overlay">
+        <div
+          className={[
+            "map-frame",
+            selectedSlug ? "map-frame--practitioner-open" : null
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <div
+            ref={searchWrapperRef}
+            className={[
+              "search-box",
+              "search-box--overlay",
+              selectedSlug ? "search-box--hidden-mobile" : null
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
             <div className="search-card">
               <label htmlFor="address-search" className="search-label">
                 Rechercher une adresse
@@ -353,6 +375,7 @@ export default function CarteInteractive({
             onSelectSlug={handleMapSelect}
             searchCenter={searchCenter ? { lng: searchCenter.lng, lat: searchCenter.lat } : null}
             onReady={() => setIsMapReady(true)}
+            hideMobileControls={Boolean(selectedSlug)}
           />
         </div>
       </div>
@@ -417,21 +440,39 @@ export default function CarteInteractive({
                       className="practitioner-item-button"
                       onClick={() => handleListSelect(p.slug)}
                       aria-pressed={isActive}
+                      aria-label={`Afficher ${p.first_name} ${p.last_name} sur la carte`}
                     >
                       <span className="practitioner-item-head">
-                        <span className="practitioner-item-name">
-                          {p.first_name} {p.last_name}
+                        <span className="practitioner-item-name-wrap">
+                          <span className="practitioner-item-name">
+                            {p.first_name} {p.last_name}
+                          </span>
+                          <span className="practitioner-item-hint">
+                            {isActive ? "Sélectionné sur la carte" : "Centrer sur la carte"}
+                          </span>
                         </span>
                         {distanceLabel ? (
                           <span className="practitioner-item-distance">{distanceLabel}</span>
                         ) : null}
                       </span>
-                      <span className="practitioner-item-meta">
-                        {[p.adresse, p.city].filter(Boolean).join(", ") || "Adresse non renseignée"}
+                      <span className="practitioner-item-address">
+                        <span className="practitioner-item-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                            <path
+                              d="M12 20.25s6-5.4 6-10.125A6 6 0 0 0 6 10.125c0 4.725 6 10.125 6 10.125Z"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <circle cx="12" cy="10.125" r="2.25" />
+                          </svg>
+                        </span>
+                        <span className="practitioner-item-meta">
+                          {[p.adresse, p.city].filter(Boolean).join(", ") || "Adresse non renseignée"}
+                        </span>
                       </span>
                     </button>
                     <Link href={`/naturopathe/${p.slug}`} className="practitioner-item-link">
-                      Fiche
+                      Voir la fiche
                     </Link>
                   </li>
                 );

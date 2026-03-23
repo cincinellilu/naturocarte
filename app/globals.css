@@ -2647,14 +2647,6 @@ h3,
   font-size: 1rem;
 }
 
-.map-page-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
 .page-alert {
   margin: 0;
   padding: 0.8rem 0.9rem;
@@ -2663,19 +2655,6 @@ h3,
   background: #fffbeb;
   color: #92400e;
   font-size: 0.92rem;
-}
-
-.meta-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: 999px;
-  background: #f8fafc;
-  border: 1px solid var(--line);
-  color: var(--text);
-  font-size: 0.88rem;
-  font-weight: 600;
 }
 
 .meta-link {
@@ -3053,10 +3032,6 @@ h3,
   .map-page-header {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .map-page-meta {
-    justify-content: flex-start;
   }
 }
 

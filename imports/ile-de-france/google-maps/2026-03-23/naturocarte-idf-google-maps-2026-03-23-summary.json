@@ -1,0 +1,36 @@
+{
+  "campaign_date": "2026-03-23",
+  "department_counts": [
+    {
+      "department_code": "77",
+      "row_count": 155
+    },
+    {
+      "department_code": "78",
+      "row_count": 189
+    },
+    {
+      "department_code": "91",
+      "row_count": 145
+    },
+    {
+      "department_code": "92",
+      "row_count": 212
+    },
+    {
+      "department_code": "93",
+      "row_count": 57
+    },
+    {
+      "department_code": "94",
+      "row_count": 115
+    },
+    {
+      "department_code": "95",
+      "row_count": 108
+    }
+  ],
+  "total_rows_before_dedupe": 981,
+  "total_rows_after_dedupe": 972,
+  "manual_review_count": 14
+}

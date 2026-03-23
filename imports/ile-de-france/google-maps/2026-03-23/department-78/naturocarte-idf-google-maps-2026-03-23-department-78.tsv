@@ -1,0 +1,190 @@
+first_name	last_name	slug	adresse	postal_code	city	lat	lng	phone	email	website	booking_url	description	status
+Mathilde	BOUTOILLE	mathilde-boutoille-acheres	3 Rue Camille Jenatzy	78260	Achères	48.9726757	2.078939	0677033893					gmaps_idf_20260323_78
+Patch	INSTITUTE	patch-institute-acheres	4 Rue Jean Wiener	78260	Achères	48.9481193	2.069766	0139224170					gmaps_idf_20260323_78
+Pires	MARIA GORETI	pires-maria-goreti-acheres	18 Rue Joseph Kosma	78260	Achères	48.947468	2.0703488	0660578404					gmaps_idf_20260323_78
+Virginie	SOPHROLOGUE	virginie-sophrologue-andresy	2 Rue du Cimetière	78570	Andrésy	48.981868	2.0590278	0676232879					gmaps_idf_20260323_78
+Magnétiseur	MAGNÉTISEUSE	magnetiseur-magnetiseuse-aubergenville	29 Av. de Dixmude	78410	Aubergenville	48.975278	1.850231	0648485236					gmaps_idf_20260323_78
+Héloïse	BOIDRON	heloise-boidron-bailly	3 Parc des Fontenelles	78870	Bailly	48.8363432	2.0742248						gmaps_idf_20260323_78
+Sylvie	BONHOMME	sylvie-bonhomme-beynes	12 Rue du Bois	78650	Beynes	48.856612	1.8715148	0698273340					gmaps_idf_20260323_78
+Geraldine	CHALEIL	geraldine-chaleil-bois-d-arcy	12 Rue Baragué bât 4, rdc	78390	Bois-d'Arcy	48.7973249	2.0305819	0687547442					gmaps_idf_20260323_78
+Sonia	THOMASSET	sonia-thomasset-bois-d-arcy	12 Av. Ingrid BergmanDéfinitivement	78390	Bois-d'Arcy	48.8036496	2.013584	0752071934					gmaps_idf_20260323_78
+Impulsion	DE VIE	impulsion-de-vie-bougival	40 Rue du Général Leclerc	78380	Bougival	48.8648219	2.1393829	0986080789					gmaps_idf_20260323_78
+Caroline	HANTAT	caroline-hantat-bougival	40 Rue du Général Leclerc	78380	Bougival	48.8647526	2.1393282	0660480926					gmaps_idf_20260323_78
+Marie	RENAUD	marie-renaud-bougival	40 Rue du Général LeclercDéfinitivement	78380	Bougival	48.8647526	2.1393282	0618967046					gmaps_idf_20260323_78
+Julie	CLAVILIER	julie-clavilier-buchelay	28 Rue Pasteur	78200	Buchelay	48.9820431	1.6731997	0642591180					gmaps_idf_20260323_78
+Valérie	DOS SANTOS	valerie-dos-santos-buchelay	1 Sq. de Rambouillet	78200	Buchelay	48.9821899	1.6739473	0613371952					gmaps_idf_20260323_78
+Elsa	POULLAIN	elsa-poullain-buchelay	4 Rue Pasteur	78200	Buchelay	48.9791501	1.6708315						gmaps_idf_20260323_78
+Marie	BRILLET	marie-brillet-carrieres-sous-poissy	46 Rue des Quatre Moulins	78955	Carrières-sous-Poissy	48.9392803	2.0330653	0668606518					gmaps_idf_20260323_78
+Nadine	RÉMY	nadine-remy-carrieres-sous-poissy	Ile de la dérivation, 526 Av. de la Gaule	78955	Carrières-sous-Poissy	48.95617	2.047207	0614835748					gmaps_idf_20260323_78
+Body	SOLARA	body-solara-carrieres-sous-poissy	17 Rue de la Senette	78955	Carrières-sous-Poissy	48.937119	2.0360789	0632713803					gmaps_idf_20260323_78
+Aurélie	GAULARD	aurelie-gaulard-carrieres-sur-seine	35 Rue du Général Leclerc	78420	Carrières-sur-Seine	48.9088383	2.1767478	0699231378					gmaps_idf_20260323_78
+Zen	HORMONES	zen-hormones-carrieres-sur-seine	7 Rue de la Rivière	78420	Carrières-sur-Seine	48.9159004	2.2020915	0658832025					gmaps_idf_20260323_78
+Khédidja	KADRI	khedidja-kadri-carrieres-sur-seine	55 Rue Louis Gandillet	78420	Carrières-sur-Seine	48.914747	2.1823514	0661100382					gmaps_idf_20260323_78
+Eugénie	CAZOR-SPAARGAREN	eugenie-cazor-spaargaren-chambourcy	4 All. des Mimosas	78240	Chambourcy	48.903819	2.0480518	0660122358					gmaps_idf_20260323_78
+Les	SOINS SORELLA	les-soins-sorella-chambourcy	7 Pl. de la Mairie	78240	Chambourcy	48.9058437	2.0393511	0183439503					gmaps_idf_20260323_78
+Trégourès	DOMINIQUE AURICULOTHÉRAPEUTE	tregoures-dominique-auriculotherapeute-chatou	18 Rue du Général Colin	78400	Chatou	48.8879635	2.1580839	0643558068					gmaps_idf_20260323_78
+Hélène	GUÉRIN	helene-guerin-chatou	12 Av. Rubens	78400	Chatou	48.8836176	2.1548971	0616517221					gmaps_idf_20260323_78
+Yasmina	HELISSI	yasmina-helissi-chatou	Le Newton, 23 Av. de l'Europe bât. 2	78400	Chatou	48.9060706	2.1590784	0660271920					gmaps_idf_20260323_78
+Catherine	JAMET	catherine-jamet-chatou	97 Rte de Carrières-sur-Seine	78400	Chatou	48.8979711	2.1587661	0130710095					gmaps_idf_20260323_78
+Magali	MANE-BILLIET	magali-mane-billiet-chatou	7 Rue Max Roujou	78400	Chatou	48.8871376	2.1518919	0683096364					gmaps_idf_20260323_78
+Marjorie	SABARIA	marjorie-sabaria-chavenay	2 Av. du Vallon	78450	Chavenay	48.8541239	1.9922532	0987014230					gmaps_idf_20260323_78
+Sophie	LE ROUX	sophie-le-roux-chevreuse	10 Rue de Rambouillet	78460	Chevreuse	48.7070811	2.0382761	0650266136					gmaps_idf_20260323_78
+Lucile	TOURNOU	lucile-tournou-chevreuse	1 Rue Renan	78460	Chevreuse	48.714294	2.062479	0699457513					gmaps_idf_20260323_78
+Prudence	BARROSO	prudence-barroso-conflans-sainte-honorine	6 Rue du Dr Schweitzer	78700	Conflans-Sainte-Honorine	49.0000984	2.107278	0647373233					gmaps_idf_20260323_78
+Julia	BOURAYNE	julia-bourayne-conflans-sainte-honorine	5 Rue de la Prte de Pontoise	78700	Conflans-Sainte-Honorine	48.9918429	2.0900578	0601325748					gmaps_idf_20260323_78
+Didier	LASSERRE	didier-lasserre-conflans-sainte-honorine	9 Rue Paul Bert	78700	Conflans-Sainte-Honorine	48.9923993	2.0768227	0749421117					gmaps_idf_20260323_78
+Coulibaly	ROUGUY	coulibaly-rouguy-conflans-sainte-honorine	4 Rue du Marais	78700	Conflans-Sainte-Honorine	49.0025802	2.1187284	0633635242					gmaps_idf_20260323_78
+Valérie	THYRAULT	valerie-thyrault-conflans-sainte-honorine	14 Rue du Chemin Vert	78700	Conflans-Sainte-Honorine	49.0084946	2.1213918	0695922705					gmaps_idf_20260323_78
+Julie	DELPLANCQ	julie-delplancq-croissy-sur-seine	2 Rue de la Mascotte	78290	Croissy-sur-Seine	48.8717608	2.1336971	0648398383					gmaps_idf_20260323_78
+Sophie	LAURENT	sophie-laurent-croissy-sur-seine	1 Avenue de Verdun	78290	Croissy-sur-Seine	48.8798695	2.1486847	0783344657					gmaps_idf_20260323_78
+Sophie	LAURENT	sophie-laurent-croissy-sur-seine	1 Rue Maurice Leblanc	78290	Croissy-sur-Seine	48.8763862	2.1263336	0783344657					gmaps_idf_20260323_78
+Florence	RAYNAUD DELAVAL	florence-raynaud-delaval-croissy-sur-seine	32 Rue du Vésinet	78290	Croissy-sur-Seine	48.8848999	2.1367042	0611606910					gmaps_idf_20260323_78
+Pascale	RENARD	pascale-renard-croissy-sur-seine	23 Rue des Moulins	78290	Croissy-sur-Seine	48.8758545	2.1388877	0670904546					gmaps_idf_20260323_78
+Camille	HANNON	camille-hannon-elancourt	1 Rue de Luxembourg	78990	Élancourt	48.7924072	1.9727369	0651477404					gmaps_idf_20260323_78
+Başak	NOËL	basak-noel-elancourt	38 Avenue des Croisades	78990	Élancourt	48.7730342	1.9770131	0699142711					gmaps_idf_20260323_78
+Céline	JACOB	celine-jacob-epone	32 Rue Charles de Gaulle	78680	Épône	48.9554737	1.8150693	0689871252					gmaps_idf_20260323_78
+Constance	BUIS DE BOUSSAC	constance-buis-de-boussac-feucherolles	24 Rés le Jardin de Sainte-Gemme	78810	Feucherolles	48.8813094	1.9803727	0664265390					gmaps_idf_20260323_78
+Claire	MAZERAND	claire-mazerand-fontenay-le-fleury	1 Av. Jean Lurçat	78330	Fontenay-le-Fleury	48.8107028	2.0491415	0134602533					gmaps_idf_20260323_78
+Dauphine	RIPELLE	dauphine-ripelle-gazeran	32 Rte de la Gare	78125	Gazeran	48.6302178	1.77255	0769958531					gmaps_idf_20260323_78
+Sophie	DE BAGLION	sophie-de-baglion-guyancourt	1 Rue le Corbusier	78280	Guyancourt	48.766823	2.0717235	0686430639					gmaps_idf_20260323_78
+Sandra	ALLIBERT	sandra-allibert-houilles	22 Rue des Vieux Chênes	78800	Houilles	48.9259594	2.2035964	0768992530					gmaps_idf_20260323_78
+Imane	BENHADDOU	imane-benhaddou-houilles	9 avenue général de Gaulle	78800	Houilles	48.921344	2.1853969	0756892277					gmaps_idf_20260323_78
+Anaïs	LOUVET	anais-louvet-houilles	14 Rue de la Marne	78800	Houilles	48.9250559	2.1864087	0635165600					gmaps_idf_20260323_78
+Christelle	VOLPEZ	christelle-volpez-houilles	10 Av. Schoelcher	78800	Houilles	48.9241097	2.1901288	0688769396					gmaps_idf_20260323_78
+Isabelle	FELISAZ	isabelle-felisaz-jouars-pontchartrain	coworking JP, 1 Rue Sainte-Anne	78760	Jouars-Pontchartrain	48.8016629	1.9003169	0781245679					gmaps_idf_20260323_78
+Sophrologue	MYRIAM JOUBERT	sophrologue-myriam-joubert-jouars-pontchartrain	22 C Rue de la Richarderie	78760	Jouars-Pontchartrain	48.7942125	1.9197771	0622568717					gmaps_idf_20260323_78
+Marie-Amandine	BAIN	marie-amandine-bain-jouy-en-josas	3 Imp. Albert Calmette	78350	Jouy-en-Josas	48.7735285	2.1679612	0619951779					gmaps_idf_20260323_78
+Doniguian	EVE	doniguian-eve-l-etang-la-ville	4 BIS Chem. du Clos Saint-Martin	78620	L'Étang-la-Ville	48.866881	2.067373	0665344245					gmaps_idf_20260323_78
+Dominique	LEFEBVRE ACCOMPAGNEMENT	dominique-lefebvre-accompagnement-l-etang-la-ville	7 ALLEE D'ARMIERES	78620	L'Étang-la-Ville	48.8666354	2.0594494	0665031328					gmaps_idf_20260323_78
+Elisabeth	MUSART	elisabeth-musart-l-etang-la-ville	39 Rue Jean Mermoz	78620	L'Étang-la-Ville	48.8689151	2.0716831	0782347707					gmaps_idf_20260323_78
+Emmanuel	CASTRO	emmanuel-castro-la-celle-saint-cloud	47 Av. Lucien René Duchesne	78170	La Celle-Saint-Cloud	48.837982	2.1300258	0673204143					gmaps_idf_20260323_78
+Sandrine	DESSERTENNE	sandrine-dessertenne-la-celle-saint-cloud	12 Allee des Sablieres	78170	La Celle-Saint-Cloud	48.8456316	2.1247676	0769437825					gmaps_idf_20260323_78
+Christophe	ETIENNE	christophe-etienne-la-celle-saint-cloud	2 Av. Camille Normand	78170	La Celle-Saint-Cloud	48.8557962	2.1405206	0981672240					gmaps_idf_20260323_78
+Christophe	ETIENNE	christophe-etienne-la-celle-saint-cloud	Sponsorisé Christophe ETIENNE - Naturopathe - santé intestinale - SIBO - Phytothérapeute 5,0Naturopathe	78170	La Celle-Saint-Cloud	48.855796	2.140521	0658898299					gmaps_idf_20260323_78
+Dr	A	dr-a-le-chesnay-rocquencourt	21 Rue Moxouris	78150	Le Chesnay-Rocquencourt	48.830203	2.1198163						gmaps_idf_20260323_78
+Nathalie	BERNHARD	nathalie-bernhard-le-chesnay-rocquencourt	13 Rue Pottier	78150	Le Chesnay-Rocquencourt	48.8269474	2.1245029	0754813350					gmaps_idf_20260323_78
+Marjorie	CAUDAL	marjorie-caudal-le-chesnay-rocquencourt	12 Sq. Raynouard	78150	Le Chesnay-Rocquencourt	48.8308995	2.1141908	0612303744					gmaps_idf_20260323_78
+Valérie	DOS SANTOS	valerie-dos-santos-le-chesnay-rocquencourt	1 Av. de Villars	78150	Le Chesnay-Rocquencourt	48.8334609	2.1190301	0613371952					gmaps_idf_20260323_78
+Stanko	KATARZYNA	stanko-katarzyna-le-chesnay-rocquencourt	4 Sq. Chardin	78150	Le Chesnay-Rocquencourt	48.8243689	2.124068	0175454882					gmaps_idf_20260323_78
+Lara	MENDEZ	lara-mendez-le-chesnay-rocquencourt	12 Rue du Docteur Audigier	78150	Le Chesnay-Rocquencourt	48.8254364	2.1305448	0768490198					gmaps_idf_20260323_78
+Sabrine	MZOUGHI	sabrine-mzoughi-le-chesnay-rocquencourt	6 Av. Charles de Gaulle	78150	Le Chesnay-Rocquencourt	48.8291801	2.1186054	0618825097					gmaps_idf_20260323_78
+Aline	ROUSSEAU	aline-rousseau-le-chesnay-rocquencourt	L'embelie, 13 Rue Pottier	78150	Le Chesnay-Rocquencourt	48.8268038	2.1252563	0781037613					gmaps_idf_20260323_78
+Oxana	VALCHUK	oxana-valchuk-le-chesnay-rocquencourt	Centre l'Embelie, 13 Rue Pottier	78150	Le Chesnay-Rocquencourt	48.8269661	2.1251604	0626732931					gmaps_idf_20260323_78
+Julie	YVETTE MARIE SAINT-CLAIR	julie-yvette-marie-saint-clair-le-chesnay-rocquencourt	25 Rue du Maréchal de Lattre de Tassigny	78150	Le Chesnay-Rocquencourt	48.8169817	2.1363524						gmaps_idf_20260323_78
+Marie	COLLIGNON	marie-collignon-le-mesnil-le-roi	13 Av. Marceau	78600	Le Mesnil-le-Roi	48.9386379	2.1347116	0769194398					gmaps_idf_20260323_78
+Équilibre	HORMONAL FÉMININ	equilibre-hormonal-feminin-le-mesnil-le-roi	8 chemin du Haut de Vaux	78600	Le Mesnil-le-Roi	48.9309521	2.121739						gmaps_idf_20260323_78
+Gout	JOSÉPHINE	gout-josephine-le-mesnil-saint-denis	41 Av. de la Concorde	78320	Le Mesnil-Saint-Denis	48.7413932	1.9492869	0672926175					gmaps_idf_20260323_78
+Sabine	BOULAY	sabine-boulay-le-pecq	Résidence les Thermes, 5 Quai Voltaire Bâtiment 10	78230	Le Pecq	48.8990257	2.1057375	0636433522					gmaps_idf_20260323_78
+Pépite	EN SOIE	pepite-en-soie-le-pecq	24 bis Av. du Centre	78230	Le Pecq	48.901045	2.1131126	0681189358					gmaps_idf_20260323_78
+Leila	GROUM	leila-groum-le-pecq	8 Rue de Paris	78230	Le Pecq	48.8962123	2.1057691	0768273230					gmaps_idf_20260323_78
+Myriam	CIOTTA	myriam-ciotta-le-port-marly	16 Av. de Saint-Germain	78560	Le Port-Marly	48.8849415	2.1070336						gmaps_idf_20260323_78
+Nathalie	CAPBLANCQ-LABORDE	nathalie-capblancq-laborde-le-tremblay-sur-mauldre	6 Rue du Général Charles de Gaulle	78490	Le Tremblay-sur-Mauldre	48.7772978	1.877173	0670546828					gmaps_idf_20260323_78
+Tennessee	PICHON-BRAILLON	tennessee-pichon-braillon-le-vesinet	31 Avenue des Pages	78110	Le Vésinet	48.9006107	2.1357378	0745059590					gmaps_idf_20260323_78
+Med'Zen	TORII	med-zen-torii-le-vesinet	30 Rue Villebois Mareuil	78110	Le Vésinet	48.8930028	2.1376779	0630044468					gmaps_idf_20260323_78
+Sandrine	BOUQUET	sandrine-bouquet-les-breviaires	6e Rte des Fourneaux	78610	Les Bréviaires	48.6995954	1.8109542	0683183291					gmaps_idf_20260323_78
+Manon	HELAINE	manon-helaine-les-essarts-le-roi	30bis Rue du Gouvernement	78690	Les Essarts-le-Roi	48.7168961	1.8553666						gmaps_idf_20260323_78
+Sabrina	VIARD	sabrina-viard-les-essarts-le-roi	8 Rue de Bourgogne	78690	Les Essarts-le-Roi	48.7188456	1.8910761	0684485582					gmaps_idf_20260323_78
+Svetlana	TELITSINE	svetlana-telitsine-les-mesnuls	Rte d’191 Mantes Rambouillet	78490	Les Mesnuls	48.7619833	1.837722	0613315093					gmaps_idf_20260323_78
+Noel	LE NABOUR MARIE ANNONCIADE	noel-le-nabour-marie-annonciade-levis-saint-nom	79 Rte de Maison Blanche	78320	Lévis-Saint-Nom	48.7260275	1.9145903	0638654103					gmaps_idf_20260323_78
+Drainage	LYMPHATIQUE	drainage-lymphatique-limay	19 Rue du Vieux Pont	78520	Limay	48.993428	1.7272098	0754049108					gmaps_idf_20260323_78
+David	RUBIGNY	david-rubigny-limay	1 Rue Abel Plisson	78520	Limay	48.9923087	1.7381011	0671737278					gmaps_idf_20260323_78
+Sandrine	DESSERTENNE	sandrine-dessertenne-louveciennes	2 Rue de la Machine	78430	Louveciennes	48.865134	2.1163945	0660694295					gmaps_idf_20260323_78
+Pascale	AGAZZI GRASSET	pascale-agazzi-grasset-maisons-laffitte	5 Rue des Loges	78600	Maisons-Laffitte	48.9473463	2.1391535	0607753220					gmaps_idf_20260323_78
+Dominique	CHAMOUMI	dominique-chamoumi-maisons-laffitte	5 Bis Pl. du Marché	78600	Maisons-Laffitte	48.9484594	2.1410506	0647782748					gmaps_idf_20260323_78
+Laurence	FOURNET	laurence-fournet-maisons-laffitte	97 Rue des Côtes	78600	Maisons-Laffitte	48.9396222	2.1397939	0671022814					gmaps_idf_20260323_78
+Laurent	FRADET	laurent-fradet-maisons-laffitte	57 Av. Lavoisier	78600	Maisons-Laffitte	48.9549777	2.1356804	0609723057					gmaps_idf_20260323_78
+Sophie	FRANCIOSI	sophie-franciosi-maisons-laffitte	48 Av. Eglé	78600	Maisons-Laffitte	48.9557102	2.1556596	0623411956					gmaps_idf_20260323_78
+Monsieur	JEAN-MARIE LE MAUX	monsieur-jean-marie-le-maux-maisons-laffitte	3 Pl. du Maréchal Juin	78600	Maisons-Laffitte	48.9453664	2.1458576	0695115413					gmaps_idf_20260323_78
+Solène	RIGOT	solene-rigot-maisons-laffitte	55 Rue du Mesnil	78600	Maisons-Laffitte	48.9440145	2.148262	0686684191					gmaps_idf_20260323_78
+Alexandrine	SICRE	alexandrine-sicre-maisons-laffitte	Graine de gourmandise, 68 Rue de Paris	78600	Maisons-Laffitte	48.9476383	2.1482734	0616589427					gmaps_idf_20260323_78
+Equilibre	ACUPUNCTURE	equilibre-acupuncture-mantes-la-jolie	au-dessus du laboratoire d'analyse médicale, 94 Bd du Maréchal Juin batiment A 1er etage	78200	Mantes-la-Jolie	48.9919948	1.7049625	0631102751					gmaps_idf_20260323_78
+Vanessa	DUPUIS	vanessa-dupuis-mantes-la-jolie	26 Rue de ChampagneDéfinitivement	78200	Mantes-la-Jolie	48.9879255	1.7095042	0785960953					gmaps_idf_20260323_78
+Sandra	MAROUZÉ	sandra-marouze-mantes-la-jolie	54 Bd du Maréchal JuinDéfinitivement	78200	Mantes-la-Jolie	48.9913924	1.7076765	0625191487					gmaps_idf_20260323_78
+Isabelle	MEDICI	isabelle-medici-mantes-la-jolie	90 bis Bd CarnotDéfinitivement	78200	Mantes-la-Jolie	48.9884427	1.7068119	0676635137					gmaps_idf_20260323_78
+Sandrine	BORCH	sandrine-borch-mantes-la-ville	6 Rue de l'Orge	78711	Mantes-la-Ville	48.9717774	1.7215641	0646800348					gmaps_idf_20260323_78
+Rella	S	rella-s-mantes-la-ville	98bis Rte de Houdan	78711	Mantes-la-Ville	48.9765314	1.7132185	0659287372					gmaps_idf_20260323_78
+Sylvie	GUILLEMIN-LANNE	sylvie-guillemin-lanne-mareil-le-guyon	4 Rte de Montfort	78490	Mareil-le-Guyon	48.7809426	1.8447169	0622914732					gmaps_idf_20260323_78
+Chrystelle	KANDJI-AUBAULT	chrystelle-kandji-aubault-mareil-marly	Maison Médicale de Mareil, 13 Rue Tellier Frères	78750	Mareil-Marly	48.8819709	2.0792007	0172542140					gmaps_idf_20260323_78
+Chrystelle	KANDJI-AUBAULT	chrystelle-kandji-aubault-mareil-marly	13 Rue Tellier Frères	78750	Mareil-Marly	48.8818085	2.0790263	0172542140					gmaps_idf_20260323_78
+Delphine	BARRIOS	delphine-barrios-marly-le-roi	6 All. Claude Monet	78160	Marly-le-Roi	48.8770388	2.0911281	0662170916					gmaps_idf_20260323_78
+Julia	BOURAYNE	julia-bourayne-marly-le-roi	7 Av. Auguste Renoir	78160	Marly-le-Roi	48.8765614	2.0947789	0601325748					gmaps_idf_20260323_78
+Aurelie	GUYOT-NMH	aurelie-guyot-nmh-maule	6 Chem. de Poissy	78580	Maule	48.911884	1.8676621	0662699194					gmaps_idf_20260323_78
+Mélanie	MOREAU	melanie-moreau-maule	8 Route de Jumeauville	78580	Maule	48.9045592	1.8366602						gmaps_idf_20260323_78
+Catherine	POMIES	catherine-pomies-maurepas	30 Chem. du Vivier	78310	Maurepas	48.7797132	1.90607	0630792257					gmaps_idf_20260323_78
+Valentine	LEVI	valentine-levi-moisson	6 Rue des Grands Jardins	78840	Moisson	49.0629821	1.6939915	0676658829					gmaps_idf_20260323_78
+Françoise	AVRIL	francoise-avril-montesson	22 Rue Pierre Louis Guyard	78360	Montesson	48.9082917	2.1521126	0680106436					gmaps_idf_20260323_78
+Violette	REGNAULT	violette-regnault-montesson	23 Av. de l'Europe Bâtiment Le Newton	78360	Montesson	48.9062777	2.1583178	0781093338					gmaps_idf_20260323_78
+Annette	ST JOHN	annette-st-john-montesson	7 Rue de Beaumont	78360	Montesson	48.9130776	2.1186747	0625597000					gmaps_idf_20260323_78
+Florence	CHOLLET	florence-chollet-montfort-l-amaury	1 Pl. Lebreton	78490	Montfort-l'Amaury	48.7766035	1.8099358	0609850639					gmaps_idf_20260323_78
+Marie-Mercedes	VEGA FAU	marie-mercedes-vega-fau-montfort-l-amaury	1 Rue de Verdun	78490	Montfort-l'Amaury	48.7750909	1.812348	0634580566					gmaps_idf_20260323_78
+Béatrice	BEURIOT	beatrice-beuriot-montigny-le-bretonneux	16 Bd d'Alembert	78180	Montigny-le-Bretonneux	48.7777546	2.0455875	0650005856					gmaps_idf_20260323_78
+Mireille	BOURNICHE EI	mireille-bourniche-ei-montigny-le-bretonneux	(7)Naturopathe	78180	Montigny-le-Bretonneux	48.7699897	2.0421231	0766562809					gmaps_idf_20260323_78
+Valérie	GAUTIER EI	valerie-gautier-ei-montigny-le-bretonneux	Mail de la Rigole	78180	Montigny-le-Bretonneux	48.7619833	2.024807	0744444180					gmaps_idf_20260323_78
+Montigny	LE BRETONNEUX	montigny-le-bretonneux-montigny-le-bretonneux	5 Rue du Col de Dyane	78180	Montigny-le-Bretonneux	48.7687085	2.0525585	0783070085					gmaps_idf_20260323_78
+Sarah	NONNENMACHER	sarah-nonnenmacher-montigny-le-bretonneux	10 All. des Boutons d'Or	78180	Montigny-le-Bretonneux	48.780131	2.036233						gmaps_idf_20260323_78
+Malika	TERNISIEN	malika-ternisien-montigny-le-bretonneux	30 Avenue des 3 Peuples	78180	Montigny-le-Bretonneux	48.7775574	2.0251864	0666652749					gmaps_idf_20260323_78
+Claire	BASIRE	claire-basire-neauphle-le-chateau	8 Rue d'Orbec	78640	Neauphle-le-Château	48.8142377	1.9002456	0669440616					gmaps_idf_20260323_78
+Isabelle	FELISAZ	isabelle-felisaz-neauphle-le-vieux	8 Rue de l'Île Robert	78640	Neauphle-le-Vieux	48.813683	1.8595298	0781245679					gmaps_idf_20260323_78
+Armelle	FERRER	armelle-ferrer-orgeval	1 Rue de Feucherolles	78630	Orgeval	48.9187883	1.9766048	0614814671					gmaps_idf_20260323_78
+Sabrina	DUSSART	sabrina-dussart-plaisir	7 Av. Marc Laurent	78370	Plaisir	48.820569	1.94415	0619800672					gmaps_idf_20260323_78
+Siejak	FABIENNE ARLETTE	siejak-fabienne-arlette-plaisir	45 Rue Max OphulsDéfinitivement	78370	Plaisir	48.8258425	1.9587732	0662875288					gmaps_idf_20260323_78
+Camille	HANNON	camille-hannon-plaisir	4 Rue Charles Gounod	78370	Plaisir	48.8187714	1.9472685	0651477404					gmaps_idf_20260323_78
+Oriane	KOZIELL	oriane-koziell-plaisir	28 Av. du 19 Mars 1962Définitivement	78370	Plaisir	48.8314117	1.9417727	0650106800					gmaps_idf_20260323_78
+Anne-Laure	LACROIX	anne-laure-lacroix-plaisir	14bis Rue François Coppée	78370	Plaisir	48.8129082	1.9483478	0662929300					gmaps_idf_20260323_78
+Chloé	BERGER	chloe-berger-poissy	107 Rue du Général de Gaulle	78300	Poissy	48.928647	2.0444299	0627018308					gmaps_idf_20260323_78
+Éveil	Ô SENS	eveil-o-sens-poissy	17 Cr du 14 Juillet	78300	Poissy	48.9325564	2.0377031	0970669847					gmaps_idf_20260323_78
+Aura	THÉRAPEUTIQUE	aura-therapeutique-porcheville	55 Grande Rue	78440	Porcheville	48.9716034	1.7790741	0768177890					gmaps_idf_20260323_78
+Nathalie	BERNARD KINÉSIOLOGIE	nathalie-bernard-kinesiologie-rambouillet	Immeuble Médicis, 5-7 Rue Hippolyte Mège-Mouriès RDC gauche	78120	Rambouillet	48.6213667	1.8283591	0689140053					gmaps_idf_20260323_78
+Clara	BLICQ	clara-blicq-rambouillet	5 Rue du Pressoir	78120	Rambouillet	48.6538278	1.8338619	0674724697					gmaps_idf_20260323_78
+Martine	LAMOUREUX	martine-lamoureux-rambouillet	9 Rue d'Angiviller	78120	Rambouillet	48.6457531	1.8217561	0609552505					gmaps_idf_20260323_78
+Frederique	QUESSADA	frederique-quessada-rambouillet	5 Rue du Pressoir	78120	Rambouillet	48.6538278	1.8338619	0684553453					gmaps_idf_20260323_78
+Alexandra	RENARD	alexandra-renard-rambouillet	9 Chem. de la Gommerie	78120	Rambouillet	48.6534964	1.8299609	0767299543					gmaps_idf_20260323_78
+Nathalie	SCHILD	nathalie-schild-rambouillet	38 Rue Gosselin Lenotre	78120	Rambouillet	48.6378533	1.8269258	0661111881					gmaps_idf_20260323_78
+Céliane	BRAMI	celiane-brami-saint-arnoult-en-yvelines	6 Rue des Bouchers	78730	Saint-Arnoult-en-Yvelines	48.570868	1.9391605						gmaps_idf_20260323_78
+Caroline	LEMARIÉ-SELVES	caroline-lemarie-selves-saint-cyr-l-ecole	2 Rue Alfred Dreyfus	78210	Saint-Cyr-l'École	48.802183	2.0565611	0661593242					gmaps_idf_20260323_78
+Eugénie	CAZOR-SPAARGAREN	eugenie-cazor-spaargaren-saint-germain-en-laye	3 Rue des Louviers	78100	Saint-Germain-en-Laye	48.8973037	2.0913858						gmaps_idf_20260323_78
+Yokonali	EMILIE HOURTOULLE	yokonali-emilie-hourtoulle-saint-germain-en-laye	9 Cr Larcher	78100	Saint-Germain-en-Laye	48.8952265	2.0925956	0615884747					gmaps_idf_20260323_78
+Judith	GUESDON	judith-guesdon-saint-germain-en-laye	22 Rue de la République	78100	Saint-Germain-en-Laye	48.8988871	2.0911598	0687318580					gmaps_idf_20260323_78
+Xavier	HOMBECQ	xavier-hombecq-saint-germain-en-laye	54 Rue de la République	78100	Saint-Germain-en-Laye	48.8999073	2.0890034	0786583847					gmaps_idf_20260323_78
+Candice	LEVY	candice-levy-saint-germain-en-laye	9 Rue des Louviers	78100	Saint-Germain-en-Laye	48.8975089	2.0913704	0617520283					gmaps_idf_20260323_78
+Pôle	PHOQUE	pole-phoque-saint-germain-en-laye	10 Rue des Joueries	78100	Saint-Germain-en-Laye	48.8960623	2.0904325						gmaps_idf_20260323_78
+Yrsa	PRIETZEL	yrsa-prietzel-saint-germain-en-laye	16 Rue de la République	78100	Saint-Germain-en-Laye	48.8985446	2.0920919						gmaps_idf_20260323_78
+Sandra	TALOUR	sandra-talour-saint-germain-en-laye	26 Avenue Saint Fiacre	78100	Saint-Germain-en-Laye	48.8933193	2.0717052	0769476774					gmaps_idf_20260323_78
+Aurélie	GAVELA	aurelie-gavela-saint-illiers-la-ville	3 Rue de Bréval	78980	Saint-Illiers-la-Ville	48.975639	1.5391971	0618576304					gmaps_idf_20260323_78
+Caroline	GAUTHIER	caroline-gauthier-saint-leger-en-yvelines	21 Rue Octave Allaire	78610	Saint-Léger-en-Yvelines	48.71952	1.7641252	0678950304					gmaps_idf_20260323_78
+Anaïs	BROUTIN	anais-broutin-saint-remy-l-honore	9 Rue du Moulin	78690	Saint-Rémy-l'Honoré	48.7619833	1.8916302	0627845839					gmaps_idf_20260323_78
+Catherine	CRAPOULET	catherine-crapoulet-saint-remy-les-chevreuse	(29)Psychothérapeute	78470	Saint-Rémy-lès-Chevreuse	48.695656	2.061299	0625088802					gmaps_idf_20260323_78
+Alina	ONESIM	alina-onesim-saint-remy-les-chevreuse	9 Rue Anatole France	78470	Saint-Rémy-lès-Chevreuse	48.695878	2.0635086						gmaps_idf_20260323_78
+Pépite	EN SOIE	pepite-en-soie-sartrouville	141 bis Rue Louise Michel	78500	Sartrouville	48.9353072	2.1674487	0687147381					gmaps_idf_20260323_78
+Marie-Ange	JOURDANT	marie-ange-jourdant-sartrouville	12 Rue Turgot	78500	Sartrouville	48.9371103	2.1573418	0784942191					gmaps_idf_20260323_78
+Khédidja	KADRI	khedidja-kadri-sartrouville	7 Rue du Bas de la Plaine	78500	Sartrouville	48.9248824	2.1589574	0661100382					gmaps_idf_20260323_78
+Régine	THOMET	regine-thomet-sartrouville	27 Rue Lamartine	78500	Sartrouville	48.9372065	2.1601339	0610577303					gmaps_idf_20260323_78
+Ruimin	ZHANG	ruimin-zhang-sartrouville	37 Rue Louise Michel	78500	Sartrouville	48.9378462	2.1611844	0695863686					gmaps_idf_20260323_78
+Raphaëlle	SANDRI	raphaelle-sandri-trappes	25 Rue Joseph Kosma	78190	Trappes	48.777607	1.975682	0669128716					gmaps_idf_20260323_78
+Mélina	HENRY	melina-henry-triel-sur-seine	16 Allee des Lauriers	78510	Triel-sur-Seine	48.9760364	2.0055079	0684555746					gmaps_idf_20260323_78
+Mélina	HENRY	melina-henry-triel-sur-seine	99 Rue de l'Hautil	78510	Triel-sur-Seine	48.9890506	2.0049713	0684555746					gmaps_idf_20260323_78
+Line	LEFEBVRE	line-lefebvre-triel-sur-seine	11 Rue des Bois	78510	Triel-sur-Seine	48.9869152	2.0030113	0677867305					gmaps_idf_20260323_78
+Stéphanie	ESTRANGIN	stephanie-estrangin-velizy-villacoublay	39 Avenue de l'Europe	78140	Vélizy-Villacoublay	48.7804683	2.218822	0634229141					gmaps_idf_20260323_78
+Maya	PURE	maya-pure-velizy-villacoublay	29bis Avenue Louis Bréguet	78140	Vélizy-Villacoublay	48.7815444	2.1800588						gmaps_idf_20260323_78
+Robert	BOGUSZ	robert-bogusz-verneuil-sur-seine	15 Rue Frédéric Chopin	78480	Verneuil-sur-Seine	48.9881831	1.959979	0658089710					gmaps_idf_20260323_78
+Garmia	SALIERI	garmia-salieri-verneuil-sur-seine	RDC gauche, 1 Rue du Maréchal Koenig Bat. 1	78480	Verneuil-sur-Seine	48.9786585	1.9798742	0610636554					gmaps_idf_20260323_78
+Françoise	VALERY	francoise-valery-verneuil-sur-seine	26 Grande Rue	78480	Verneuil-sur-Seine	48.9794999	1.979098	0621702137					gmaps_idf_20260323_78
+Marie-Amandine	BAIN	marie-amandine-bain-versailles	8 Rue Richaud	78000	Versailles	48.8074408	2.133311	0619951779					gmaps_idf_20260323_78
+Ingrid	GHESQUIERE	ingrid-ghesquiere-versailles	1 Bd des Jeux Olympiques S	78000	Versailles	48.8040864	2.1573565	0663108024					gmaps_idf_20260323_78
+Armelle	HUET	armelle-huet-versailles	23 Rue des Réservoirs	78000	Versailles	48.8090817	2.1247488						gmaps_idf_20260323_78
+Delphine	JALLEAU LONGUEVILLE	delphine-jalleau-longueville-versailles	14 Rue Pierre Curie	78000	Versailles	48.7962205	2.1567369	0669398511					gmaps_idf_20260323_78
+Christelle	JOUVEL	christelle-jouvel-versailles	9 Rue de la Paroisse	78000	Versailles	48.8022585	2.1297422	0745252297					gmaps_idf_20260323_78
+Catherine	LARNAC	catherine-larnac-versailles	82bis Av. de Paris	78000	Versailles	48.797818	2.144838	0767867925					gmaps_idf_20260323_78
+Annabelle	LEWANDOWSKI	annabelle-lewandowski-versailles	70 Rue de la Paroisse	78000	Versailles	48.8066128	2.1323852	0749939116					gmaps_idf_20260323_78
+Hélène	PASSEDOUET	helene-passedouet-versailles	Maison Amara, 16 bis Pass. de la Geôle	78000	Versailles	48.8078832	2.1316501	0689608480					gmaps_idf_20260323_78
+Libération	PSYCHO-EMOTIONNELLE PEGGY LAURENT VERSAILLES	liberation-psycho-emotionnelle-peggy-laurent-versailles-versailles	1 Bd des Jeux Olympiques S	78000	Versailles	48.8040864	2.1573565	0776920224					gmaps_idf_20260323_78
+Gomes	RODRIGUES FÉLICIE	gomes-rodrigues-felicie-versailles	2 bis Rue Saint-Honoré	78000	Versailles	48.7989969	2.1254598	0786233214					gmaps_idf_20260323_78
+Aurore	ALVAREZ	aurore-alvarez-villennes-sur-seine	63 Sente des Petites Jachères	78670	Villennes-sur-Seine	48.9452388	1.994203	0622181905					gmaps_idf_20260323_78
+Cayeux-Poirrier	MARIE-ODILE	cayeux-poirrier-marie-odile-villennes-sur-seine	30 Rue Maurice Ravel	78670	Villennes-sur-Seine	48.9375171	1.9879568	0679557812					gmaps_idf_20260323_78
+L'Atelier	DU BIEN ÊTRE ANIMAL	l-atelier-du-bien-etre-animal-villepreux	4 Chemin du Hameau du Bois Hervé	78450	Villepreux	48.8400235	2.0206509	0663097635					gmaps_idf_20260323_78
+Laureline	AFCHAIN	laureline-afchain-villiers-saint-frederic	21 Rue de la Vierge	78640	Villiers-Saint-Frédéric	48.816193	1.8848425	0616337451					gmaps_idf_20260323_78
+Chloé	AIGLON	chloe-aiglon-viroflay	7 Rue Hippolyte Maze	78220	Viroflay	48.8009915	2.1717376	0665573537					gmaps_idf_20260323_78
+Sophie	DE BAGLION	sophie-de-baglion-viroflay	3 Rue de la Sablière	78220	Viroflay	48.7984332	2.1649915	0686430639					gmaps_idf_20260323_78
+Samia	BOURAOUI	samia-bouraoui-voisins-le-bretonneux	8 Rue de la Bergerie	78960	Voisins-le-Bretonneux	48.7596145	2.0501866	0614292890					gmaps_idf_20260323_78
+Anne	ROQUETTE	anne-roquette-voisins-le-bretonneux	1 Pl. des Douves	78960	Voisins-le-Bretonneux	48.759307	2.0491898	0603569583					gmaps_idf_20260323_78
+Katia	VOISIN	katia-voisin-voisins-le-bretonneux	35 Rue aux Fleurs	78960	Voisins-le-Bretonneux	48.7568198	2.053872						gmaps_idf_20260323_78

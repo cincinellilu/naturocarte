@@ -1,0 +1,11 @@
+{
+  "campaign_date": "2026-03-23",
+  "generated_at": "2026-03-23T21:28:32.171Z",
+  "duration_seconds": 2702,
+  "total_rows": 972,
+  "website_found_count": 702,
+  "booking_found_count": 96,
+  "website_and_booking_found_count": 96,
+  "no_external_link_found_count": 267,
+  "error_count": 3
+}

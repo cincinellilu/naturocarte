@@ -112,16 +112,6 @@ export default async function CartePage() {
               fiches les plus utiles en quelques clics.
             </p>
           </div>
-
-          <div className="map-page-meta">
-            <span className="meta-pill">{mapPoints.length} praticiens</span>
-            <Link className="meta-link" href="/annuaire-naturopathes">
-              Choisir par zone
-            </Link>
-            <Link className="meta-link" href="/naturopathe-paris">
-              Paris par arrondissement
-            </Link>
-          </div>
         </div>
 
         {hasError ? (

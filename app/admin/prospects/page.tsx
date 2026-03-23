@@ -25,7 +25,7 @@ function getErrorMessage(error: string | undefined): string | null {
   }
 
   if (error === "missing_config") {
-    return "Ajoutez ADMIN_PROSPECTS_PASSWORD dans l’environnement avant d’utiliser cet admin.";
+    return "Aucun mot de passe admin n’est configuré.";
   }
 
   return null;
@@ -48,8 +48,7 @@ export default async function AdminProspectsPage({
           <p className="page-eyebrow">Admin prospects</p>
           <h1>Configuration manquante</h1>
           <p className="page-lead">
-            Définissez <code>ADMIN_PROSPECTS_PASSWORD</code> dans l’environnement pour
-            activer cet espace.
+            Aucun mot de passe admin n’est configuré pour le moment.
           </p>
         </section>
       </article>

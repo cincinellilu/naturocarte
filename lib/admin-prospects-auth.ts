@@ -2,10 +2,8 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
 export const ADMIN_PROSPECTS_COOKIE_NAME = "naturocarte_admin_prospects";
-
-function getConfiguredAdminPassword(): string {
-  return process.env.ADMIN_PROSPECTS_PASSWORD?.trim() ?? "";
-}
+const FALLBACK_ADMIN_PASSWORD_HASH =
+  "6fbe88b2178fcdaf39607596ac049160450416d50a6ab745bf0be1cbaa13172b";
 
 function hashAdminPassword(value: string): string {
   return createHash("sha256").update(value).digest("hex");
@@ -22,22 +20,32 @@ function safeEqual(left: string, right: string): boolean {
   return timingSafeEqual(leftBuffer, rightBuffer);
 }
 
+function getConfiguredAdminPasswordHash(): string {
+  const passwordFromEnv = process.env.ADMIN_PROSPECTS_PASSWORD?.trim();
+
+  if (passwordFromEnv) {
+    return hashAdminPassword(passwordFromEnv);
+  }
+
+  return FALLBACK_ADMIN_PASSWORD_HASH;
+}
+
 export function isAdminProspectsConfigured(): boolean {
-  return Boolean(getConfiguredAdminPassword());
+  return Boolean(getConfiguredAdminPasswordHash());
 }
 
 export function verifyAdminProspectsPassword(password: string): boolean {
-  const configuredPassword = getConfiguredAdminPassword();
-  if (!configuredPassword) return false;
+  const configuredPasswordHash = getConfiguredAdminPasswordHash();
+  if (!configuredPasswordHash) return false;
 
-  return safeEqual(hashAdminPassword(password.trim()), hashAdminPassword(configuredPassword));
+  return safeEqual(hashAdminPassword(password.trim()), configuredPasswordHash);
 }
 
 export function getAdminProspectsSessionValue(): string | null {
-  const configuredPassword = getConfiguredAdminPassword();
-  if (!configuredPassword) return null;
+  const configuredPasswordHash = getConfiguredAdminPasswordHash();
+  if (!configuredPasswordHash) return null;
 
-  return hashAdminPassword(configuredPassword);
+  return configuredPasswordHash;
 }
 
 export async function hasAdminProspectsAccess(): Promise<boolean> {

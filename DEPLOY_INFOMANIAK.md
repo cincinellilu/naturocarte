@@ -11,6 +11,7 @@ Variables a configurer en production:
 - `NEXT_PUBLIC_SUPABASE_URL=...`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY=...`
 - `SUPABASE_SERVICE_ROLE_KEY=...` (necessaire pour `app/api/lead-practitioner/route.ts`)
+- `ADMIN_PROSPECTS_PASSWORD=...` (optionnel: override le mot de passe embarqué pour `/admin/prospects`)
 - `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=...`
 - `NODE_ENV=production`
 - `PORT=3000` (ou le port impose par la plateforme)

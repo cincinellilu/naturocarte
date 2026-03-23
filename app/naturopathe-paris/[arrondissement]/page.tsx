@@ -144,7 +144,7 @@ export default async function NaturopatheParisArrondissementPage({
   };
 
   return (
-    <article>
+    <article className="article-shell">
       <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
         <ol>
           <li>
@@ -159,26 +159,54 @@ export default async function NaturopatheParisArrondissementPage({
         </ol>
       </nav>
 
-      <h1>Naturopathe Paris {arrondissement}</h1>
-      <p>
-        Annuaire des naturopathes du {toParisArrondissementLabel(arrondissement)} ({postalCode}).
-        Retrouvez les praticiens de ce secteur et accédez à leurs fiches détaillées.
-      </p>
+      <section className="page-hero page-hero--directory">
+        <div className="page-hero-grid">
+          <div className="page-hero-copy">
+            <p className="page-eyebrow">Paris {arrondissement} • annuaire local</p>
+            <h1>Naturopathe Paris {arrondissement}</h1>
+            <p className="page-lead">
+              Annuaire des naturopathes du {toParisArrondissementLabel(arrondissement)} (
+              {postalCode}). Retrouvez les praticiens de ce secteur et accédez à leurs fiches
+              détaillées.
+            </p>
 
-      <p>
-        <Link className="btn" href="/carte">
-          Voir la carte des naturopathes
-        </Link>
-      </p>
+            <div className="hero-actions">
+              <Link className="btn" href="/carte">
+                Voir la carte des naturopathes
+              </Link>
+              <Link className="btn btn-secondary" href="/naturopathe-paris">
+                Voir tous les arrondissements
+              </Link>
+            </div>
+          </div>
 
-      <p>
-        <Link className="btn btn-secondary" href="/naturopathe-paris">
-          Voir tous les arrondissements
-        </Link>
-      </p>
+          <div className="hero-panel">
+            <p className="hero-panel-label">Dans ce secteur</p>
+            <div className="hero-metrics">
+              <div className="hero-metric">
+                <strong>{practitioners.length}</strong>
+                <span>fiches publiées</span>
+              </div>
+              <div className="hero-metric">
+                <strong>{postalCode}</strong>
+                <span>code postal</span>
+              </div>
+            </div>
+            <p className="hero-note">
+              Les fiches restent accessibles individuellement pour consulter les coordonnées
+              et les modalités de prise de contact.
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <section>
-        <h2>Praticiens référencés ({practitioners.length})</h2>
+      <section className="section-shell">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Liste locale</p>
+            <h2>Praticiens référencés ({practitioners.length})</h2>
+          </div>
+        </div>
         {practitioners.length === 0 ? (
           <p>Aucun naturopathe n’est encore référencé pour ce secteur.</p>
         ) : (

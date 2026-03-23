@@ -84,7 +84,7 @@ export default async function NaturopatheParisPage() {
   };
 
   return (
-    <article>
+    <article className="article-shell">
       <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
         <ol>
           <li>
@@ -95,24 +95,54 @@ export default async function NaturopatheParisPage() {
         </ol>
       </nav>
 
-      <h1>Naturopathe Paris: annuaire des naturopathes</h1>
-      <p>
-        Cette page regroupe les fiches de naturopathes à Paris pour faciliter la recherche
-        par quartier et arrondissement. Chaque fiche contient des informations utiles:
-        adresse, contact et lien de rendez-vous quand disponible.
-      </p>
-      <p>
-        <Link className="btn" href="/carte">
-          Voir la carte des naturopathes
-        </Link>
-      </p>
+      <section className="page-hero page-hero--directory">
+        <div className="page-hero-grid">
+          <div className="page-hero-copy">
+            <p className="page-eyebrow">Paris • annuaire éditorial</p>
+            <h1>Naturopathe Paris: un annuaire plus lisible par arrondissement</h1>
+            <p className="page-lead">
+              Cette page regroupe les fiches de naturopathes à Paris pour faciliter la
+              recherche par quartier et arrondissement, avec accès rapide à la carte et aux
+              fiches détaillées.
+            </p>
 
-      <section>
-        <h2>Rechercher par arrondissement</h2>
-        <p>
-          Accédez directement aux pages locales: Naturopathe Paris 1, Naturopathe Paris 2,
-          jusqu’à Naturopathe Paris 20.
-        </p>
+            <div className="hero-actions">
+              <Link className="btn" href="/carte">
+                Voir la carte des naturopathes
+              </Link>
+            </div>
+          </div>
+
+          <div className="hero-panel">
+            <p className="hero-panel-label">Couverture actuelle</p>
+            <div className="hero-metrics">
+              <div className="hero-metric">
+                <strong>{PARIS_ARRONDISSEMENTS.length}</strong>
+                <span>arrondissements</span>
+              </div>
+              <div className="hero-metric">
+                <strong>{practitioners.length}</strong>
+                <span>fiches publiées</span>
+              </div>
+            </div>
+            <p className="hero-note">
+              Pour une recherche plus directe, la carte permet aussi de trier les profils
+              autour d’une adresse précise.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Navigation locale</p>
+            <h2>Rechercher par arrondissement</h2>
+          </div>
+          <p className="section-intro">
+            Accédez directement aux pages locales, de Paris 1 à Paris 20.
+          </p>
+        </div>
         <ul className="practitioner-list">
           {PARIS_ARRONDISSEMENTS.map((arrondissement) => (
             <li key={arrondissement}>
@@ -133,8 +163,13 @@ export default async function NaturopatheParisPage() {
         </ul>
       </section>
 
-      <section className="paris-practitioners-section">
-        <h2>Naturopathes référencés à Paris</h2>
+      <section className="paris-practitioners-section section-shell">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Référencement</p>
+            <h2>Naturopathes référencés à Paris</h2>
+          </div>
+        </div>
         <details className="faq-item">
           <summary className="faq-question">Afficher la liste ({practitioners.length})</summary>
           {practitioners.length === 0 ? (

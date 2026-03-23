@@ -222,7 +222,7 @@ export default async function PractitionerPage({
   };
 
   return (
-    <article className="practitioner-page">
+    <article className="article-shell practitioner-page">
       <p className="breadcrumbs">
         <Link href="/carte">← Retour à la carte</Link>
       </p>

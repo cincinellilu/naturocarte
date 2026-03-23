@@ -14,7 +14,11 @@ function parseArgs(argv) {
     department: "92",
     maxQueries: null,
     maxDetails: null,
-    headful: false
+    headful: false,
+    detailConcurrency: 4,
+    minQueries: 0,
+    staleQueryLimit: null,
+    staleRelevantThreshold: 0
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -40,6 +44,30 @@ function parseArgs(argv) {
 
     if (arg === "--headful") {
       options.headful = true;
+      continue;
+    }
+
+    if (arg === "--detail-concurrency") {
+      options.detailConcurrency = Number(argv[i + 1] ?? options.detailConcurrency);
+      i += 1;
+      continue;
+    }
+
+    if (arg === "--min-queries") {
+      options.minQueries = Number(argv[i + 1] ?? options.minQueries);
+      i += 1;
+      continue;
+    }
+
+    if (arg === "--stale-query-limit") {
+      options.staleQueryLimit = Number(argv[i + 1] ?? options.staleQueryLimit);
+      i += 1;
+      continue;
+    }
+
+    if (arg === "--stale-relevant-threshold") {
+      options.staleRelevantThreshold = Number(argv[i + 1] ?? options.staleRelevantThreshold);
+      i += 1;
     }
   }
 
@@ -105,6 +133,17 @@ function normalizeText(value) {
     .toLowerCase();
 }
 
+function formatFirstName(value) {
+  return (value ?? "")
+    .trim()
+    .toLowerCase()
+    .split(/([-'’\s])/)
+    .map((chunk) =>
+      /^[\p{L}]/u.test(chunk) ? chunk.charAt(0).toUpperCase() + chunk.slice(1) : chunk
+    )
+    .join("");
+}
+
 function buildIdentityKey(row) {
   return [
     normalizeText(row.first_name),
@@ -133,7 +172,10 @@ function extractHexId(placeUrl) {
 }
 
 function parseAddress(addressLabel) {
-  const raw = (addressLabel ?? "").replace(/^Adresse:\s*/i, "").trim();
+  const raw = (addressLabel ?? "")
+    .replace(/^Adresse:\s*/i, "")
+    .replace(/^[^\p{L}\p{N}]+/u, "")
+    .trim();
   const match = raw.match(/^(.*?)(?:,\s*)?(\d{5})\s+(.+)$/);
 
   if (!match) {
@@ -151,15 +193,17 @@ function parseAddress(addressLabel) {
   };
 }
 
-function parseName(title) {
+function parseName(title, knownFirstNames = new Set()) {
   const normalized = (title ?? "")
     .replace(/Sponsorisé/gi, " ")
     .replace(/[|｜]/g, " - ")
+    .replace(/["“”][^"“”]*["“”]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 
   const stopKeywords = [
     "naturopathe",
+    "naturopathie",
     "réflexologue",
     "reflexologue",
     "nutritionniste",
@@ -177,31 +221,113 @@ function parseName(title) {
     "therapeute"
   ];
 
-  const firstSegment = normalized.split(" - ")[0].trim();
-  const tokens = firstSegment.split(/\s+/);
-  const kept = [];
-
-  for (const token of tokens) {
-    const lower = normalizeText(token);
-    if (stopKeywords.includes(lower)) break;
-    kept.push(token);
-  }
-
-  if (kept.length < 2) {
-    return null;
-  }
-
-  const firstName = kept[0];
-  const lastName = kept.slice(1).join(" ");
+  const segments = normalized
+    .split(" - ")
+    .map((segment) => segment.replace(/["“”]/g, "").trim())
+    .filter(Boolean);
 
   const blockedPrefixes = ["cabinet", "centre", "formation", "studio", "maison", "prisma"];
-  if (blockedPrefixes.includes(normalizeText(firstName))) {
+  let bestCandidate = null;
+
+  for (const segment of segments) {
+    if (/[&/]/.test(segment)) {
+      continue;
+    }
+
+    const tokens = segment
+      .split(/\s+/)
+      .map((token) => token.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}'’-]+$/gu, ""))
+      .filter(Boolean);
+    const kept = [];
+
+    for (const token of tokens) {
+      const lower = normalizeText(token);
+      if (stopKeywords.includes(lower)) break;
+      kept.push(token);
+    }
+
+    if (kept.length < 2) {
+      continue;
+    }
+
+    let firstName = kept[0];
+    let lastName = kept.slice(1).join(" ");
+
+    if (
+      kept.length === 2 &&
+      knownFirstNames.has(normalizeText(kept[1])) &&
+      !knownFirstNames.has(normalizeText(kept[0]))
+    ) {
+      firstName = kept[1];
+      lastName = kept[0];
+    }
+
+    if (blockedPrefixes.includes(normalizeText(firstName))) {
+      continue;
+    }
+
+    if (stopKeywords.includes(normalizeText(lastName))) {
+      continue;
+    }
+
+    let score = 0;
+    if (knownFirstNames.has(normalizeText(firstName))) score += 10;
+    if (knownFirstNames.has(normalizeText(kept[kept.length - 1]))) score -= 3;
+    if (kept.length === 2) score += 4;
+    if (kept.length === 3) score += 2;
+    if (kept.length === 4) score += 1;
+
+    const candidate = {
+      first_name: formatFirstName(firstName),
+      last_name: lastName.toUpperCase(),
+      score
+    };
+
+    if (!bestCandidate || candidate.score > bestCandidate.score) {
+      bestCandidate = candidate;
+    }
+  }
+
+  if (!bestCandidate) {
     return null;
   }
 
   return {
-    first_name: firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
-    last_name: lastName.toUpperCase()
+    first_name: bestCandidate.first_name,
+    last_name: bestCandidate.last_name
+  };
+}
+
+function splitWebsiteAndBookingUrl(url) {
+  const normalized = (url ?? "").trim();
+  if (!normalized) {
+    return { website: "", booking_url: "" };
+  }
+
+  let hostname = "";
+  try {
+    hostname = new URL(normalized).hostname.toLowerCase();
+  } catch {
+    return { website: normalized, booking_url: "" };
+  }
+
+  const bookingDomains = [
+    "calendly.com",
+    "crenolib.fr",
+    "doctolib.fr",
+    "doctolib.com",
+    "liberlo.com",
+    "medoucine.com",
+    "resalib.fr"
+  ];
+  const bookingHints = ["/prendre-rendez-vous", "/prise-de-rendez-vous", "/booking", "/reservation"];
+  const isBookingUrl =
+    bookingDomains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`)) ||
+    bookingHints.some((hint) => normalized.toLowerCase().includes(hint));
+
+  return {
+    website: normalized,
+    booking_url: isBookingUrl ? normalized : ""
   };
 }
 
@@ -243,14 +369,18 @@ async function collectSearchResults(page, searchUrl) {
   await page.goto(searchUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
   await rejectConsent(page);
   await page.waitForURL(/google\.com\/maps/, { timeout: 120000 });
-  await page.waitForTimeout(5000);
+  await Promise.race([
+    page.locator("div.Nv2PK").first().waitFor({ state: "visible", timeout: 6000 }),
+    page.locator('div[role="feed"]').first().waitFor({ state: "visible", timeout: 6000 })
+  ]).catch(() => null);
+  await page.waitForTimeout(1200);
 
   const feed = page.locator('div[role="feed"]').first();
   if ((await feed.count()) > 0) {
     let previousCount = 0;
     let stablePasses = 0;
 
-    while (stablePasses < 3) {
+    while (stablePasses < 2) {
       const currentCount = await page.locator("div.Nv2PK").count();
       if (currentCount === previousCount) {
         stablePasses += 1;
@@ -262,7 +392,7 @@ async function collectSearchResults(page, searchUrl) {
       await feed.evaluate((el) => {
         el.scrollBy(0, el.scrollHeight);
       });
-      await page.waitForTimeout(1500);
+      await page.waitForTimeout(800);
     }
   }
 
@@ -281,7 +411,11 @@ async function collectSearchResults(page, searchUrl) {
 async function collectPlaceDetails(page, placeUrl) {
   await page.goto(placeUrl, { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.waitForURL(/google\.com\/maps/, { timeout: 120000 });
-  await page.waitForTimeout(5000);
+  await Promise.race([
+    page.locator("h1").first().waitFor({ state: "visible", timeout: 6000 }),
+    page.locator('button[aria-label^="Adresse:"]').first().waitFor({ state: "visible", timeout: 6000 })
+  ]).catch(() => null);
+  await page.waitForTimeout(1200);
 
   const title = (
     (await page.locator("h1").first().textContent().catch(() => "")) ||
@@ -329,21 +463,23 @@ async function collectPlaceDetails(page, placeUrl) {
   };
 }
 
-function toPractitionerRow(detail, placeUrl, departmentCode) {
-  const parsedName = parseName(detail.title);
+function toPractitionerRow(detail, placeUrl, departmentCode, knownFirstNames) {
+  const parsedName = parseName(detail.title, knownFirstNames);
   if (!parsedName) return null;
 
   const address = parseAddress(detail.addressLabel);
   if (!address.postal_code || !address.city) return null;
   if (normalizeText(address.city) === "paris" || address.postal_code.startsWith("75")) return null;
   if (!/^(77|78|91|92|93|94|95)/.test(address.postal_code)) return null;
-  if (detail.category && !/naturopathe/i.test(detail.category)) return null;
+  if (!address.postal_code.startsWith(departmentCode)) return null;
+  if (!/naturopathe/i.test(`${detail.category} ${detail.title}`)) return null;
 
   const mapMeta = extractHexId(placeUrl);
   const slug = [parsedName.first_name, parsedName.last_name, address.city]
     .map(slugify)
     .filter(Boolean)
     .join("-");
+  const links = splitWebsiteAndBookingUrl(detail.website);
 
   return {
     first_name: parsedName.first_name,
@@ -356,8 +492,8 @@ function toPractitionerRow(detail, placeUrl, departmentCode) {
     lng: mapMeta.lng,
     phone: detail.phone,
     email: "",
-    website: detail.website,
-    booking_url: "",
+    website: links.website,
+    booking_url: links.booking_url,
     description: "",
     status: `gmaps_idf_${CAMPAIGN_DATE.replace(/-/g, "")}_${departmentCode}`,
     source_google_hexid: mapMeta.hexid,
@@ -388,51 +524,150 @@ async function main() {
   const liveRows = await fetchLivePractitioners();
   const liveSlugSet = new Set(liveRows.map((row) => row.slug));
   const liveIdentitySet = new Set(liveRows.map(buildIdentityKey));
+  const knownFirstNames = new Set(
+    liveRows.map((row) => normalizeText(row.first_name)).filter(Boolean).concat([
+      "patricia",
+      "alexandra",
+      "fanny",
+      "marie-alix",
+      "eulalie",
+      "eleana"
+    ])
+  );
 
   const browser = await chromium.launch({ headless: !options.headful });
   const context = await browser.newContext({ locale: "fr-FR" });
   const listPage = await context.newPage();
-  const detailPage = await context.newPage();
+  const detailConcurrency =
+    Number.isFinite(options.detailConcurrency) && options.detailConcurrency > 0
+      ? Math.min(Math.floor(options.detailConcurrency), 8)
+      : 4;
 
   const uniquePlaces = new Map();
+  const searchAudit = [];
+  let staleQueryCount = 0;
 
   for (const row of selectedQueries) {
     console.log(`Searching ${row.commune_name} (${row.department_code})`);
     const cards = await collectSearchResults(listPage, row.google_maps_search_url);
+    let newUniquePlaces = 0;
+    let newRelevantPlaces = 0;
+
     for (const card of cards) {
       if (!card.href || !card.title) continue;
       if (!uniquePlaces.has(card.href)) {
+        const isRelevant = /naturop|naturo/i.test(`${card.title} ${card.text}`);
         uniquePlaces.set(card.href, {
           ...card,
           commune_name: row.commune_name,
           department_code: row.department_code,
           department_name: row.department_name,
-          query: row.google_maps_query
+          query: row.google_maps_query,
+          is_relevant_candidate: isRelevant
         });
+        newUniquePlaces += 1;
+        if (isRelevant) {
+          newRelevantPlaces += 1;
+        }
       }
+    }
+
+    if (Number.isFinite(options.staleQueryLimit) && options.staleQueryLimit > 0) {
+      if (newRelevantPlaces <= options.staleRelevantThreshold) {
+        staleQueryCount += 1;
+      } else {
+        staleQueryCount = 0;
+      }
+    }
+
+    searchAudit.push({
+      department_code: row.department_code,
+      commune_name: row.commune_name,
+      priority_in_department: row.priority_in_department,
+      new_unique_places: newUniquePlaces,
+      new_relevant_places: newRelevantPlaces,
+      total_unique_places: uniquePlaces.size,
+      stale_query_count: staleQueryCount
+    });
+
+    if (
+      Number.isFinite(options.staleQueryLimit) &&
+      options.staleQueryLimit > 0 &&
+      searchAudit.length >= options.minQueries &&
+      staleQueryCount >= options.staleQueryLimit
+    ) {
+      console.log(
+        `Stopping search after saturation: ${staleQueryCount} stale queries (threshold ${options.staleRelevantThreshold})`
+      );
+      break;
     }
   }
 
   const placeEntries = [...uniquePlaces.values()];
+  const likelyRelevantPlaces = placeEntries.filter((place) => place.is_relevant_candidate);
   const selectedDetails =
     options.maxDetails && Number.isFinite(options.maxDetails)
-      ? placeEntries.slice(0, options.maxDetails)
-      : placeEntries;
+      ? likelyRelevantPlaces.slice(0, options.maxDetails)
+      : likelyRelevantPlaces;
 
-  const rawDetails = [];
+  const rawDetails = new Array(selectedDetails.length);
+  const candidateRows = new Array(selectedDetails.length);
+  const detailPages = await Promise.all(
+    Array.from({ length: Math.min(detailConcurrency, Math.max(selectedDetails.length, 1)) }, () =>
+      context.newPage()
+    )
+  );
+  let nextIndex = 0;
+
+  async function runDetailWorker(page) {
+    while (true) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+
+      if (currentIndex >= selectedDetails.length) {
+        return;
+      }
+
+      const place = selectedDetails[currentIndex];
+      console.log(`Detail ${currentIndex + 1}/${selectedDetails.length} ${place.title}`);
+
+      try {
+        const detail = await collectPlaceDetails(page, place.href);
+        rawDetails[currentIndex] = {
+          ...place,
+          detail
+        };
+        candidateRows[currentIndex] = toPractitionerRow(
+          detail,
+          place.href,
+          options.department,
+          knownFirstNames
+        );
+      } catch (error) {
+        rawDetails[currentIndex] = {
+          ...place,
+          detail: {
+            title: "",
+            website: "",
+            phone: "",
+            addressLabel: "",
+            category: "",
+            error: error instanceof Error ? error.message : String(error)
+          }
+        };
+        candidateRows[currentIndex] = null;
+      }
+    }
+  }
+
+  await Promise.all(detailPages.map((page) => runDetailWorker(page)));
+  await Promise.all(detailPages.map((page) => page.close()));
+  await browser.close();
+
   const finalRows = [];
   const seenIdentity = new Set();
 
-  for (const place of selectedDetails) {
-    console.log(`Detail ${place.title}`);
-    const detail = await collectPlaceDetails(detailPage, place.href);
-    const row = toPractitionerRow(detail, place.href, options.department);
-
-    rawDetails.push({
-      ...place,
-      detail
-    });
-
+  for (const row of candidateRows) {
     if (!row) continue;
     if (liveSlugSet.has(row.slug)) continue;
     const identityKey = buildIdentityKey(row);
@@ -443,7 +678,7 @@ async function main() {
     finalRows.push(row);
   }
 
-  await browser.close();
+  const settledRawDetails = rawDetails.filter(Boolean);
 
   finalRows.sort((a, b) => {
     const cityCompare = a.city.localeCompare(b.city, "fr");
@@ -453,7 +688,7 @@ async function main() {
 
   fs.writeFileSync(
     path.join(outputDir, `naturocarte-idf-google-maps-${CAMPAIGN_DATE}-department-${options.department}-raw.json`),
-    JSON.stringify(rawDetails, null, 2) + "\n",
+    JSON.stringify(settledRawDetails, null, 2) + "\n",
     "utf8"
   );
 
@@ -461,6 +696,20 @@ async function main() {
     path.join(outputDir, `naturocarte-idf-google-maps-${CAMPAIGN_DATE}-department-${options.department}.json`),
     JSON.stringify(finalRows, null, 2) + "\n",
     "utf8"
+  );
+
+  writeTsv(
+    path.join(outputDir, `naturocarte-idf-google-maps-${CAMPAIGN_DATE}-department-${options.department}-search-audit.tsv`),
+    [
+      "department_code",
+      "commune_name",
+      "priority_in_department",
+      "new_unique_places",
+      "new_relevant_places",
+      "total_unique_places",
+      "stale_query_count"
+    ],
+    searchAudit
   );
 
   writeTsv(
@@ -486,6 +735,7 @@ async function main() {
 
   console.log(`Queries: ${selectedQueries.length}`);
   console.log(`Unique places collected: ${placeEntries.length}`);
+  console.log(`Likely relevant places: ${likelyRelevantPlaces.length}`);
   console.log(`Final practitioner rows: ${finalRows.length}`);
   console.log(`Output dir: ${outputDir}`);
 }

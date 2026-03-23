@@ -37,12 +37,41 @@ export default async function PractitionersPage({
 
   return (
     <article className="praticiens-page">
-      <h1>Espace praticiens</h1>
+      <section className="page-hero page-hero--contact">
+        <div className="page-hero-grid">
+          <div className="page-hero-copy">
+            <p className="page-eyebrow">Professionnels • contact</p>
+            <h1>Espace praticiens</h1>
+            <p className="page-lead">
+              Cet espace permet aux naturopathes de demander un rappel, de solliciter leur
+              souscription à l’abonnement ou de poser une question liée à leur fiche.
+            </p>
+          </div>
 
-      <section>
+          <div className="hero-panel">
+            <p className="hero-panel-label">Utilisation</p>
+            <div className="hero-metrics">
+              <div className="hero-metric">
+                <strong>1</strong>
+                <span>formulaire unique</span>
+              </div>
+              <div className="hero-metric">
+                <strong>3</strong>
+                <span>motifs de contact</span>
+              </div>
+            </div>
+            <p className="hero-note">
+              Le formulaire est pensé pour aller à l’essentiel et faciliter le tri des
+              demandes côté praticien.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell">
         <p>
-          Cet espace permet aux naturopathes de demander un rappel, de demander leur
-          souscription à l’abonnement (5€/mois), ou de poser une question.
+          Utilisez ce formulaire pour une demande commerciale, une correction de fiche ou
+          une question simple. Les retours sont traités par email.
         </p>
       </section>
 

@@ -116,21 +116,15 @@ export function SiteHeaderNav() {
   const pathname = usePathname();
 
   return (
-    <div className="site-header-inner">
-      <Link href="/" className="site-brand" aria-label="NaturoCarte, retour a l’accueil">
-        <span className="site-brand-name">NaturoCarte</span>
-      </Link>
-
-      <nav className="site-nav" aria-label="Navigation principale">
-        <ul className="site-nav-list">
-          {navigationItems.map((item) => (
-            <li key={item.href}>
-              <NavigationLink item={item} pathname={pathname} />
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+    <nav className="site-nav" aria-label="Navigation principale">
+      <ul className="site-nav-list">
+        {navigationItems.map((item) => (
+          <li key={item.href}>
+            <NavigationLink item={item} pathname={pathname} />
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 

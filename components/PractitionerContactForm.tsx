@@ -128,7 +128,7 @@ export default function PractitionerContactForm({
       </p>
 
       <p className="practitioner-form-actions">
-        <button type="submit" className="btn">
+        <button type="submit" className="btn practitioner-form-btn">
           Envoyer
         </button>
       </p>

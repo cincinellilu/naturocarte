@@ -32,21 +32,31 @@ function shouldReduceMotion(): boolean {
 
 function moveMap(
   map: mapboxgl.Map,
-  options: { center: [number, number]; zoom?: number; mode?: "fly" | "ease" }
+  options: {
+    center: [number, number];
+    zoom?: number;
+    mode?: "fly" | "ease";
+    padding?: mapboxgl.PaddingOptions;
+  }
 ) {
   const reduceMotion = shouldReduceMotion();
+  const cameraOptions = {
+    center: options.center,
+    zoom: options.zoom,
+    padding: options.padding
+  };
 
   if (reduceMotion) {
-    map.jumpTo({ center: options.center, zoom: options.zoom });
+    map.jumpTo(cameraOptions);
     return;
   }
 
   if (options.mode === "fly") {
-    map.flyTo({ center: options.center, zoom: options.zoom, speed: 1.2 });
+    map.flyTo({ ...cameraOptions, speed: 1.2 });
     return;
   }
 
-  map.easeTo({ center: options.center, zoom: options.zoom, duration: 550 });
+  map.easeTo({ ...cameraOptions, duration: 550 });
 }
 
 function hideNonEssentialLayers(map: mapboxgl.Map) {
@@ -509,7 +519,8 @@ export default function MapboxMap({
     moveMap(map, {
       center: [selectedPoint.lng, selectedPoint.lat],
       zoom: Math.max(map.getZoom(), 13.5),
-      mode: "ease"
+      mode: "ease",
+      padding: { top: 160, bottom: 120, left: 60, right: 60 }
     });
 
     popupRef.current?.remove();

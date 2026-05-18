@@ -26,6 +26,16 @@ export const metadata: Metadata = {
 export default function AProposPage() {
   return (
     <article className="about-page">
+      <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
+        <ol>
+          <li>
+            <Link href="/">Accueil</Link>
+          </li>
+          <li aria-hidden="true">›</li>
+          <li aria-current="page">À propos</li>
+        </ol>
+      </nav>
+
       <header className="about-hero">
         <p className="about-eyebrow">NaturoCarte</p>
         <h1>À propos de NaturoCarte</h1>

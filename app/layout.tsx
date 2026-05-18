@@ -41,7 +41,24 @@ export default function RootLayout({
         <div className="site-shell">
           <header className="site-header">
             <div className="container">
-              <SiteHeaderNav />
+              <div className="site-header-inner">
+                <Link href="/" className="site-brand" aria-label="NaturoCarte, retour a l’accueil">
+                  <span className="site-brand-mark" aria-hidden="true">
+                    N
+                  </span>
+                  <span className="site-brand-copy">
+                    <span className="site-brand-name">NaturoCarte</span>
+                  </span>
+                </Link>
+
+                <div className="site-header-actions">
+                  <SiteHeaderNav />
+
+                  <Link href="/carte" className="site-header-cta">
+                    Ouvrir la carte
+                  </Link>
+                </div>
+              </div>
             </div>
           </header>
 
@@ -53,7 +70,6 @@ export default function RootLayout({
             <div className="container">
               <div className="site-footer-inner">
                 <div className="site-footer-branding">
-                  <p className="site-footer-brand">NaturoCarte</p>
                   <p className="site-footer-copy">
                     Cherchez un naturopathe près de chez vous en Île-de-France, par carte,
                     département ou arrondissement à Paris.

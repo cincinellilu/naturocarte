@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   type DepartmentInfo,
   IDF_DEPARTMENTS,
@@ -152,7 +153,6 @@ export default async function AnnuaireNaturopathesPage() {
     };
   });
 
-  const totalCount = departmentSummaries.reduce((sum, item) => sum + item.count, 0);
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/annuaire-naturopathes`;
 
@@ -177,56 +177,99 @@ export default async function AnnuaireNaturopathesPage() {
   };
 
   return (
-    <article className="article-shell">
-      <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
-        <ol>
-          <li>
-            <Link href="/">Accueil</Link>
-          </li>
-          <li aria-hidden="true">›</li>
-          <li aria-current="page">Annuaire naturopathes</li>
-        </ol>
-      </nav>
-
+    <article className="article-shell article-shell--directory">
       <section className="page-hero page-hero--directory">
-        <div className="page-hero-grid">
-          <div className="page-hero-copy">
+        <div className="page-hero-background directory-hero-background" aria-hidden="true">
+          <Image
+            src="https://images.pexels.com/photos/6255629/pexels-photo-6255629.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
+            alt=""
+            fill
+            sizes="100vw"
+            priority
+            className="home-hero-background-image directory-hero-background-image"
+          />
+          <div className="home-hero-background-scrim directory-hero-background-scrim" />
+        </div>
+
+          <div className="page-hero-grid directory-hero-grid">
+          <nav className="breadcrumb-nav directory-hero-breadcrumb" aria-label="Fil d’Ariane">
+            <ol>
+              <li>
+                <Link href="/">Accueil</Link>
+              </li>
+              <li aria-hidden="true">›</li>
+              <li aria-current="page">Annuaire naturopathes</li>
+            </ol>
+          </nav>
+
+          <div className="page-hero-copy directory-hero-copy">
             <p className="page-eyebrow">Annuaire naturopathes</p>
-            <h1>Choisissez simplement votre zone</h1>
+            <h1>Choisissez votre zone de recherche</h1>
             <p className="page-lead">
-              Paris ou un département d’Île-de-France, puis ouvrez les praticiens publiés
-              dans la zone qui vous intéresse.
+              Paris, un département d’Île-de-France ou la carte, puis ouvrez directement les
+              praticiens publiés dans la zone qui vous intéresse.
             </p>
 
             <div className="hero-actions">
-              <Link className="btn" href="/carte">
-                Rechercher autour d’une adresse
+              <Link className="btn" href="#departements">
+                Rechercher par département
               </Link>
-            </div>
-          </div>
-
-          <div className="hero-panel">
-            <p className="hero-panel-label">En ce moment</p>
-            <div className="hero-metrics">
-              <div className="hero-metric">
-                <strong>{IDF_DEPARTMENTS.length}</strong>
-                <span>zones</span>
-              </div>
-              <div className="hero-metric">
-                <strong>{totalCount}</strong>
-                <span>fiches publiées</span>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section-shell">
+      <section className="section-shell directory-path-section">
         <div className="section-heading section-heading--stacked">
           <div>
-            <p className="section-eyebrow">Zones disponibles</p>
-            <h2>Ouvrir les praticiens par zone</h2>
+            <p className="section-eyebrow">Comment trouver un naturopathe</p>
+            <h2>Trois étapes simples depuis l’annuaire</h2>
           </div>
+          <p className="section-intro">
+            Commencez par une zone, ouvrez la liste correspondante, puis consultez les fiches
+            qui vous semblent les plus utiles.
+          </p>
+        </div>
+
+        <div className="directory-path-grid">
+          <article className="surface-card directory-path-card">
+            <p className="directory-path-index">1</p>
+            <h3>Choisissez une zone</h3>
+            <p>
+              Sélectionnez Paris ou un département pour accéder directement à la bonne liste de
+              praticiens.
+            </p>
+          </article>
+
+          <article className="surface-card directory-path-card">
+            <p className="directory-path-index">2</p>
+            <h3>Ouvrez la liste des praticiens</h3>
+            <p>
+              Parcourez les naturopathes publiés dans la zone choisie et repérez ceux qui vous
+              intéressent.
+            </p>
+          </article>
+
+          <article className="surface-card directory-path-card">
+            <p className="directory-path-index">3</p>
+            <h3>Comparez les fiches</h3>
+            <p>
+              Consultez le contact, l’adresse, le site web et les informations utiles avant de
+              choisir.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section className="section-shell directory-departments-section" id="departements">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Départements</p>
+            <h2>Choisissez une zone en un clic</h2>
+          </div>
+          <p className="section-intro">
+            Chaque carte ouvre directement les praticiens publiés dans la zone choisie.
+          </p>
         </div>
 
         <div className="department-grid">
@@ -255,7 +298,7 @@ export default async function AnnuaireNaturopathesPage() {
         </div>
       </section>
 
-      <section className="section-shell section-shell--compact">
+      <section className="section-shell section-shell--compact directory-map-cta">
         <div className="section-heading section-heading--stacked">
           <div>
             <p className="section-eyebrow">Recherche précise</p>

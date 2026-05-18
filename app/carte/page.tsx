@@ -115,6 +115,16 @@ export default async function CartePage({
 
   return (
     <article className="article-shell article-shell--map">
+      <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
+        <ol>
+          <li>
+            <Link href="/">Accueil</Link>
+          </li>
+          <li aria-hidden="true">›</li>
+          <li aria-current="page">Carte</li>
+        </ol>
+      </nav>
+
       <section className="map-page-shell">
         <div className="map-page-header">
           <div className="map-page-copy">

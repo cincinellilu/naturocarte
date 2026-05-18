@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import PractitionerDetailMap from "@/components/PractitionerDetailMap";
 import { getDepartmentFromPostalCode } from "@/lib/locations";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -167,12 +167,14 @@ export default async function PractitionerPage({
   const city = normalizeLocationSegment(practitioner.city);
   const department = getDepartmentFromPostalCode(practitioner.postal_code);
   const title = buildTitle(practitioner);
+  const locationLabel = getPractitionerLocationLabel(practitioner);
 
   const bookingUrl = isValidExternalUrl(practitioner.booking_url)
     ? practitioner.booking_url.trim()
     : null;
 
   const websiteUrl = normalizeWebsiteUrl(practitioner.website);
+  const claimUrl = `/praticiens?claim=${encodeURIComponent(practitioner.slug)}`;
 
   const addressLine = [
     practitioner.adresse?.trim(),
@@ -190,8 +192,44 @@ export default async function PractitionerPage({
       ? buildStaticMapUrl(practitioner.lat, practitioner.lng, mapboxToken)
       : null;
 
-  const hasContact = Boolean(practitioner.phone || practitioner.email || websiteUrl);
   const practitionerDescription = practitioner.description?.trim() || undefined;
+  const directContactActions = [
+    bookingUrl
+      ? {
+          href: bookingUrl,
+          label: "Prendre rendez-vous",
+          variant: "primary" as const,
+          external: true
+        }
+      : null,
+    practitioner.phone
+      ? {
+          href: `tel:${practitioner.phone}`,
+          label: "Appeler",
+          variant: bookingUrl ? ("secondary" as const) : ("primary" as const)
+        }
+      : null,
+    practitioner.email
+      ? {
+          href: `mailto:${practitioner.email}`,
+          label: "Envoyer un email",
+          variant: "secondary" as const
+        }
+      : null,
+    websiteUrl
+      ? {
+          href: websiteUrl,
+          label: "Voir le site",
+          variant: "secondary" as const,
+          external: true
+        }
+      : null
+  ].filter(Boolean) as Array<{
+    href: string;
+    label: string;
+    variant: "primary" | "secondary";
+    external?: boolean;
+  }>;
 
   const sameAs = [bookingUrl, websiteUrl].filter((v): v is string => Boolean(v));
 
@@ -275,15 +313,8 @@ export default async function PractitionerPage({
       <div className="practitioner-layout">
         <aside className="practitioner-map-pane" aria-label="Carte du praticien">
           <div className="mini-map mini-map--sticky">
-            {staticMapUrl ? (
-              <Image
-                src={staticMapUrl}
-                alt={`Carte de localisation de ${practitioner.first_name} ${practitioner.last_name}`}
-                width={720}
-                height={360}
-                sizes="(max-width: 900px) 92vw, 720px"
-                placeholder="empty"
-              />
+            {Number.isFinite(practitioner.lat) && Number.isFinite(practitioner.lng) ? (
+              <PractitionerDetailMap lat={practitioner.lat} lng={practitioner.lng} />
             ) : (
               <p>Carte indisponible.</p>
             )}
@@ -291,7 +322,11 @@ export default async function PractitionerPage({
         </aside>
 
         <div className="practitioner-content-pane">
-          <h1>{title}</h1>
+          <section className="practitioner-card practitioner-hero-card">
+            <p className="practitioner-eyebrow">Fiche praticien</p>
+            <h1>{title}</h1>
+            <p className="practitioner-hero-subtitle">{locationLabel}</p>
+          </section>
 
           <section className="practitioner-card">
             <h2>Adresse</h2>
@@ -299,46 +334,25 @@ export default async function PractitionerPage({
           </section>
 
           <section className="practitioner-card">
-            <h2>Contact</h2>
-
-            {hasContact ? (
-              <ul>
-                {practitioner.phone ? (
-                  <li>
-                    Téléphone : <a href={`tel:${practitioner.phone}`}>{practitioner.phone}</a>
-                  </li>
-                ) : null}
-
-                {practitioner.email ? (
-                  <li>
-                    Email : <a href={`mailto:${practitioner.email}`}>{practitioner.email}</a>
-                  </li>
-                ) : null}
-
-                {websiteUrl ? (
-                  <li>
-                    Site web :{" "}
-                    <a href={websiteUrl} target="_blank" rel="noopener noreferrer">
-                      {practitioner.website}
-                    </a>
-                  </li>
-                ) : null}
-              </ul>
+            <h2>Contact direct</h2>
+            {directContactActions.length > 0 ? (
+              <div className="practitioner-contact-actions">
+                {directContactActions.map((action) => (
+                  <Link
+                    key={action.href}
+                    className={action.variant === "primary" ? "btn" : "btn btn-secondary"}
+                    href={action.href}
+                    target={action.external ? "_blank" : undefined}
+                    rel={action.external ? "noopener noreferrer" : undefined}
+                  >
+                    {action.label}
+                  </Link>
+                ))}
+              </div>
             ) : (
               <p>Contact non renseigné.</p>
             )}
           </section>
-
-          {bookingUrl ? (
-            <section className="practitioner-card">
-              <h2>Prise de rendez-vous</h2>
-              <p>
-                <a className="btn" href={bookingUrl} target="_blank" rel="noopener noreferrer">
-                  Prendre rendez-vous
-                </a>
-              </p>
-            </section>
-          ) : null}
 
           {practitionerDescription ? (
             <section className="practitioner-card">
@@ -346,6 +360,28 @@ export default async function PractitionerPage({
               <p>{practitionerDescription}</p>
             </section>
           ) : null}
+
+          <details className="practitioner-card practitioner-claim-accordion">
+            <summary className="practitioner-claim-summary">
+              Revendiquer ou corriger cette fiche
+            </summary>
+            <div className="practitioner-claim-content">
+              <p>
+                Si vous êtes le praticien, vous pouvez demander la correction de la fiche,
+                mettre à jour vos coordonnées ou ajouter des informations utiles.
+              </p>
+              <ul className="practitioner-edit-list">
+                <li>Corriger l’adresse ou les coordonnées</li>
+                <li>Ajouter une description plus précise</li>
+                <li>Ajouter des photos ou un site web</li>
+              </ul>
+              <p className="practitioner-form-actions">
+                <Link className="btn btn-secondary practitioner-form-btn" href={claimUrl}>
+                  Ouvrir la demande de correction
+                </Link>
+              </p>
+            </div>
+          </details>
         </div>
       </div>
 

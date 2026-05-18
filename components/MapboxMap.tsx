@@ -206,13 +206,41 @@ function addPractitionersSourceAndLayers(map: mapboxgl.Map, points: MapPoint[]) 
   }
 }
 
+function fitMapToPoints(map: mapboxgl.Map, points: MapPoint[]) {
+  const validPoints = points.filter((point) => Number.isFinite(point.lat) && Number.isFinite(point.lng));
+
+  if (validPoints.length === 0) return;
+
+  if (validPoints.length === 1) {
+    moveMap(map, {
+      center: [validPoints[0].lng, validPoints[0].lat],
+      zoom: 12.4,
+      mode: "ease"
+    });
+    return;
+  }
+
+  const bounds = new mapboxgl.LngLatBounds();
+  for (const point of validPoints) {
+    bounds.extend([point.lng, point.lat]);
+  }
+
+  const reduceMotion = shouldReduceMotion();
+  map.fitBounds(bounds, {
+    padding: 56,
+    maxZoom: 12.5,
+    duration: reduceMotion ? 0 : 650,
+    essential: !reduceMotion
+  });
+}
+
 export default function MapboxMap({
   points,
   selectedSlug = null,
   selectionSource = null,
   onSelectSlug,
   searchCenter = null,
-  onReady,
+  activeZoneCode = null,
   locateRequestNonce = 0,
   onGeoErrorChange,
   isFullscreen = false
@@ -222,7 +250,7 @@ export default function MapboxMap({
   selectionSource?: SelectionSource;
   onSelectSlug?: (slug: string | null) => void;
   searchCenter?: SearchCenter;
-  onReady?: () => void;
+  activeZoneCode?: string | null;
   locateRequestNonce?: number;
   onGeoErrorChange?: (error: string | null) => void;
   isFullscreen?: boolean;
@@ -234,7 +262,6 @@ export default function MapboxMap({
   const previousSelectedSlugRef = useRef<string | null>(null);
   const onSelectSlugRef = useRef<typeof onSelectSlug>(onSelectSlug);
   const pointsRef = useRef<MapPoint[]>(points);
-  const onReadyRef = useRef<typeof onReady>(onReady);
 
   const userMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const userMarkerElementRef = useRef<HTMLDivElement | null>(null);
@@ -247,10 +274,6 @@ export default function MapboxMap({
   useEffect(() => {
     onSelectSlugRef.current = onSelectSlug;
   }, [onSelectSlug]);
-
-  useEffect(() => {
-    onReadyRef.current = onReady;
-  }, [onReady]);
 
   useEffect(() => {
     pointsRef.current = points;
@@ -338,7 +361,6 @@ export default function MapboxMap({
     map.on("load", () => {
       hideNonEssentialLayers(map);
       addPractitionersSourceAndLayers(map, points);
-      onReadyRef.current?.();
 
       if (!interactionsBoundRef.current) {
         map.on("click", CLUSTERS_LAYER_ID, (event) => {
@@ -534,6 +556,13 @@ export default function MapboxMap({
         .addTo(map);
     }
   }, [searchCenter]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !activeZoneCode || searchCenter || selectedSlug) return;
+
+    fitMapToPoints(map, pointsRef.current);
+  }, [activeZoneCode, points, searchCenter, selectedSlug]);
 
   useEffect(() => {
     if (!mapRef.current) return;

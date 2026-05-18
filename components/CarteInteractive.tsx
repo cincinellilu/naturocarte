@@ -3,18 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import MapSkeleton from "@/components/MapSkeleton";
-import ListSkeleton from "@/components/ListSkeleton";
 import {
-  IDF_DEPARTMENTS,
   getDepartmentByCode,
   getDepartmentCodeFromPostalCode
 } from "@/lib/locations";
 
 const MapboxMap = dynamic(() => import("@/components/MapboxMap"), {
   ssr: false,
-  loading: () => <MapSkeleton />
+  loading: () => <div className="map-fallback map-fallback--loading">Carte interactive en cours de chargement…</div>
 });
 
 const DEBOUNCE_MS = 300;
@@ -79,12 +75,13 @@ function haversineDistanceKm(
 
 export default function CarteInteractive({
   practitioners,
-  mapPoints
+  mapPoints,
+  zoneCode = null
 }: {
   practitioners: Practitioner[];
   mapPoints: MapPoint[];
+  zoneCode?: string | null;
 }) {
-  const searchParams = useSearchParams();
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [selectionSource, setSelectionSource] = useState<"map" | "list" | null>(null);
 
@@ -94,12 +91,10 @@ export default function CarteInteractive({
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
-  const [isMapReady, setIsMapReady] = useState(!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN);
   const [showAll, setShowAll] = useState(false);
   const [locateRequestNonce, setLocateRequestNonce] = useState(0);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isZoneFilterOpen, setIsZoneFilterOpen] = useState(false);
 
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
   const mapFrameRef = useRef<HTMLDivElement | null>(null);
@@ -107,9 +102,20 @@ export default function CarteInteractive({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const zoneParam = searchParams.get("zone");
-  const activeDepartment = zoneParam ? getDepartmentByCode(zoneParam) : null;
+  const activeDepartment = zoneCode ? getDepartmentByCode(zoneCode) : null;
   const activeZoneLabel = activeDepartment?.name ?? "Île-de-France";
+
+  useEffect(() => {
+    if (!activeDepartment) return;
+
+    setSelectedSlug(null);
+    setSelectionSource(null);
+    setSearchCenter(null);
+    setSearchQuery("");
+    setSuggestions([]);
+    setIsSuggestionsOpen(false);
+    setShowAll(false);
+  }, [activeDepartment?.code]);
 
   const visibleMapPoints = useMemo(() => {
     if (!activeDepartment) return mapPoints;
@@ -152,10 +158,6 @@ export default function CarteInteractive({
   useEffect(() => {
     setShowAll(false);
   }, [activeDepartment?.code]);
-
-  useEffect(() => {
-    setIsZoneFilterOpen(false);
-  }, [zoneParam]);
 
   useEffect(() => {
     if (!selectedSlug) return;
@@ -400,80 +402,8 @@ export default function CarteInteractive({
     ? `Les résultats sont limités à ${activeZoneLabel}. Utilisez ensuite la recherche d’adresse pour classer les fiches autour de vous.`
     : "Commencez par une zone ou entrez directement votre adresse pour faire remonter les praticiens les plus proches.";
 
-  const zoneFilterDescription = activeDepartment
-    ? `Zone actuelle : ${activeZoneLabel}. Cliquez sur Filtrer pour changer de zone.`
-    : "Cliquez sur Filtrer pour limiter la recherche à un département.";
-
   return (
     <div className="map-experience">
-      <section className="zone-filter-panel">
-        <div className="zone-filter-head">
-          <div>
-            <h2>Choisir une zone</h2>
-            <p className="directory-caption">{zoneFilterDescription}</p>
-          </div>
-          <div className="zone-filter-actions">
-            <button
-              type="button"
-              className="search-clear-btn"
-              onClick={() => setIsZoneFilterOpen((current) => !current)}
-              aria-expanded={isZoneFilterOpen}
-              aria-controls="zone-filter-options"
-            >
-              Filtrer
-            </button>
-
-            {activeDepartment ? (
-              <Link className="search-clear-btn" href="/carte">
-                Réinitialiser
-              </Link>
-            ) : (
-              <Link className="search-clear-btn" href="/annuaire-naturopathes">
-                Annuaire
-              </Link>
-            )}
-          </div>
-        </div>
-
-        {isZoneFilterOpen ? (
-          <>
-            <div id="zone-filter-options" className="zone-filter-links">
-              <Link
-                href="/carte"
-                className={[
-                  "zone-filter-link",
-                  !activeDepartment ? "zone-filter-link--active" : null
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                Toute l’Île-de-France
-              </Link>
-
-              {IDF_DEPARTMENTS.map((department) => (
-                <Link
-                  key={department.code}
-                  href={`/carte?zone=${department.code}`}
-                  className={[
-                    "zone-filter-link",
-                    activeDepartment?.code === department.code ? "zone-filter-link--active" : null
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {department.code === "75" ? "Paris" : department.name}
-                </Link>
-              ))}
-            </div>
-
-            <p className="zone-filter-note">
-              Pour Paris, vous pouvez aussi parcourir les arrondissements depuis{" "}
-              <Link href="/naturopathe-paris">la page dédiée</Link>.
-            </p>
-          </>
-        ) : null}
-      </section>
-
       <div ref={mapSectionRef} className="map-stage">
         <div
           ref={mapFrameRef}
@@ -545,7 +475,7 @@ export default function CarteInteractive({
             selectionSource={selectionSource}
             onSelectSlug={handleMapSelect}
             searchCenter={searchCenter ? { lng: searchCenter.lng, lat: searchCenter.lat } : null}
-            onReady={() => setIsMapReady(true)}
+            activeZoneCode={activeDepartment?.code ?? null}
             locateRequestNonce={locateRequestNonce}
             onGeoErrorChange={setGeoError}
             isFullscreen={isFullscreen}
@@ -627,8 +557,6 @@ export default function CarteInteractive({
             </button>
           </div>
         ) : null}
-
-        {!isMapReady ? <ListSkeleton /> : null}
 
         {filteredPractitioners.length === 0 ? (
           <div className="results-empty">

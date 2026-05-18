@@ -14229,8 +14229,11 @@
     "department_code": "91",
     "source_had_site_hint": false,
     "source_had_booking_hint": false,
-    "result": "error",
-    "error": "page.waitForTimeout: Target page, context or browser has been closed"
+    "website_candidate": "",
+    "booking_candidate": "",
+    "external_link_count": 0,
+    "result": "no_external_link_found",
+    "error": ""
   },
   {
     "first_name": "Lara",
@@ -22190,7 +22193,7 @@
     "lng": "2.4049816",
     "phone": "0612219289",
     "email": "",
-    "website": "",
+    "website": "https://www.crenolibre.fr/therapeute/naturopathe/choisy-le-roi/94600/114031-sarah_bouharket",
     "booking_url": "",
     "description": "",
     "status": "gmaps_idf_20260323_94",
@@ -22201,8 +22204,11 @@
     "department_code": "94",
     "source_had_site_hint": true,
     "source_had_booking_hint": false,
-    "result": "error",
-    "error": "page.waitForTimeout: Target page, context or browser has been closed"
+    "website_candidate": "https://www.crenolibre.fr/therapeute/naturopathe/choisy-le-roi/94600/114031-sarah_bouharket",
+    "booking_candidate": "",
+    "external_link_count": 2,
+    "result": "website_found",
+    "error": ""
   },
   {
     "first_name": "Riga",
@@ -24914,7 +24920,7 @@
     "lng": "2.2698801",
     "phone": "0685801426",
     "email": "",
-    "website": "",
+    "website": "https://stephaneamourda-naturopathe.fr/",
     "booking_url": "",
     "description": "",
     "status": "gmaps_idf_20260323_92",
@@ -24925,8 +24931,11 @@
     "department_code": "92",
     "source_had_site_hint": true,
     "source_had_booking_hint": false,
-    "result": "error",
-    "error": "page.waitForTimeout: Target page, context or browser has been closed"
+    "website_candidate": "https://stephaneamourda-naturopathe.fr/",
+    "booking_candidate": "",
+    "external_link_count": 2,
+    "result": "website_found",
+    "error": ""
   },
   {
     "first_name": "Stéphane",

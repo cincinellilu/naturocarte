@@ -27,7 +27,7 @@ const navigationItems: NavItem[] = [
         <path d="M9 4.5v12.75M15 6.75V19.5" strokeLinecap="round" />
       </svg>
     ),
-    isActive: (pathname) => pathname === "/" || pathname.startsWith("/carte")
+    isActive: (pathname) => pathname.startsWith("/carte")
   },
   {
     href: "/annuaire-naturopathes",
@@ -117,7 +117,7 @@ export function SiteHeaderNav() {
 
   return (
     <div className="site-header-inner">
-      <Link href="/carte" className="site-brand" aria-label="NaturoCarte, retour a la carte">
+      <Link href="/" className="site-brand" aria-label="NaturoCarte, retour a l’accueil">
         <span className="site-brand-name">NaturoCarte</span>
       </Link>
 

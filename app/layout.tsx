@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 import { getSiteUrl } from "@/lib/site";
 import Analytics from "@/components/Analytics";

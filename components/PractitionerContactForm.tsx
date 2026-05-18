@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 
-type SubjectType = "callback" | "subscription" | "question";
+type SubjectType = "claim" | "update" | "question" | "callback" | "subscription";
 
 export default function PractitionerContactForm({
   claim
 }: {
   claim?: string | null;
 }) {
-  const [subjectType, setSubjectType] = useState<SubjectType | "">("");
+  const [subjectType, setSubjectType] = useState<SubjectType | "">(claim ? "claim" : "");
 
   return (
     <form action="/api/lead-practitioner" method="post" className="practitioner-form">
@@ -59,33 +59,38 @@ export default function PractitionerContactForm({
         <select
           id="subject_type"
           name="subject_type"
-          className="practitioner-form-input"
+          className="practitioner-form-input practitioner-form-select"
           value={subjectType}
           required
           onChange={(event) => setSubjectType(event.target.value as SubjectType | "")}
         >
-          <option value="">
-            -- Choisissez une option --
+          <option value="" disabled hidden>
+            Choisir un sujet
           </option>
-          <option value="callback">Je souhaite être recontacté</option>
-          <option value="subscription">Je souhaite demander ma souscription</option>
+          <option value="claim">Je veux revendiquer ma fiche</option>
+          <option value="update">Je veux corriger / enrichir ma fiche</option>
           <option value="question">J&apos;ai une question à poser</option>
         </select>
+        <p className="practitioner-form-help">
+          Choisissez le type de demande pour afficher les bons champs.
+        </p>
       </div>
 
-      {subjectType === "callback" ? (
+      {(subjectType === "claim" || subjectType === "update") ? (
         <div className="practitioner-form-field">
           <label htmlFor="phone" className="practitioner-form-label">
-            Numéro de téléphone
+            Téléphone professionnel (facultatif)
           </label>
           <input
             id="phone"
             name="phone"
             type="text"
-            required
             autoComplete="tel"
             className="practitioner-form-input"
           />
+          <p className="practitioner-form-help">
+            Utile si vous souhaitez un rappel rapide.
+          </p>
         </div>
       ) : null}
 

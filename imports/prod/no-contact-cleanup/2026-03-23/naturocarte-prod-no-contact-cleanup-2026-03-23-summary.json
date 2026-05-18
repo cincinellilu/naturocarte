@@ -1,0 +1,123 @@
+{
+  "campaign_date": "2026-03-23",
+  "generated_at": "2026-03-23T21:54:33.094Z",
+  "total_rows": 36,
+  "cities": [
+    {
+      "city": "Paris",
+      "count": 5
+    },
+    {
+      "city": "Vincennes",
+      "count": 3
+    },
+    {
+      "city": "Issy-les-Moulineaux",
+      "count": 2
+    },
+    {
+      "city": "Beauchamp",
+      "count": 1
+    },
+    {
+      "city": "Bois-le-Roi",
+      "count": 1
+    },
+    {
+      "city": "Chelles",
+      "count": 1
+    },
+    {
+      "city": "Chilly-Mazarin",
+      "count": 1
+    },
+    {
+      "city": "Colombes",
+      "count": 1
+    },
+    {
+      "city": "Drancy",
+      "count": 1
+    },
+    {
+      "city": "Eaubonne",
+      "count": 1
+    },
+    {
+      "city": "Écouen",
+      "count": 1
+    },
+    {
+      "city": "Épinay-sous-Sénart",
+      "count": 1
+    },
+    {
+      "city": "Herblay-sur-Seine",
+      "count": 1
+    },
+    {
+      "city": "La Ferté-sous-Jouarre",
+      "count": 1
+    },
+    {
+      "city": "Le Chesnay-Rocquencourt",
+      "count": 1
+    },
+    {
+      "city": "Le Port-Marly",
+      "count": 1
+    },
+    {
+      "city": "Levallois-Perret",
+      "count": 1
+    },
+    {
+      "city": "Maule",
+      "count": 1
+    },
+    {
+      "city": "Montlignon",
+      "count": 1
+    },
+    {
+      "city": "Nogent-sur-Marne",
+      "count": 1
+    },
+    {
+      "city": "Puteaux",
+      "count": 1
+    },
+    {
+      "city": "Rosny-sous-Bois",
+      "count": 1
+    },
+    {
+      "city": "Saint-Arnoult-en-Yvelines",
+      "count": 1
+    },
+    {
+      "city": "Saint-Ouen-sur-Seine",
+      "count": 1
+    },
+    {
+      "city": "Soisy-sous-Montmorency",
+      "count": 1
+    },
+    {
+      "city": "Thorigny-sur-Marne",
+      "count": 1
+    },
+    {
+      "city": "Vanves",
+      "count": 1
+    },
+    {
+      "city": "Villiers-le-Bel",
+      "count": 1
+    },
+    {
+      "city": "Voisins-le-Bretonneux",
+      "count": 1
+    }
+  ]
+}

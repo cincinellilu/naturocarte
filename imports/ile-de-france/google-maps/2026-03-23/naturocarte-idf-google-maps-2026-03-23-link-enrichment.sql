@@ -2952,6 +2952,11 @@ WHERE slug = 'remodeltoi-au-naturel-le-perreux-sur-marne'
   AND (COALESCE(website, '') = '' OR COALESCE(booking_url, '') = '');
 
 UPDATE practitioners
+SET website = CASE WHEN COALESCE(website, '') = '' THEN 'https://www.crenolibre.fr/therapeute/naturopathe/choisy-le-roi/94600/114031-sarah_bouharket' ELSE website END
+WHERE slug = 'restored-nutrition-choisy-le-roi'
+  AND (COALESCE(website, '') = '' OR COALESCE(booking_url, '') = '');
+
+UPDATE practitioners
 SET website = CASE WHEN COALESCE(website, '') = '' THEN 'https://www.masanteonaturel.fr/' ELSE website END
 WHERE slug = 'rousset-stephanie-ma-sante-o-naturel-franconville'
   AND (COALESCE(website, '') = '' OR COALESCE(booking_url, '') = '');
@@ -3261,6 +3266,11 @@ UPDATE practitioners
 SET website = CASE WHEN COALESCE(website, '') = '' THEN 'http://www.doctolib.fr/naturopathe/ris-orangis/souad-zenaina?utm_campaign=google-maps&utm_content=ris-orangis&utm_medium=organic&utm_source=google&utm_term=naturopathe' ELSE website END,
     booking_url = CASE WHEN COALESCE(booking_url, '') = '' THEN 'http://www.doctolib.fr/naturopathe/ris-orangis/souad-zenaina?utm_campaign=google-maps&utm_content=ris-orangis&utm_medium=organic&utm_source=google&utm_term=naturopathe' ELSE booking_url END
 WHERE slug = 'souad-zenaina-ris-orangis'
+  AND (COALESCE(website, '') = '' OR COALESCE(booking_url, '') = '');
+
+UPDATE practitioners
+SET website = CASE WHEN COALESCE(website, '') = '' THEN 'https://stephaneamourda-naturopathe.fr/' ELSE website END
+WHERE slug = 'stephane-amourda-clamart'
   AND (COALESCE(website, '') = '' OR COALESCE(booking_url, '') = '');
 
 UPDATE practitioners

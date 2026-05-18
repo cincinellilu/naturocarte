@@ -4,15 +4,23 @@ function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-type SubjectType = "callback" | "subscription" | "question";
+type SubjectType = "claim" | "update" | "callback" | "subscription" | "question";
 
 function isValidSubjectType(value: string): value is SubjectType {
-  return value === "callback" || value === "subscription" || value === "question";
+  return (
+    value === "claim" ||
+    value === "update" ||
+    value === "callback" ||
+    value === "subscription" ||
+    value === "question"
+  );
 }
 
 function getSubjectLabel(subjectType: SubjectType): string {
+  if (subjectType === "claim") return "Je veux revendiquer ma fiche";
+  if (subjectType === "update") return "Je veux corriger / enrichir ma fiche";
   if (subjectType === "callback") return "Je souhaite être recontacté";
-  if (subjectType === "subscription") return "Je souhaite demander ma souscription";
+  if (subjectType === "subscription") return "Je souhaite parler d'une offre";
   return "J'ai une question à poser";
 }
 

@@ -63,6 +63,37 @@ export default async function NaturopatheParisPage() {
 
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/naturopathe-paris`;
+  const quickGuide = [
+    {
+      title: "1. Choisir un secteur",
+      text: "Commencez par l’arrondissement le plus pertinent, puis élargissez si besoin à Paris voisin ou à la carte."
+    },
+    {
+      title: "2. Ouvrir la fiche",
+      text: "Comparez l’adresse, la ville, les coordonnées et les informations visibles avant de contacter le praticien."
+    },
+    {
+      title: "3. Revenir à la vue d’ensemble",
+      text: "Si vous hésitez encore, utilisez la carte ou l’annuaire Île-de-France pour repartir d’une vue plus large."
+    }
+  ];
+  const faqItems = [
+    {
+      question: "Comment choisir un naturopathe à Paris ?",
+      answer:
+        "Le plus efficace est de partir de l’arrondissement, d’ouvrir plusieurs fiches, puis de comparer l’adresse, les infos de contact et la présentation du praticien."
+    },
+    {
+      question: "Faut-il passer par la carte ou par cette page ?",
+      answer:
+        "Cette page est pensée pour la recherche par secteur. La carte est plus pratique quand vous partez d’une adresse ou quand vous voulez élargir la zone."
+    },
+    {
+      question: "Que contient une fiche praticien ?",
+      answer:
+        "Chaque fiche rassemble les informations publiques utiles pour comparer les praticiens avant de passer à la prise de contact."
+    }
+  ];
 
   const itemListElement = practitioners.slice(0, 80).map((p, index) => ({
     "@type": "ListItem",
@@ -84,6 +115,18 @@ export default async function NaturopatheParisPage() {
       numberOfItems: practitioners.length,
       itemListElement
     }
+  };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer
+      }
+    }))
   };
 
   return (
@@ -169,6 +212,28 @@ export default async function NaturopatheParisPage() {
         </ul>
       </section>
 
+      <section className="section-shell">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Mode d’emploi</p>
+            <h2>Comment comparer les fiches rapidement</h2>
+          </div>
+          <p className="section-intro">
+            Cette page existe pour réduire le temps de recherche. L’idée est simple:
+            partir d’un secteur, ouvrir plusieurs fiches et comparer ce qui compte
+            vraiment avant de choisir.
+          </p>
+        </div>
+        <div className="quick-guide-grid">
+          {quickGuide.map((step) => (
+            <div key={step.title} className="about-card">
+              <h3 className="about-title">{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="paris-practitioners-section section-shell">
         <div className="section-heading section-heading--stacked">
           <div>
@@ -206,10 +271,32 @@ export default async function NaturopatheParisPage() {
         </details>
       </section>
 
+      <section aria-labelledby="faq-title" className="faq-section section-shell section-shell--compact">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Questions fréquentes</p>
+            <h2 id="faq-title">Comprendre la page Paris</h2>
+          </div>
+        </div>
+        {faqItems.map((item) => (
+          <details key={item.question} className="faq-item">
+            <summary className="faq-question">{item.question}</summary>
+            <div className="faq-answer">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </section>
+
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
     </article>
   );

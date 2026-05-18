@@ -106,6 +106,38 @@ export default async function NaturopatheParisArrondissementPage({
 
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/naturopathe-paris/${arrondissement}`;
+  const arrondissementLabel = toParisArrondissementLabel(arrondissement);
+  const quickGuide = [
+    {
+      title: "1. Vérifier le secteur",
+      text: `Cette page cible le ${arrondissementLabel} (${postalCode}) pour vous faire gagner du temps sur la recherche locale.`
+    },
+    {
+      title: "2. Ouvrir plusieurs fiches",
+      text: "Ouvrez plusieurs praticiens du même secteur afin de comparer les coordonnées et la présentation avant de choisir."
+    },
+    {
+      title: "3. Revenir à la vue Paris",
+      text: "Si le secteur ne suffit pas, retournez à la page Paris ou à la carte pour élargir la recherche."
+    }
+  ];
+  const faqItems = [
+    {
+      question: `Pourquoi une page dédiée au Paris ${arrondissement} ?`,
+      answer:
+        "Une page par arrondissement permet de comparer plus vite les praticiens d’un même secteur sans mélanger les résultats de tout Paris."
+    },
+    {
+      question: "Que faire si je n’ai pas assez de résultats ?",
+      answer:
+        "Repartez de la page Paris ou de la carte pour élargir la zone et trouver d’autres fiches pertinentes."
+    },
+    {
+      question: "Les fiches contiennent-elles toutes les mêmes informations ?",
+      answer:
+        "Non. Chaque fiche affiche les informations publiques disponibles sur le praticien, ce qui permet de comparer plusieurs profils plus proprement."
+    }
+  ];
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -145,6 +177,18 @@ export default async function NaturopatheParisArrondissementPage({
       item: `${siteUrl}/naturopathe/${p.slug}`
     }))
   };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer
+      }
+    }))
+  };
 
   return (
     <article className="article-shell">
@@ -168,9 +212,9 @@ export default async function NaturopatheParisArrondissementPage({
             <p className="page-eyebrow">Paris {arrondissement} • annuaire local</p>
             <h1>Naturopathe Paris {arrondissement}</h1>
             <p className="page-lead">
-              Annuaire des naturopathes du {toParisArrondissementLabel(arrondissement)} (
-              {postalCode}). Retrouvez les praticiens de ce secteur et accédez à leurs fiches
-              détaillées.
+              Annuaire des naturopathes du {arrondissementLabel} ({postalCode}). Cette page
+              sert à comparer rapidement les praticiens du secteur, puis à ouvrir leurs
+              fiches détaillées si vous voulez aller plus loin.
             </p>
 
             <div className="hero-actions">
@@ -196,8 +240,8 @@ export default async function NaturopatheParisArrondissementPage({
               </div>
             </div>
             <p className="hero-note">
-              Les fiches restent accessibles individuellement pour consulter les coordonnées
-              et les modalités de prise de contact.
+              Les fiches restent accessibles individuellement pour consulter les coordonnées,
+              les informations de contact et les éléments publics utiles à la comparaison.
             </p>
           </div>
         </div>
@@ -233,6 +277,45 @@ export default async function NaturopatheParisArrondissementPage({
         )}
       </section>
 
+      <section className="section-shell">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Mode d’emploi</p>
+            <h2>Comparer les praticiens du secteur</h2>
+          </div>
+          <p className="section-intro">
+            Cette page concentre les résultats du secteur pour aller plus vite. L’objectif
+            n’est pas seulement de lister des noms, mais de faciliter la comparaison avant
+            d’ouvrir une fiche.
+          </p>
+        </div>
+        <div className="quick-guide-grid">
+          {quickGuide.map((step) => (
+            <div key={step.title} className="about-card">
+              <h3 className="about-title">{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="faq-title" className="faq-section section-shell section-shell--compact">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Questions fréquentes</p>
+            <h2 id="faq-title">Comprendre ce secteur</h2>
+          </div>
+        </div>
+        {faqItems.map((item) => (
+          <details key={item.question} className="faq-item">
+            <summary className="faq-question">{item.question}</summary>
+            <div className="faq-answer">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </section>
+
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
@@ -242,6 +325,11 @@ export default async function NaturopatheParisArrondissementPage({
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
     </article>
   );

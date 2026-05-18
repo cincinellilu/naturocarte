@@ -37,9 +37,9 @@ export default function PractitionerDetailMap({
 
     map.on("load", () => {
       const markerElement = document.createElement("div");
-      markerElement.className = "search-marker";
+      markerElement.className = "practitioner-detail-marker";
 
-      markerRef.current = new mapboxgl.Marker({ element: markerElement })
+      markerRef.current = new mapboxgl.Marker({ element: markerElement, anchor: "bottom" })
         .setLngLat([lng, lat])
         .addTo(map);
 

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PractitionerContactFormMounted from "@/components/PractitionerContactFormMounted";
+import PractitionerContactForm from "@/components/PractitionerContactForm";
 
 export const metadata: Metadata = {
   title: "Espace praticiens",
   description:
-    "Contact pour souscription ou demande de rappel praticien.",
+    "Revendiquer, corriger ou enrichir votre fiche praticien sur NaturoCarte.",
   robots: {
     index: false,
     follow: true
@@ -38,15 +38,20 @@ export default async function PractitionersPage({
   return (
     <article className="praticiens-page">
       <section className="section-shell">
-        <h1>Espace praticiens</h1>
+        <h1>Revendiquer, corriger ou enrichir votre fiche</h1>
         <p>
-          Utilisez ce formulaire pour une demande commerciale, une correction de fiche ou
-          une question simple. Les retours sont traités par email.
+          Utilisez ce formulaire si vous êtes déjà présent sur NaturoCarte. Le lien depuis
+          une fiche pré-remplit automatiquement votre demande.
         </p>
+        <ul className="practitioner-edit-list">
+          <li>Revendiquer une fiche et reprendre la main sur les informations publiques</li>
+          <li>Corriger une adresse, un téléphone, un site web ou une description</li>
+          <li>Ajouter des photos et préparer l’enrichissement futur de la fiche</li>
+        </ul>
       </section>
 
       <section className="practitioner-card practitioner-form-card">
-        <h2>Formulaire de contact praticiens</h2>
+        <h2>Demande praticien</h2>
         <p className="practitioner-form-intro">
           Envoyez votre demande et nous revenons vers vous par email.
         </p>
@@ -89,15 +94,22 @@ export default async function PractitionersPage({
         ) : null}
 
         {normalizedClaim ? (
-          <p>
-            Vous souhaitez revendiquer / corriger la fiche : {normalizedClaim}.{" "}
+          <p className="practitioner-form-feedback practitioner-form-feedback--success">
+            Fiche pré-remplie : {normalizedClaim}.{" "}
             <Link href={`/naturopathe/${encodeURIComponent(normalizedClaim)}`}>
               Voir la fiche concernée
             </Link>
           </p>
         ) : null}
 
-        <PractitionerContactFormMounted claim={normalizedClaim} />
+        {!normalizedClaim ? (
+          <p className="practitioner-form-intro">
+            Si vous venez d’une fiche, le lien “Revendiquer ou corriger la fiche” la
+            pré-remplit automatiquement ici.
+          </p>
+        ) : null}
+
+        <PractitionerContactForm claim={normalizedClaim} />
       </section>
     </article>
   );

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Link from "next/link";
 import CarteInteractive from "@/components/CarteInteractive";
-import ListSkeleton from "@/components/ListSkeleton";
-import MapSkeleton from "@/components/MapSkeleton";
+import ZoneFilterPanel from "@/components/ZoneFilterPanel";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
+import { getDepartmentByCode } from "@/lib/locations";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -46,7 +45,21 @@ type PractitionerRow = {
   booking_url: string | null;
 };
 
-export default async function CartePage() {
+type SearchParams = {
+  zone?: string | string[];
+};
+
+export default async function CartePage({
+  searchParams
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const zoneParam = resolvedSearchParams.zone;
+  const zoneCode = Array.isArray(zoneParam) ? zoneParam[0] : zoneParam ?? null;
+  const activeDepartment = zoneCode ? getDepartmentByCode(zoneCode) : null;
+  const activeZoneLabel = activeDepartment?.name ?? "Île-de-France";
+
   let practitioners: PractitionerRow[] = [];
   let hasError = false;
 
@@ -120,16 +133,13 @@ export default async function CartePage() {
           </p>
         ) : null}
 
-        <Suspense
-          fallback={
-            <div className="map-experience">
-              <MapSkeleton />
-              <ListSkeleton />
-            </div>
-          }
-        >
-          <CarteInteractive practitioners={practitionerItems} mapPoints={mapPoints} />
-        </Suspense>
+        <ZoneFilterPanel zoneCode={zoneCode} activeZoneLabel={activeZoneLabel} />
+
+        <CarteInteractive
+          practitioners={practitionerItems}
+          mapPoints={mapPoints}
+          zoneCode={zoneCode}
+        />
       </section>
 
       <section aria-labelledby="faq-title" className="faq-section section-shell section-shell--compact">

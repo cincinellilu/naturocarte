@@ -41,9 +41,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${siteUrl}/annuaire-naturopathes`,
       lastModified: now,
       changeFrequency: "weekly",
-      priority: 0.9
+      priority: 0.75
     },
-    { url: `${siteUrl}/carte`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: `${siteUrl}/carte`, lastModified: now, changeFrequency: "daily", priority: 0.85 },
     {
       url: `${siteUrl}/naturopathe-paris`,
       lastModified: now,
@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${siteUrl}/naturopathe-paris/${arrondissement}`,
       lastModified: now,
       changeFrequency: "daily" as const,
-      priority: 0.85
+      priority: 0.8
     })),
     ...practitionerEntries,
     { url: `${siteUrl}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },

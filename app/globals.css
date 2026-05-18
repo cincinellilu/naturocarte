@@ -2849,6 +2849,12 @@ a {
     align-items: start;
   }
 
+  .home-hero-guide-card {
+    justify-self: stretch;
+    width: 100%;
+    max-width: none;
+  }
+
   .map-stage-head,
   .directory-stage-head {
     align-items: start;

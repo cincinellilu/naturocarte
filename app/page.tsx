@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getSiteUrl } from "@/lib/site";
 import { IDF_DEPARTMENTS } from "@/lib/locations";
+import homeHeroImage from "@/assets/home-hero-naturopathy-v2.jpg";
 
 const siteUrl = getSiteUrl();
 
@@ -44,7 +45,7 @@ export default function HomePage() {
       <section className="home-hero home-hero-fullbleed">
         <div className="home-hero-background" aria-hidden="true">
           <Image
-            src="/home-hero-naturopathy-v2.jpg"
+            src={homeHeroImage}
             alt="Espace de naturopathie axé sur l'alimentation et l'hygiène de vie"
             fill
             priority

@@ -51,6 +51,7 @@ Variables:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` : clé anonyme du projet Supabase
 - `SUPABASE_SERVICE_ROLE_KEY` : clé serveur Supabase (uniquement pour les routes API backend)
 - `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` : token public Mapbox (obligatoire pour afficher la carte)
+- `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` : code de vérification Google Search Console (optionnel, pour la propriété du domaine)
 
 ## Ce qui est en place
 

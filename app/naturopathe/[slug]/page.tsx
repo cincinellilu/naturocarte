@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PractitionerDetailMap from "@/components/PractitionerDetailMap";
 import PractitionerReviewModal from "@/components/PractitionerReviewModal";
+import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { getDepartmentFromPostalCode } from "@/lib/locations";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -11,6 +12,7 @@ import { getSiteUrl } from "@/lib/site";
 export const revalidate = 300;
 
 type Practitioner = {
+  id: string;
   slug: string;
   first_name: string;
   last_name: string;
@@ -32,6 +34,7 @@ type PractitionerReview = {
   rating: number;
   message: string | null;
   created_at: string;
+  published_at: string | null;
 };
 
 async function getPublishedPractitioner(slug: string): Promise<Practitioner | null> {
@@ -40,7 +43,7 @@ async function getPublishedPractitioner(slug: string): Promise<Practitioner | nu
   const { data, error } = await supabase
     .from("practitioners")
     .select(
-      "slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, description, status"
+      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, description, status"
     )
     .eq("slug", slug)
     .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
@@ -48,6 +51,27 @@ async function getPublishedPractitioner(slug: string): Promise<Practitioner | nu
 
   if (error || !data) return null;
   return data as Practitioner;
+}
+
+async function getPublishedPractitionerReviews(practitionerId: string): Promise<PractitionerReview[]> {
+  const supabase = getSupabaseServerClient();
+
+  try {
+    const rows = await fetchAllSupabaseRows<PractitionerReview>((from, to) =>
+      supabase
+        .from("practitioner_reviews")
+        .select("id, rating, message, created_at, published_at")
+        .eq("practitioner_id", practitionerId)
+        .eq("status", "published")
+        .order("created_at", { ascending: false })
+        .range(from, to)
+    );
+
+    return rows;
+  } catch (error) {
+    console.error("practitioner reviews fetch error", error);
+    return [];
+  }
 }
 
 function isValidExternalUrl(value: string | null | undefined): value is string {
@@ -215,7 +239,7 @@ export default async function PractitionerPage({
   const practitionerDescriptionPreview = practitionerDescription
     ? truncateText(practitionerDescription, 240)
     : "Description non renseignée pour le moment. Cet espace sera utilisé pour présenter la méthode, les spécialisations et les repères utiles.";
-  const practitionerReviews: PractitionerReview[] = [];
+  const practitionerReviews = await getPublishedPractitionerReviews(practitioner.id);
   const reviewsCount = practitionerReviews.length;
   const ratingAverage = reviewsCount
     ? practitionerReviews.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
@@ -441,7 +465,7 @@ export default async function PractitionerPage({
                             ))}
                           </div>
                           <time dateTime={review.created_at} className="practitioner-review-item-date">
-                            {new Date(review.created_at).toLocaleDateString("fr-FR", {
+                            {new Date(review.published_at ?? review.created_at).toLocaleDateString("fr-FR", {
                               day: "2-digit",
                               month: "long",
                               year: "numeric"

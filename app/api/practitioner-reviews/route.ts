@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -30,12 +32,11 @@ export async function POST(request: Request) {
     };
 
     const practitionerSlug = body.practitionerSlug?.trim();
-    const practitionerName = body.practitionerName?.trim();
     const email = body.email?.trim();
     const rating = normalizeRating(body.rating);
     const message = body.message?.trim() || "";
 
-    if (!practitionerSlug || !practitionerName) {
+    if (!practitionerSlug) {
       return NextResponse.json({ error: "missing_practitioner" }, { status: 400 });
     }
 
@@ -51,15 +52,42 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "message_too_long" }, { status: 400 });
     }
 
-    return NextResponse.json({
-      ok: true,
-      received: {
-        practitionerSlug,
-        practitionerName,
+    const supabase = getSupabaseAdminClient();
+    const { data: practitioner, error: practitionerError } = await supabase
+      .from("practitioners")
+      .select("id, slug, first_name, last_name")
+      .eq("slug", practitionerSlug)
+      .maybeSingle();
+
+    if (practitionerError) {
+      return NextResponse.json({ error: practitionerError.message }, { status: 500 });
+    }
+
+    if (!practitioner) {
+      return NextResponse.json({ error: "missing_practitioner" }, { status: 404 });
+    }
+
+    const { data: review, error: insertError } = await supabase
+      .from("practitioner_reviews")
+      .insert({
+        practitioner_id: practitioner.id,
         email,
         rating,
-        message: message || null
-      }
+        message: message || null,
+        status: "pending"
+      })
+      .select("id, status, created_at")
+      .maybeSingle();
+
+    if (insertError) {
+      return NextResponse.json({ error: insertError.message }, { status: 500 });
+    }
+
+    revalidatePath(`/naturopathe/${practitionerSlug}`);
+
+    return NextResponse.json({
+      ok: true,
+      review: review
     });
   } catch (error) {
     console.error("practitioner-reviews server error", error);

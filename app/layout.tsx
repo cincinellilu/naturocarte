@@ -80,6 +80,7 @@ export default function RootLayout({
                   <Link href="/carte">Carte</Link>
                   <Link href="/annuaire-naturopathes">Annuaire</Link>
                   <Link href="/praticiens">Espace praticiens</Link>
+                  <Link href="/methode">Méthode</Link>
                   <Link href="/a-propos">À propos</Link>
                 </nav>
               </div>

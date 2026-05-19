@@ -93,6 +93,17 @@ export default function AProposPage() {
       </section>
 
       <section className="about-card">
+        <h2 className="about-title">Méthode et fiabilité</h2>
+        <p>
+          NaturoCarte présente des fiches factuelles, des corrections structurées et des
+          avis modérés pour garder un service lisible et fiable dans le temps.
+        </p>
+        <p className="about-inline-link">
+          <Link href="/methode">Lire la méthode complète</Link>
+        </p>
+      </section>
+
+      <section className="about-card">
         <h2 className="about-title">Transparence et mise à jour des informations</h2>
         <p>
           Les fiches contiennent des informations factuelles (coordonnées, localisation,

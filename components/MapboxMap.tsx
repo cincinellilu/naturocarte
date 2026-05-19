@@ -377,7 +377,7 @@ function addPractitionersSourceAndLayers(map: mapboxgl.Map, points: MapPoint[]) 
       source: SOURCE_ID,
       filter: ["has", "point_count"],
       paint: {
-        "circle-color": "#1f2937",
+        "circle-color": "#09110c",
         "circle-radius": ["step", ["get", "point_count"], 18, 10, 22, 30, 28],
         "circle-opacity": 0.85
       }
@@ -409,12 +409,12 @@ function addPractitionersSourceAndLayers(map: mapboxgl.Map, points: MapPoint[]) 
         "circle-color": [
           "case",
           ["boolean", ["feature-state", "selected"], false],
-          "#115e59",
-          "#0f766e"
+          "#0f9d52",
+          "#09110c"
         ],
         "circle-radius": ["case", ["boolean", ["feature-state", "selected"], false], 10, 8],
         "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff"
+        "circle-stroke-color": "#ecfdf4"
       }
     });
   }

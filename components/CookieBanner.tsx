@@ -83,11 +83,11 @@ export default function CookieBanner() {
         bottom: "16px",
         zIndex: 99999,
         width: "min(360px, calc(100vw - 24px))",
-        background: "#111827",
-        color: "#f9fafb",
-        border: "1px solid rgba(148, 163, 184, 0.45)",
+        background: "var(--surface-solid)",
+        color: "var(--text)",
+        border: "1px solid var(--line)",
         borderRadius: "12px",
-        boxShadow: "0 14px 34px rgba(2, 6, 23, 0.38)",
+        boxShadow: "var(--shadow-lg)",
         padding: "12px"
       }}
     >
@@ -98,9 +98,9 @@ export default function CookieBanner() {
         Nous utilisons des cookies de mesure d’audience. Vous pouvez accepter ou
         refuser ces cookies.
       </p>
-      <p style={{ margin: "6px 0 0", fontSize: "0.82rem", color: "#cbd5e1" }}>
+      <p style={{ margin: "6px 0 0", fontSize: "0.82rem", color: "var(--muted)" }}>
         Détails:{" "}
-        <Link href="/confidentialite" style={{ color: "#99f6e4" }}>
+        <Link href="/confidentialite" style={{ color: "var(--accent-strong)" }}>
           politique de confidentialité
         </Link>
         .
@@ -109,9 +109,9 @@ export default function CookieBanner() {
         <button
           type="button"
           style={{
-            border: "1px solid #94a3b8",
+            border: "1px solid var(--line-strong)",
             background: "transparent",
-            color: "#f8fafc",
+            color: "var(--text)",
             padding: "6px 10px",
             borderRadius: "8px",
             font: "inherit",
@@ -129,9 +129,9 @@ export default function CookieBanner() {
           type="button"
           className="cookie-banner-accept"
           style={{
-            border: "1px solid #2dd4bf",
-            background: "#2dd4bf",
-            color: "#042f2e",
+            border: "1px solid var(--accent)",
+            background: "var(--accent)",
+            color: "var(--accent-contrast)",
             padding: "6px 10px",
             borderRadius: "8px",
             font: "inherit",
@@ -151,7 +151,7 @@ export default function CookieBanner() {
           style={{
             border: "1px solid transparent",
             background: "transparent",
-            color: "#cbd5e1",
+            color: "var(--muted)",
             padding: "6px 8px",
             borderRadius: "8px",
             font: "inherit",

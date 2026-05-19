@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -26,24 +27,40 @@ export const metadata: Metadata = {
 export default function AProposPage() {
   return (
     <article className="about-page">
-      <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
-        <ol>
-          <li>
-            <Link href="/">Accueil</Link>
-          </li>
-          <li aria-hidden="true">›</li>
-          <li aria-current="page">À propos</li>
-        </ol>
-      </nav>
+      <section className="page-hero page-hero--about">
+        <div className="page-hero-background about-hero-background" aria-hidden="true">
+          <Image
+            src="https://images.pexels.com/photos/6383166/pexels-photo-6383166.jpeg?auto=compress&cs=tinysrgb&h=900&w=1600"
+            alt=""
+            fill
+            sizes="100vw"
+            priority
+            className="home-hero-background-image about-hero-background-image"
+          />
+          <div className="home-hero-background-scrim about-hero-background-scrim" />
+        </div>
 
-      <header className="about-hero">
-        <p className="about-eyebrow">NaturoCarte</p>
-        <h1>À propos de NaturoCarte</h1>
-        <p className="about-intro">
-          NaturoCarte aide les utilisateurs à trouver un naturopathe plus rapidement,
-          grâce à une recherche par carte, par département et par arrondissement à Paris.
-        </p>
-      </header>
+        <div className="page-hero-grid about-hero-grid">
+          <nav className="breadcrumb-nav about-hero-breadcrumb" aria-label="Fil d’Ariane">
+            <ol>
+              <li>
+                <Link href="/">Accueil</Link>
+              </li>
+              <li aria-hidden="true">›</li>
+              <li aria-current="page">À propos</li>
+            </ol>
+          </nav>
+
+          <div className="page-hero-copy about-hero-copy">
+            <p className="page-eyebrow">NaturoCarte</p>
+            <h1>À propos de NaturoCarte</h1>
+            <p className="page-lead">
+              NaturoCarte aide les utilisateurs à trouver un naturopathe plus rapidement,
+              grâce à une recherche par carte, par département et par arrondissement à Paris.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section className="about-card">
         <h2 className="about-title">Mission</h2>

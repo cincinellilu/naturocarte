@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import DirectorySearchBar from "@/components/DirectorySearchBar";
 import {
   type DepartmentInfo,
   IDF_DEPARTMENTS,
@@ -36,6 +37,9 @@ export const metadata: Metadata = {
 };
 
 type PractitionerRow = {
+  slug: string;
+  first_name: string;
+  last_name: string;
   city: string | null;
   postal_code: string | null;
 };
@@ -100,7 +104,7 @@ export default async function AnnuaireNaturopathesPage() {
     practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
       supabase
         .from("practitioners")
-        .select("city, postal_code")
+        .select("slug, first_name, last_name, city, postal_code")
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .range(from, to)
     );
@@ -148,8 +152,8 @@ export default async function AnnuaireNaturopathesPage() {
       keyword: buildDepartmentKeyword(department),
       count: bucket.count,
       description: buildDepartmentDescription(department, bucket.count, sampleCities),
-      href: department.code === "75" ? "/naturopathe-paris" : `/carte?zone=${department.code}`,
-      ctaLabel: department.code === "75" ? "Voir Paris" : "Voir les praticiens"
+      href: department.code === "75" ? "/naturopathe-paris" : `/annuaire-naturopathes/${department.code}`,
+      ctaLabel: "Voir les praticiens"
     };
   });
 
@@ -216,6 +220,17 @@ export default async function AnnuaireNaturopathesPage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section-shell directory-search-section">
+        <div className="directory-search-panel">
+          <h2>Rechercher un naturopathe</h2>
+          <p className="directory-search-intro">
+            Saisissez le nom d’un praticien pour ouvrir directement sa fiche et retrouver ses
+            informations utiles en quelques secondes.
+          </p>
+          <DirectorySearchBar practitioners={practitioners} compact />
         </div>
       </section>
 

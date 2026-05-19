@@ -37,6 +37,10 @@ type MapPoint = {
   phone?: string | null;
   email?: string | null;
   booking_url?: string | null;
+  description?: string | null;
+  rating?: number | null;
+  tarifs?: string | null;
+  photo_url?: string | null;
 };
 
 type SearchCenter = { lng: number; lat: number; label: string };
@@ -76,11 +80,17 @@ function haversineDistanceKm(
 export default function CarteInteractive({
   practitioners,
   mapPoints,
-  zoneCode = null
+  zoneCode = null,
+  activeSubzoneLabel = null,
+  activeLocationLabel = null,
+  activeLocationSummary = null
 }: {
   practitioners: Practitioner[];
   mapPoints: MapPoint[];
   zoneCode?: string | null;
+  activeSubzoneLabel?: string | null;
+  activeLocationLabel?: string | null;
+  activeLocationSummary?: string | null;
 }) {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [selectionSource, setSelectionSource] = useState<"map" | "list" | null>(null);
@@ -393,13 +403,16 @@ export default function CarteInteractive({
     suggestions.length === 0;
 
   const resultsTitle = activeDepartment
-    ? activeDepartment.code === "75"
-      ? "Praticiens à Paris"
-      : `Praticiens en ${activeDepartment.name}`
+    ? activeSubzoneLabel
+      ? `Praticiens à ${activeLocationLabel ?? activeSubzoneLabel}`
+      : activeDepartment.code === "75"
+        ? "Praticiens à Paris"
+        : `Praticiens en ${activeDepartment.name}`
     : "Praticiens en Île-de-France";
 
   const resultsCaption = activeDepartment
-    ? `Les résultats sont limités à ${activeZoneLabel}. Utilisez ensuite la recherche d’adresse pour classer les fiches autour de vous.`
+    ? activeLocationSummary ??
+      `Les résultats sont limités à ${activeZoneLabel}. Utilisez ensuite la recherche d’adresse pour classer les fiches autour de vous.`
     : "Commencez par une zone ou entrez directement votre adresse pour faire remonter les praticiens les plus proches.";
 
   return (
@@ -543,7 +556,7 @@ export default function CarteInteractive({
             <p>
               Vous consultez actuellement la zone <strong>{activeZoneLabel}</strong>.
             </p>
-            <Link className="meta-link" href="/annuaire-naturopathes">
+            <Link className="meta-link" href="/carte#zone-filter-panel">
               Revenir au choix des zones
             </Link>
           </div>
@@ -605,14 +618,14 @@ export default function CarteInteractive({
                         <span className="practitioner-item-name">
                           {p.first_name} {p.last_name}
                         </span>
-                        {distanceLabel ? (
-                          <span className="practitioner-item-distance">{distanceLabel}</span>
-                        ) : null}
                       </span>
                       <span className="practitioner-item-meta">
                         {[p.adresse, p.city].filter(Boolean).join(", ") || "Adresse non renseignée"}
                       </span>
                     </button>
+                    {distanceLabel ? (
+                      <span className="practitioner-item-distance">{distanceLabel}</span>
+                    ) : null}
                     <Link href={`/naturopathe/${p.slug}`} className="practitioner-item-link">
                       <span>Voir la fiche</span>
                       <span className="practitioner-item-link-icon" aria-hidden="true">
@@ -631,7 +644,7 @@ export default function CarteInteractive({
               <div className="practitioner-list-cta">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-secondary practitioner-list-more-btn"
                   onClick={() => setShowAll(true)}
                 >
                   Voir plus

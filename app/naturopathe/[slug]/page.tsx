@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PractitionerDetailMap from "@/components/PractitionerDetailMap";
+import PractitionerReviewModal from "@/components/PractitionerReviewModal";
 import { getDepartmentFromPostalCode } from "@/lib/locations";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -24,6 +25,13 @@ type Practitioner = {
   booking_url: string | null;
   description: string | null;
   status: string;
+};
+
+type PractitionerReview = {
+  id: string;
+  rating: number;
+  message: string | null;
+  created_at: string;
 };
 
 async function getPublishedPractitioner(slug: string): Promise<Practitioner | null> {
@@ -106,6 +114,14 @@ function buildStaticMapUrl(lat: number, lng: number, accessToken: string): strin
   )}&logo=false&attribution=false`;
 }
 
+function truncateText(value: string, limit: number): string {
+  if (value.length <= limit) {
+    return value;
+  }
+
+  return `${value.slice(0, limit - 1).trimEnd()}…`;
+}
+
 export async function generateMetadata({
   params
 }: {
@@ -175,6 +191,9 @@ export default async function PractitionerPage({
 
   const websiteUrl = normalizeWebsiteUrl(practitioner.website);
   const claimUrl = `/praticiens?claim=${encodeURIComponent(practitioner.slug)}`;
+  const practitionerInitials = `${practitioner.first_name?.charAt(0) ?? ""}${practitioner.last_name?.charAt(0) ?? ""}`
+    .trim()
+    .toUpperCase();
 
   const addressLine = [
     practitioner.adresse?.trim(),
@@ -192,7 +211,15 @@ export default async function PractitionerPage({
       ? buildStaticMapUrl(practitioner.lat, practitioner.lng, mapboxToken)
       : null;
 
-  const practitionerDescription = practitioner.description?.trim() || undefined;
+  const practitionerDescription = practitioner.description?.trim() || null;
+  const practitionerDescriptionPreview = practitionerDescription
+    ? truncateText(practitionerDescription, 240)
+    : "Description non renseignée pour le moment. Cet espace sera utilisé pour présenter la méthode, les spécialisations et les repères utiles.";
+  const practitionerReviews: PractitionerReview[] = [];
+  const reviewsCount = practitionerReviews.length;
+  const ratingAverage = reviewsCount
+    ? practitionerReviews.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
+    : null;
   const directContactActions = [
     bookingUrl
       ? {
@@ -290,27 +317,172 @@ export default async function PractitionerPage({
 
   return (
     <article className="article-shell practitioner-page">
-      <p className="breadcrumbs">
-        <Link href="/carte">← Retour à la carte</Link>
-      </p>
+      <div className="practitioner-page-links">
+        <p className="breadcrumbs">
+          <Link href="/carte">← Retour à la carte</Link>
+        </p>
 
-      <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
-        <ol>
-          <li>
-            <Link href="/">Accueil</Link>
-          </li>
-          <li aria-hidden="true">›</li>
-          <li>
-            <Link href="/carte">Carte</Link>
-          </li>
-          <li aria-hidden="true">›</li>
-          <li aria-current="page">
-            {practitioner.first_name} {practitioner.last_name}
-          </li>
-        </ol>
-      </nav>
+        <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
+          <ol>
+            <li>
+              <Link href="/">Accueil</Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li>
+              <Link href="/carte">Carte</Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li aria-current="page">
+              {practitioner.first_name} {practitioner.last_name}
+            </li>
+          </ol>
+        </nav>
+      </div>
 
       <div className="practitioner-layout">
+        <div className="practitioner-info-pane">
+          <section className="practitioner-card practitioner-summary-card">
+            <div className="practitioner-summary-top">
+              <div className="practitioner-summary-photo" aria-hidden="true">
+                <div className="practitioner-summary-photo-placeholder">
+                  <span>{practitionerInitials || "NC"}</span>
+                </div>
+              </div>
+
+              <div className="practitioner-summary-copy">
+                <p className="practitioner-eyebrow">Fiche praticien</p>
+                <h1>{title}</h1>
+                <p className="practitioner-hero-subtitle">{locationLabel}</p>
+              </div>
+            </div>
+
+            <div className="practitioner-summary-description-panel">
+              <p className="practitioner-summary-description">
+                {practitionerDescriptionPreview}
+              </p>
+            </div>
+
+            <div className="practitioner-summary-address">
+              <p className="practitioner-detail-label">Adresse</p>
+              <p className="practitioner-detail-value">{addressLine || "Adresse non renseignée."}</p>
+            </div>
+
+            <div className="practitioner-detail-grid">
+              <section className="practitioner-detail-tile practitioner-detail-tile--contact">
+                <p className="practitioner-detail-label">Contact direct</p>
+                {directContactActions.length > 0 ? (
+                  <div className="practitioner-contact-actions">
+                    {directContactActions.map((action) => (
+                      <Link
+                        key={action.href}
+                        className={action.variant === "primary" ? "btn" : "btn btn-secondary"}
+                        href={action.href}
+                        target={action.external ? "_blank" : undefined}
+                        rel={action.external ? "noopener noreferrer" : undefined}
+                      >
+                        {action.label}
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="practitioner-detail-value">Contact non renseigné.</p>
+                )}
+              </section>
+            </div>
+
+            <section className="practitioner-card practitioner-reviews-card">
+              <div className="practitioner-reviews-header">
+                <div>
+                  <p className="practitioner-detail-label">Avis</p>
+                  <h2>Avis et notes</h2>
+                </div>
+              </div>
+
+              {reviewsCount > 0 && ratingAverage !== null ? (
+                <>
+                  <div className="practitioner-reviews-summary">
+                    <div className="practitioner-reviews-score">
+                      <strong>{ratingAverage.toFixed(1)}</strong>
+                      <span>/5</span>
+                    </div>
+                    <div
+                      className="practitioner-reviews-stars"
+                      aria-label={`Note moyenne ${ratingAverage.toFixed(1)} sur 5`}
+                    >
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <span
+                          key={`global-star-${index}`}
+                          className={index < Math.round(ratingAverage) ? "is-filled" : ""}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    <p className="practitioner-detail-value">
+                      {reviewsCount} avis publiés pour le moment.
+                    </p>
+                  </div>
+
+                  <div className="practitioner-review-list">
+                    {practitionerReviews.map((review) => (
+                      <article key={review.id} className="practitioner-review-item">
+                        <div className="practitioner-review-item-head">
+                          <div
+                            className="practitioner-review-item-stars"
+                            aria-label={`Note ${review.rating} sur 5`}
+                          >
+                            {Array.from({ length: 5 }, (_, index) => (
+                              <span
+                                key={`review-${review.id}-star-${index}`}
+                                className={index < review.rating ? "is-filled" : ""}
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                          <time dateTime={review.created_at} className="practitioner-review-item-date">
+                            {new Date(review.created_at).toLocaleDateString("fr-FR", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric"
+                            })}
+                          </time>
+                        </div>
+                        {review.message ? (
+                          <p className="practitioner-review-item-message">{review.message}</p>
+                        ) : null}
+                      </article>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="practitioner-reviews-empty">
+                  <p className="practitioner-detail-value">Aucun avis publié pour le moment.</p>
+                </div>
+              )}
+
+              <div className="practitioner-reviews-actions">
+                <PractitionerReviewModal
+                  practitionerSlug={practitioner.slug}
+                  practitionerName={`${practitioner.first_name} ${practitioner.last_name}`}
+                />
+              </div>
+            </section>
+
+            <section className="practitioner-card practitioner-tariffs-card">
+              <div className="practitioner-reviews-header">
+                <div>
+                  <p className="practitioner-detail-label">Tarifs</p>
+                  <h2>Tarifs et prestations</h2>
+                </div>
+              </div>
+              <div className="practitioner-tariffs-body">
+                <p className="practitioner-detail-value">Tarifs non renseignés pour le moment.</p>
+              </div>
+            </section>
+          </section>
+        </div>
+
         <aside className="practitioner-map-pane" aria-label="Carte du praticien">
           <div className="mini-map mini-map--sticky">
             {Number.isFinite(practitioner.lat) && Number.isFinite(practitioner.lng) ? (
@@ -321,46 +493,7 @@ export default async function PractitionerPage({
           </div>
         </aside>
 
-        <div className="practitioner-content-pane">
-          <section className="practitioner-card practitioner-hero-card">
-            <p className="practitioner-eyebrow">Fiche praticien</p>
-            <h1>{title}</h1>
-            <p className="practitioner-hero-subtitle">{locationLabel}</p>
-          </section>
-
-          <section className="practitioner-card">
-            <h2>Adresse</h2>
-            <p>{addressLine || "Adresse non renseignée."}</p>
-          </section>
-
-          <section className="practitioner-card">
-            <h2>Contact direct</h2>
-            {directContactActions.length > 0 ? (
-              <div className="practitioner-contact-actions">
-                {directContactActions.map((action) => (
-                  <Link
-                    key={action.href}
-                    className={action.variant === "primary" ? "btn" : "btn btn-secondary"}
-                    href={action.href}
-                    target={action.external ? "_blank" : undefined}
-                    rel={action.external ? "noopener noreferrer" : undefined}
-                  >
-                    {action.label}
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p>Contact non renseigné.</p>
-            )}
-          </section>
-
-          {practitionerDescription ? (
-            <section className="practitioner-card">
-              <h2>Description</h2>
-              <p>{practitionerDescription}</p>
-            </section>
-          ) : null}
-
+        <div className="practitioner-claim-pane">
           <details className="practitioner-card practitioner-claim-accordion">
             <summary className="practitioner-claim-summary">
               Revendiquer ou corriger cette fiche

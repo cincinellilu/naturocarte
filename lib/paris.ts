@@ -18,3 +18,13 @@ export function parseParisArrondissement(
   if (parsed < 1 || parsed > 20) return null;
   return parsed;
 }
+
+export function getParisArrondissementFromPostalCode(
+  postalCode: string | null | undefined
+): number | null {
+  const raw = (postalCode ?? "").trim();
+  const match = raw.match(/^75(0[1-9]|1[0-9]|20)$/);
+  if (!match) return null;
+
+  return Number.parseInt(match[1], 10);
+}

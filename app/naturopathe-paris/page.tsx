@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
@@ -142,6 +143,18 @@ export default async function NaturopatheParisPage() {
       </nav>
 
       <section className="page-hero page-hero--directory">
+        <div className="page-hero-background directory-hero-background" aria-hidden="true">
+          <Image
+            src="https://images.pexels.com/photos/6255629/pexels-photo-6255629.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
+            alt=""
+            fill
+            sizes="100vw"
+            priority
+            className="home-hero-background-image directory-hero-background-image"
+          />
+          <div className="home-hero-background-scrim directory-hero-background-scrim" />
+        </div>
+
         <div className="page-hero-grid">
           <div className="page-hero-copy">
             <p className="page-eyebrow">Paris • recherche locale</p>

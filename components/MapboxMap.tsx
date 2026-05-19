@@ -18,6 +18,10 @@ type MapPoint = {
   phone?: string | null;
   email?: string | null;
   booking_url?: string | null;
+  description?: string | null;
+  rating?: number | null;
+  tarifs?: string | null;
+  photo_url?: string | null;
 };
 
 type SelectionSource = "map" | "list" | null;
@@ -28,6 +32,22 @@ function shouldReduceMotion(): boolean {
     return false;
   }
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function isMobileViewportNow(): boolean {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+
+  return window.matchMedia("(max-width: 640px)").matches;
+}
+
+function getPopupPadding() {
+  if (isMobileViewportNow()) {
+    return { top: 280, bottom: 96, left: 24, right: 24 };
+  }
+
+  return { top: 160, bottom: 120, left: 60, right: 60 };
 }
 
 function moveMap(
@@ -94,12 +114,29 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#039;");
 }
 
+function truncateText(value: string, maxLength: number): string {
+  const compact = value.replace(/\s+/g, " ").trim();
+  if (compact.length <= maxLength) return compact;
+
+  const slice = compact.slice(0, maxLength).trimEnd();
+  const lastSpace = slice.lastIndexOf(" ");
+  return `${(lastSpace > 40 ? slice.slice(0, lastSpace) : slice).trimEnd()}…`;
+}
+
 function buildPopupHtml(point: MapPoint): string {
   const bookingUrl =
     typeof point.booking_url === "string" &&
     (point.booking_url.startsWith("http://") || point.booking_url.startsWith("https://"))
       ? point.booking_url
       : null;
+  const ratingValue =
+    typeof point.rating === "number" && Number.isFinite(point.rating) ? point.rating : null;
+  const description = point.description?.trim() ? point.description.trim() : null;
+  const descriptionPreview = description ? truncateText(description, 160) : null;
+  const photoLabel = `${point.first_name} ${point.last_name}`;
+  const initials = `${point.first_name?.charAt(0) ?? ""}${point.last_name?.charAt(0) ?? ""}`
+    .trim()
+    .toUpperCase();
   const phoneHref = point.phone ? point.phone.replace(/[^\d+]/g, "") : "";
 
   const phoneLine = point.phone
@@ -119,19 +156,186 @@ function buildPopupHtml(point: MapPoint): string {
         bookingUrl
       )}" target="_blank" rel="noopener noreferrer">Prendre rendez-vous</a>`
     : "";
+  const tarifsLine = point.tarifs?.trim()
+    ? `<a class="map-popup-secondary" href="/naturopathe/${encodeURIComponent(
+        point.slug
+      )}#tarifs">Voir les tarifs</a>`
+    : "";
+  const ratingLine = ratingValue
+    ? `<div class="map-popup-rating" aria-label="Note ${ratingValue.toFixed(1)} sur 5">
+        <span class="map-popup-rating-star">★</span>
+        <span class="map-popup-rating-value">${ratingValue.toFixed(1)}</span>
+      </div>`
+    : "";
+  const photoMarkup = point.photo_url?.trim()
+    ? `<img class="map-popup-photo-image" src="${escapeHtml(
+        point.photo_url.trim()
+      )}" alt="${escapeHtml(photoLabel)}" loading="lazy" />`
+    : `<div class="map-popup-photo-placeholder" aria-hidden="true">
+        <span class="map-popup-photo-initials">${escapeHtml(initials || "NC")}</span>
+      </div>`;
 
   return `<div class="map-popup">
-    <p class="map-popup-name">${escapeHtml(point.first_name)} ${escapeHtml(point.last_name)}</p>
-    ${
-      phoneLine || emailLine
-        ? `<div class="map-popup-details">${phoneLine}${emailLine}</div>`
-        : ""
-    }
-    <div class="map-popup-actions">
-      <a class="map-popup-link" href="/naturopathe/${encodeURIComponent(point.slug)}">Voir la fiche</a>
-      ${bookingLine}
+    <div class="map-popup-layout">
+      <div class="map-popup-left">
+        <div class="map-popup-visual">${photoMarkup}</div>
+        ${
+          descriptionPreview
+            ? `<p class="map-popup-description">${escapeHtml(descriptionPreview)}</p>`
+            : ""
+        }
+        <a class="map-popup-link" href="/naturopathe/${encodeURIComponent(point.slug)}">Voir la fiche</a>
+      </div>
+      <div class="map-popup-content">
+        <p class="map-popup-name">${escapeHtml(point.first_name)} ${escapeHtml(point.last_name)}</p>
+        ${ratingLine}
+        ${
+          phoneLine || emailLine
+            ? `<div class="map-popup-details">${phoneLine}${emailLine}</div>`
+            : ""
+        }
+        <div class="map-popup-actions">
+          ${bookingLine}
+          ${tarifsLine}
+        </div>
+      </div>
     </div>
   </div>`;
+}
+
+function buildPhoneHref(value?: string | null): string {
+  return value ? value.replace(/[^\d+]/g, "") : "";
+}
+
+function MobilePractitionerPopup({
+  point,
+  onClose
+}: {
+  point: MapPoint;
+  onClose: () => void;
+}) {
+  const bookingUrl =
+    typeof point.booking_url === "string" &&
+    (point.booking_url.startsWith("http://") || point.booking_url.startsWith("https://"))
+      ? point.booking_url
+      : null;
+  const ratingValue =
+    typeof point.rating === "number" && Number.isFinite(point.rating) ? point.rating : null;
+  const description = point.description?.trim() ? point.description.trim() : null;
+  const descriptionPreview = description ? truncateText(description, 138) : null;
+  const initials = `${point.first_name?.charAt(0) ?? ""}${point.last_name?.charAt(0) ?? ""}`
+    .trim()
+    .toUpperCase();
+  const phoneHref = buildPhoneHref(point.phone);
+  const hasTarifs = Boolean(point.tarifs?.trim());
+
+  return (
+    <div className="map-mobile-overlay" role="presentation">
+      <section
+        className="map-mobile-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${point.first_name} ${point.last_name}`}
+      >
+        <button
+          type="button"
+          className="map-mobile-popup-close"
+          onClick={onClose}
+          aria-label="Fermer la fiche"
+        >
+          ×
+        </button>
+
+        <div className="map-mobile-popup-photo" aria-hidden="true">
+          {point.photo_url?.trim() ? (
+            <img
+              className="map-mobile-popup-photo-image"
+              src={point.photo_url.trim()}
+              alt=""
+              loading="lazy"
+            />
+          ) : (
+            <div className="map-mobile-popup-photo-placeholder">
+              <span className="map-mobile-popup-photo-initials">{initials || "NC"}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="map-mobile-popup-content">
+          <p className="map-popup-name">
+            {point.first_name} {point.last_name}
+          </p>
+
+          {ratingValue ? (
+            <div className="map-popup-rating" aria-label={`Note ${ratingValue.toFixed(1)} sur 5`}>
+              <span className="map-popup-rating-star">★</span>
+              <span className="map-popup-rating-value">{ratingValue.toFixed(1)}</span>
+            </div>
+          ) : null}
+
+          {descriptionPreview ? (
+            <p className="map-mobile-popup-description">{descriptionPreview}</p>
+          ) : null}
+
+          {point.phone || point.email ? (
+            <div className="map-popup-details map-mobile-popup-details">
+              {point.phone ? (
+                <p className="map-popup-detail">
+                  <span className="map-popup-label">Téléphone</span>
+                  <a className="map-popup-value" href={`tel:${phoneHref}`}>
+                    {point.phone}
+                  </a>
+                </p>
+              ) : null}
+              {point.email ? (
+                <p className="map-popup-detail">
+                  <span className="map-popup-label">Email</span>
+                  <a className="map-popup-value" href={`mailto:${encodeURIComponent(point.email)}`}>
+                    {point.email}
+                  </a>
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
+          <div className="map-popup-actions map-mobile-popup-actions">
+            {bookingUrl ? (
+              <a
+                className="map-popup-link map-mobile-popup-link"
+                href={bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Prendre rendez-vous
+              </a>
+            ) : null}
+
+            {hasTarifs ? (
+              <a
+                className="map-popup-secondary map-mobile-popup-secondary"
+                href={`/naturopathe/${encodeURIComponent(point.slug)}#tarifs`}
+              >
+                Voir les tarifs
+              </a>
+            ) : null}
+
+            <a
+              className={[
+                bookingUrl ? "map-popup-secondary" : "map-popup-link",
+                "map-mobile-popup-link",
+                bookingUrl ? "map-mobile-popup-secondary" : null
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              href={`/naturopathe/${encodeURIComponent(point.slug)}`}
+            >
+              Voir la fiche
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
 
 function toFeatureCollection(points: MapPoint[]): GeoJSON.FeatureCollection {
@@ -280,6 +484,27 @@ export default function MapboxMap({
   const autoGeoAttemptedRef = useRef(false);
 
   const [geoError, setGeoError] = useState<string | null>(null);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [mobilePopupPoint, setMobilePopupPoint] = useState<MapPoint | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+    const updateViewport = () => setIsMobileViewport(mediaQuery.matches);
+
+    updateViewport();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateViewport);
+      return () => mediaQuery.removeEventListener("change", updateViewport);
+    }
+
+    mediaQuery.addListener(updateViewport);
+    return () => mediaQuery.removeListener(updateViewport);
+  }, []);
 
   useEffect(() => {
     onSelectSlugRef.current = onSelectSlug;
@@ -394,28 +619,7 @@ export default function MapboxMap({
           const feature = event.features?.[0];
           if (!feature || feature.geometry.type !== "Point" || !feature.properties) return;
 
-          const coordinates = [...feature.geometry.coordinates] as [number, number];
           const slug = String(feature.properties.slug ?? "");
-          const firstName = String(feature.properties.first_name ?? "");
-          const lastName = String(feature.properties.last_name ?? "");
-
-          const selectedPoint =
-            pointsRef.current.find((p) => p.slug === slug) ?? {
-              slug,
-              first_name: firstName,
-              last_name: lastName,
-              lat: coordinates[1],
-              lng: coordinates[0]
-            };
-
-          popupRef.current?.remove();
-          popupRef.current = new mapboxgl.Popup({ closeButton: true, closeOnClick: true })
-            .setLngLat(coordinates)
-            .setHTML(buildPopupHtml(selectedPoint))
-            .on("close", () => {
-              onSelectSlugRef.current?.(null);
-            })
-            .addTo(map);
 
           onSelectSlugRef.current?.(slug);
         });
@@ -511,19 +715,42 @@ export default function MapboxMap({
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || selectionSource !== "list" || !selectedSlug) return;
+    if (!map) return;
+
+    if (!selectedSlug) {
+      popupRef.current?.remove();
+      popupRef.current = null;
+      setMobilePopupPoint(null);
+      return;
+    }
 
     const selectedPoint = pointsRef.current.find((p) => p.slug === selectedSlug);
-    if (!selectedPoint) return;
-
-    moveMap(map, {
-      center: [selectedPoint.lng, selectedPoint.lat],
-      zoom: Math.max(map.getZoom(), 13.5),
-      mode: "ease",
-      padding: { top: 160, bottom: 120, left: 60, right: 60 }
-    });
+    if (!selectedPoint) {
+      popupRef.current?.remove();
+      popupRef.current = null;
+      setMobilePopupPoint(null);
+      return;
+    }
 
     popupRef.current?.remove();
+    popupRef.current = null;
+
+    if (isMobileViewport) {
+      setMobilePopupPoint(selectedPoint);
+      return;
+    }
+
+    setMobilePopupPoint(null);
+
+    if (selectionSource === "list") {
+      moveMap(map, {
+        center: [selectedPoint.lng, selectedPoint.lat],
+        zoom: Math.max(map.getZoom(), 13.5),
+        mode: "ease",
+        padding: getPopupPadding()
+      });
+    }
+
     popupRef.current = new mapboxgl.Popup({ closeButton: true, closeOnClick: true })
       .setLngLat([selectedPoint.lng, selectedPoint.lat])
       .setHTML(buildPopupHtml(selectedPoint))
@@ -531,7 +758,7 @@ export default function MapboxMap({
         onSelectSlugRef.current?.(null);
       })
       .addTo(map);
-  }, [selectedSlug, selectionSource]);
+  }, [isMobileViewport, selectedSlug, selectionSource]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -545,6 +772,7 @@ export default function MapboxMap({
 
     popupRef.current?.remove();
     popupRef.current = null;
+    setMobilePopupPoint(null);
     onSelectSlugRef.current?.(null);
 
     moveMap(map, {
@@ -595,6 +823,17 @@ export default function MapboxMap({
   return (
     <div className="map-root" aria-label="Carte des praticiens">
       <div ref={containerRef} className="map-canvas" />
+      {isMobileViewport && mobilePopupPoint ? (
+        <MobilePractitionerPopup
+          point={mobilePopupPoint}
+          onClose={() => {
+            popupRef.current?.remove();
+            popupRef.current = null;
+            setMobilePopupPoint(null);
+            onSelectSlugRef.current?.(null);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

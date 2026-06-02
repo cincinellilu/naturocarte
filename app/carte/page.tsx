@@ -220,6 +220,17 @@ export default async function CartePage({
               Entrez votre adresse, comparez les praticiens autour de vous et ouvrez les
               fiches les plus utiles en quelques clics.
             </p>
+            <div className="map-mobile-action-bar" aria-label="Actions rapides carte">
+              <a className="map-mobile-action-link" href="#carte-interactive" data-scroll-target="carte-interactive">
+                Voir la carte
+              </a>
+              <a className="map-mobile-action-link" href="#zone-filter-panel" data-scroll-target="zone-filter-panel">
+                Filtrer
+              </a>
+              <a className="map-mobile-action-link" href="#praticiens-results" data-scroll-target="praticiens-results">
+                Liste
+              </a>
+            </div>
           </div>
         </div>
 

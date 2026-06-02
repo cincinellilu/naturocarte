@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordProductEvent, type ProductEventMetadata } from "@/lib/product-events-server";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 const STAT_EVENTS = ["profile_view", "contact_click", "booking_click"] as const;
@@ -11,6 +12,21 @@ type StatsRow = {
   contact_clicks: number | null;
   booking_clicks: number | null;
 };
+
+function normalizeMetadata(value: unknown): ProductEventMetadata {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).filter(([, item]) => {
+      return (
+        item === null ||
+        typeof item === "string" ||
+        typeof item === "number" ||
+        typeof item === "boolean"
+      );
+    })
+  ) as ProductEventMetadata;
+}
 
 function isStatEvent(value: unknown): value is StatEvent {
   return typeof value === "string" && STAT_EVENTS.includes(value as StatEvent);
@@ -96,10 +112,12 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       practitionerSlug?: unknown;
       event?: unknown;
+      metadata?: unknown;
     };
 
     const practitionerSlug = typeof body.practitionerSlug === "string" ? body.practitionerSlug.trim() : "";
     const event = body.event;
+    const metadata = normalizeMetadata(body.metadata);
 
     if (!practitionerSlug || !isStatEvent(event)) {
       return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
@@ -121,6 +139,33 @@ export async function POST(request: Request) {
     }
 
     await incrementStat(practitioner.id, event);
+
+    const source =
+      typeof metadata.source === "string" ? metadata.source : "unknown";
+    const eventName =
+      event === "profile_view"
+        ? "practitioner_profile_view"
+        : event === "booking_click"
+          ? "booking_click"
+          : metadata.channel === "phone"
+            ? "phone_click"
+            : metadata.channel === "email"
+              ? "email_click"
+              : "website_click";
+
+    await recordProductEvent({
+      eventName,
+      request,
+      practitionerId: practitioner.id,
+      practitionerSlug,
+      source,
+      metadata: {
+        ...metadata,
+        practitioner_slug: practitionerSlug
+      }
+    }).catch((error) => {
+      console.error("product event from practitioner stats failed", error);
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { ensurePractitionerAccount, resolvePractitionerAccount } from "@/lib/auth-account-routing";
+import { recordProductEvent } from "@/lib/product-events-server";
 import {
   createPractitionerSessionCookieValue,
   getPractitionerSessionCookieOptions,
@@ -61,6 +62,11 @@ export async function GET(request: Request) {
     const { data, error } = result;
 
     if (error || !data.user?.id || !data.user.email) {
+      await recordProductEvent({
+        eventName: "practitioner_login_failed",
+        request,
+        metadata: { reason: "auth_failed" }
+      }).catch(() => {});
       return NextResponse.redirect(new URL("/praticiens?error=auth_failed", request.url));
     }
 
@@ -89,6 +95,11 @@ export async function GET(request: Request) {
     }
 
     const response = NextResponse.redirect(new URL("/praticiens/dashboard", request.url));
+    await recordProductEvent({
+      eventName: "practitioner_login_success",
+      request,
+      metadata: { entry: "practitioner_callback" }
+    }).catch(() => {});
     response.cookies.set({
       name: PRACTITIONER_SESSION_COOKIE_NAME,
       value: createPractitionerSessionCookieValue({

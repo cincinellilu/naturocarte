@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -44,6 +45,12 @@ export async function POST(request: Request) {
 
   const session = await getCurrentUserSession();
   if (!session) {
+    await recordProductEvent({
+      eventName: "favorite_auth_required",
+      request,
+      practitionerSlug,
+      metadata: { practitioner_slug: practitionerSlug }
+    }).catch(() => {});
     const loginUrl = new URL("/compte", request.url);
     loginUrl.searchParams.set("next", redirectUrl.pathname + redirectUrl.search + redirectUrl.hash);
     loginUrl.searchParams.set("auth", "required");
@@ -80,6 +87,12 @@ export async function POST(request: Request) {
       .eq("user_account_id", account.id)
       .eq("practitioner_id", practitioner.id);
     redirectUrl.searchParams.set("favorite", "removed");
+    await recordProductEvent({
+      eventName: "favorite_removed",
+      request,
+      practitionerId: practitioner.id,
+      metadata: { practitioner_slug: practitioner.slug }
+    }).catch(() => {});
   } else {
     await supabase.from("user_favorite_practitioners").upsert(
       {
@@ -89,6 +102,12 @@ export async function POST(request: Request) {
       { onConflict: "user_account_id,practitioner_id" }
     );
     redirectUrl.searchParams.set("favorite", "added");
+    await recordProductEvent({
+      eventName: "favorite_added",
+      request,
+      practitionerId: practitioner.id,
+      metadata: { practitioner_slug: practitioner.slug }
+    }).catch(() => {});
   }
 
   revalidatePath("/compte");

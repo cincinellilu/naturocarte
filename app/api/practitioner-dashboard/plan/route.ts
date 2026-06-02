@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import {
   isPractitionerPlanId,
@@ -53,6 +54,11 @@ export async function POST(request: Request) {
   if (plan === PRACTITIONER_PLAN_PRESENCE) {
     if (account.stripe_customer_id) {
       try {
+        await recordProductEvent({
+          eventName: "billing_portal_opened",
+          request,
+          metadata: { target_plan: plan }
+        }).catch(() => {});
         const portal = await createBillingPortalSession({
           customerId: account.stripe_customer_id,
           returnUrl: new URL("/praticiens/dashboard", request.url).toString()
@@ -116,6 +122,14 @@ export async function POST(request: Request) {
     if (!checkout.url) {
       throw new Error("Stripe Checkout did not return a URL.");
     }
+
+    await recordProductEvent({
+      eventName: "checkout_started",
+      request,
+      metadata: {
+        target_plan: plan
+      }
+    }).catch(() => {});
 
     return NextResponse.redirect(checkout.url, { status: 303 });
   } catch (error) {

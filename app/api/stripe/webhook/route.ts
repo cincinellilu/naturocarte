@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { PRACTITIONER_PLAN_PRESENCE, PRACTITIONER_PLAN_VISIBILITY } from "@/lib/practitioner-plans";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 import { getStripeVisibilityPriceId, verifyStripeWebhookSignature } from "@/lib/stripe";
@@ -83,6 +84,19 @@ async function updateAccountFromSubscription(subscription: Record<string, unknow
   if (error) {
     throw error;
   }
+
+  await recordProductEvent({
+    eventName:
+      plan === PRACTITIONER_PLAN_VISIBILITY
+        ? "stripe_subscription_active"
+        : "stripe_subscription_inactive",
+    practitionerAccountId: accountId,
+    metadata: {
+      stripe_subscription_id: subscriptionId,
+      stripe_status: status,
+      plan
+    }
+  }).catch(() => {});
 }
 
 async function updateAccountFromCheckoutSession(session: Record<string, unknown>) {
@@ -108,6 +122,16 @@ async function updateAccountFromCheckoutSession(session: Record<string, unknown>
   if (error) {
     throw error;
   }
+
+  await recordProductEvent({
+    eventName: "checkout_completed",
+    practitionerAccountId: accountId,
+    metadata: {
+      stripe_customer_id: customerId,
+      stripe_subscription_id: subscriptionId,
+      plan: PRACTITIONER_PLAN_VISIBILITY
+    }
+  }).catch(() => {});
 }
 
 export async function POST(request: Request) {

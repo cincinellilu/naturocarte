@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import {
   PRACTITIONER_PLAN_PRESENCE,
@@ -90,6 +91,21 @@ export async function POST(request: Request) {
     .eq("id", account.id);
 
   revalidatePath(`/naturopathe/${practitioner.slug}`);
+  await recordProductEvent({
+    eventName: "practitioner_profile_updated",
+    request,
+    practitionerAccountId: account.id,
+    practitionerId: account.practitioner_id,
+    metadata: {
+      plan,
+      contact_slot: contactSlot,
+      has_phone: Boolean(phone),
+      has_email: Boolean(email),
+      has_booking_url: Boolean(bookingUrl),
+      has_website: Boolean(website),
+      has_description: Boolean(description)
+    }
+  }).catch(() => {});
   redirectUrl.searchParams.set("saved", "profile");
   return NextResponse.redirect(redirectUrl, { status: 303 });
 }

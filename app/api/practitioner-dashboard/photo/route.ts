@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { PRACTITIONER_PLAN_VISIBILITY } from "@/lib/practitioner-plans";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
@@ -59,6 +60,13 @@ export async function POST(request: Request) {
   }
 
   if (account.plan !== PRACTITIONER_PLAN_VISIBILITY) {
+    await recordProductEvent({
+      eventName: "photo_upload_failed",
+      request,
+      practitionerAccountId: account.id,
+      practitionerId: account.practitioner_id,
+      metadata: { reason: "paid_required" }
+    }).catch(() => {});
     redirectUrl.searchParams.set("error", "paid_required");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
@@ -74,6 +82,13 @@ export async function POST(request: Request) {
 
   if (uploadError) {
     console.error("practitioner photo upload failed", uploadError);
+    await recordProductEvent({
+      eventName: "photo_upload_failed",
+      request,
+      practitionerAccountId: account.id,
+      practitionerId: account.practitioner_id,
+      metadata: { reason: "storage_upload_failed" }
+    }).catch(() => {});
     redirectUrl.searchParams.set("error", "photo_upload_failed");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
@@ -95,6 +110,16 @@ export async function POST(request: Request) {
   }
 
   revalidatePath(`/naturopathe/${practitioner.slug}`);
+  await recordProductEvent({
+    eventName: "photo_upload_success",
+    request,
+    practitionerAccountId: account.id,
+    practitionerId: account.practitioner_id,
+    metadata: {
+      file_type: photo.type,
+      file_size: photo.size
+    }
+  }).catch(() => {});
   redirectUrl.searchParams.set("saved", "photo");
   return NextResponse.redirect(redirectUrl, { status: 303 });
 }

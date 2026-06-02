@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 function isValidEmail(value: string): boolean {
@@ -136,6 +137,11 @@ export async function POST(request: Request) {
 
     if (!result.ok) {
       console.error("practitioner magic link email send failed", result.error);
+      await recordProductEvent({
+        eventName: "practitioner_login_link_failed",
+        request,
+        metadata: { reason: result.code }
+      }).catch(() => {});
       redirectUrl.searchParams.set(
         "error",
         result.code === "missing_provider" ? "email_provider_missing" : "email_failed"
@@ -144,6 +150,10 @@ export async function POST(request: Request) {
     }
 
     redirectUrl.searchParams.set("auth", "sent");
+    await recordProductEvent({
+      eventName: "practitioner_login_link_requested",
+      request
+    }).catch(() => {});
     return NextResponse.redirect(redirectUrl, { status: 303 });
   } catch (error) {
     console.error("practitioner magic link error", error);

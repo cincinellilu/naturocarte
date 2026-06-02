@@ -14,6 +14,7 @@ import {
   USER_SESSION_COOKIE_NAME
 } from "@/lib/user-auth";
 import { ensureUserAccount, resolvePractitionerAccount } from "@/lib/auth-account-routing";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 type EmailOtpType = "signup" | "invite" | "magiclink" | "recovery" | "email_change" | "email";
@@ -70,6 +71,11 @@ export async function GET(request: Request) {
     const { data, error } = result;
 
     if (error || !data.user?.id || !data.user.email) {
+      await recordProductEvent({
+        eventName: "user_login_failed",
+        request,
+        metadata: { reason: "auth_failed" }
+      }).catch(() => {});
       return NextResponse.redirect(new URL("/compte?error=auth_failed", request.url));
     }
 
@@ -92,6 +98,11 @@ export async function GET(request: Request) {
     }
 
     if (practitionerResolution.isPractitioner) {
+      await recordProductEvent({
+        eventName: "practitioner_login_success",
+        request,
+        metadata: { entry: "user_callback" }
+      }).catch(() => {});
       const response = NextResponse.redirect(new URL("/praticiens/dashboard", request.url));
       response.cookies.set({
         name: PRACTITIONER_SESSION_COOKIE_NAME,
@@ -115,6 +126,13 @@ export async function GET(request: Request) {
     }
 
     const response = NextResponse.redirect(new URL(getSafeNextPath(shouldUseIntent ? intent?.nextPath : null), request.url));
+    await recordProductEvent({
+      eventName: "user_login_success",
+      request,
+      metadata: {
+        next_path: getSafeNextPath(shouldUseIntent ? intent?.nextPath : null)
+      }
+    }).catch(() => {});
     response.cookies.set({
       name: USER_SESSION_COOKIE_NAME,
       value: createUserSessionCookieValue({ userId: data.user.id, email: normalizedEmail }),

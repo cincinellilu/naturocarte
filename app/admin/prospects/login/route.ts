@@ -7,14 +7,19 @@ import {
 } from "@/lib/admin-prospects-auth";
 
 export async function POST(request: Request) {
-  const redirectUrl = new URL("/admin/prospects", request.url);
+  const formData = await request.formData();
+  const rawNext = formData.get("next");
+  const nextPath =
+    typeof rawNext === "string" && rawNext.startsWith("/admin") && !rawNext.startsWith("//")
+      ? rawNext
+      : "/admin/prospects";
+  const redirectUrl = new URL(nextPath, request.url);
 
   if (!isAdminProspectsConfigured()) {
     redirectUrl.searchParams.set("error", "missing_config");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
 
-  const formData = await request.formData();
   const rawPassword = formData.get("password");
   const password = typeof rawPassword === "string" ? rawPassword.trim() : "";
 

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -128,6 +129,11 @@ export async function POST(request: Request) {
 
   const coordinates = await geocodePractitionerAddress({ addressLine, postalCode, city });
   if (!coordinates) {
+    await recordProductEvent({
+      eventName: "practitioner_onboarding_failed",
+      request,
+      metadata: { reason: "address_not_found" }
+    }).catch(() => {});
     redirectUrl.searchParams.set("error", "address_not_found");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
@@ -208,6 +214,13 @@ export async function POST(request: Request) {
 
     if (createError || !practitioner?.id) {
       console.error("dashboard practitioner onboarding creation failed", createError);
+      await recordProductEvent({
+        eventName: "practitioner_onboarding_failed",
+        request,
+        metadata: {
+          reason: createError?.code === "23505" ? "duplicate_siret" : "profile_creation_failed"
+        }
+      }).catch(() => {});
       redirectUrl.searchParams.set(
         "error",
         createError?.code === "23505" ? "duplicate_siret" : "profile_creation_failed"
@@ -302,5 +315,15 @@ export async function POST(request: Request) {
   }
 
   redirectUrl.searchParams.set("saved", "profile_created");
+  await recordProductEvent({
+    eventName: "practitioner_onboarding_completed",
+    request,
+    practitionerAccountId: account.id,
+    practitionerId,
+    metadata: {
+      city,
+      postal_code: postalCode
+    }
+  }).catch(() => {});
   return NextResponse.redirect(redirectUrl, { status: 303 });
 }

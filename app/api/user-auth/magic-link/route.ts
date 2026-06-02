@@ -4,6 +4,7 @@ import {
   getUserAuthIntentCookieOptions,
   USER_AUTH_INTENT_COOKIE_NAME
 } from "@/lib/user-auth";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 function isValidEmail(value: string): boolean {
@@ -145,6 +146,11 @@ export async function POST(request: Request) {
 
     if (!result.ok) {
       console.error("user magic link email send failed", result.error);
+      await recordProductEvent({
+        eventName: "user_login_link_failed",
+        request,
+        metadata: { reason: result.code }
+      }).catch(() => {});
       redirectUrl.searchParams.set(
         "error",
         result.code === "missing_provider" ? "email_provider_missing" : "email_failed"
@@ -153,6 +159,11 @@ export async function POST(request: Request) {
     }
 
     redirectUrl.searchParams.set("auth", "sent");
+    await recordProductEvent({
+      eventName: "user_login_link_requested",
+      request,
+      metadata: { next_path: nextPath }
+    }).catch(() => {});
     const response = NextResponse.redirect(redirectUrl, { status: 303 });
     response.cookies.set({
       name: USER_AUTH_INTENT_COOKIE_NAME,

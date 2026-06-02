@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackProductEvent } from "@/lib/product-events";
 
 type PractitionerEntry = {
   slug: string;
@@ -68,6 +69,14 @@ export default function DirectorySearchBar({
   }, [normalizedQuery, practitioners]);
 
   function openBestResult() {
+    trackProductEvent(
+      results.length === 0 ? "directory_search_no_result" : "directory_search_submitted",
+      {
+        query_length: query.trim().length,
+        results_count: results.length,
+        top_result: results[0]?.href ?? null
+      }
+    );
     if (results.length === 0) return;
     router.push(results[0].href);
   }
@@ -109,7 +118,13 @@ export default function DirectorySearchBar({
                 key={result.href}
                 type="button"
                 className="directory-search-result"
-                onClick={() => router.push(result.href)}
+                onClick={() => {
+                  trackProductEvent("directory_search_result_clicked", {
+                    query_length: query.trim().length,
+                    result_href: result.href
+                  });
+                  router.push(result.href);
+                }}
               >
                 <span className="directory-search-result-label">{result.label}</span>
                 <span className="directory-search-result-helper">Praticien · Ouvrir la fiche</span>

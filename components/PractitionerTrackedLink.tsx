@@ -19,11 +19,23 @@ export default function PractitionerTrackedLink({
   onClick,
   ...props
 }: PractitionerTrackedLinkProps) {
+  const channel =
+    event === "booking_click"
+      ? "booking"
+      : props.href?.startsWith("tel:")
+        ? "phone"
+        : props.href?.startsWith("mailto:")
+          ? "email"
+          : "website";
+
   return (
     <a
       {...props}
       onClick={(clickEvent) => {
-        trackPractitionerStat(practitionerSlug, event);
+        trackPractitionerStat(practitionerSlug, event, {
+          source: "profile_page",
+          channel
+        });
         onClick?.(clickEvent);
       }}
     >

@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { trackProductEvent } from "@/lib/product-events";
 
 type ReviewPayload = {
   practitionerSlug: string;
@@ -93,6 +94,9 @@ export default function PractitionerReviewModal({
       });
 
       if (response.status === 401) {
+        trackProductEvent("review_auth_required", {
+          practitioner_slug: practitionerSlug
+        });
         window.location.href = loginUrl;
         return;
       }
@@ -103,9 +107,17 @@ export default function PractitionerReviewModal({
       }
 
       setSubmitted(true);
+      trackProductEvent("review_submitted", {
+        practitioner_slug: practitionerSlug,
+        rating,
+        has_message: Boolean(message.trim())
+      });
       setRating(0);
       setMessage("");
     } catch {
+      trackProductEvent("review_submit_failed", {
+        practitioner_slug: practitionerSlug
+      });
       setError("Une erreur est survenue pendant l’envoi.");
     } finally {
       setIsSubmitting(false);
@@ -114,7 +126,15 @@ export default function PractitionerReviewModal({
 
   if (!isAuthenticated) {
     return (
-      <Link className="btn btn-secondary practitioner-static-cta practitioner-review-trigger" href={loginUrl}>
+      <Link
+        className="btn btn-secondary practitioner-static-cta practitioner-review-trigger"
+        href={loginUrl}
+        onClick={() =>
+          trackProductEvent("review_auth_required", {
+            practitioner_slug: practitionerSlug
+          })
+        }
+      >
         Se connecter pour laisser un avis
       </Link>
     );
@@ -125,7 +145,12 @@ export default function PractitionerReviewModal({
       <button
         type="button"
         className="btn btn-secondary practitioner-static-cta practitioner-review-trigger"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          trackProductEvent("review_modal_opened", {
+            practitioner_slug: practitionerSlug
+          });
+          setIsOpen(true);
+        }}
       >
         Laisser un avis
       </button>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { trackPractitionerStat, type PractitionerStatEvent } from "@/components/PractitionerStatsTracker";
+import { trackProductEvent } from "@/lib/product-events";
 
 const PARIS_CENTER: [number, number] = [2.3522, 48.8566];
 const SOURCE_ID = "practitioners";
@@ -147,6 +148,7 @@ function buildPopupHtml(point: MapPoint): string {
           class="map-popup-value"
           href="tel:${escapeHtml(phoneHref)}"
           data-practitioner-stat-event="contact_click"
+          data-practitioner-channel="phone"
           data-practitioner-slug="${escapeHtml(point.slug)}"
         >${escapeHtml(point.phone)}</a>
       </p>`
@@ -158,6 +160,7 @@ function buildPopupHtml(point: MapPoint): string {
           class="map-popup-value"
           href="mailto:${encodeURIComponent(point.email)}"
           data-practitioner-stat-event="contact_click"
+          data-practitioner-channel="email"
           data-practitioner-slug="${escapeHtml(point.slug)}"
         >${escapeHtml(point.email)}</a>
       </p>`
@@ -165,7 +168,7 @@ function buildPopupHtml(point: MapPoint): string {
   const bookingLine = bookingUrl
     ? `<a class="map-popup-secondary" href="${escapeHtml(
         bookingUrl
-      )}" target="_blank" rel="noopener noreferrer" data-practitioner-stat-event="booking_click" data-practitioner-slug="${escapeHtml(
+      )}" target="_blank" rel="noopener noreferrer" data-practitioner-stat-event="booking_click" data-practitioner-channel="booking" data-practitioner-slug="${escapeHtml(
         point.slug
       )}">Prendre rendez-vous</a>`
     : "";
@@ -304,7 +307,12 @@ function MobilePractitionerPopup({
                   <a
                     className="map-popup-value"
                     href={`tel:${phoneHref}`}
-                    onClick={() => trackPractitionerStat(point.slug, "contact_click")}
+                    onClick={() =>
+                      trackPractitionerStat(point.slug, "contact_click", {
+                        source: "map_mobile_popup",
+                        channel: "phone"
+                      })
+                    }
                   >
                     {point.phone}
                   </a>
@@ -316,7 +324,12 @@ function MobilePractitionerPopup({
                   <a
                     className="map-popup-value"
                     href={`mailto:${encodeURIComponent(point.email)}`}
-                    onClick={() => trackPractitionerStat(point.slug, "contact_click")}
+                    onClick={() =>
+                      trackPractitionerStat(point.slug, "contact_click", {
+                        source: "map_mobile_popup",
+                        channel: "email"
+                      })
+                    }
                   >
                     {point.email}
                   </a>
@@ -340,7 +353,12 @@ function MobilePractitionerPopup({
                 href={bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackPractitionerStat(point.slug, "booking_click")}
+                onClick={() =>
+                  trackPractitionerStat(point.slug, "booking_click", {
+                    source: "map_mobile_popup",
+                    channel: "booking"
+                  })
+                }
               >
                 Prendre rendez-vous
               </a>
@@ -523,6 +541,7 @@ export default function MapboxMap({
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [mobilePopupPoint, setMobilePopupPoint] = useState<MapPoint | null>(null);
+  const [mapInitError, setMapInitError] = useState<string | null>(null);
 
   const removePopupSilently = () => {
     const popup = popupRef.current;
@@ -564,6 +583,7 @@ export default function MapboxMap({
     if (!map) return;
 
     if (typeof navigator === "undefined" || !navigator.geolocation) {
+      trackProductEvent("map_geolocation_failed", { reason: "unavailable" });
       setGeoError("Localisation indisponible sur cet appareil.");
       return;
     }
@@ -573,6 +593,9 @@ export default function MapboxMap({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
+        trackProductEvent("map_geolocation_success", {
+          source: isManual ? "manual" : "auto"
+        });
 
         moveMap(map, {
           center: [longitude, latitude],
@@ -596,6 +619,9 @@ export default function MapboxMap({
       },
       (error) => {
         if (error.code === error.PERMISSION_DENIED) {
+          trackProductEvent("map_geolocation_denied", {
+            source: isManual ? "manual" : "auto"
+          });
           setGeoError(
             isManual
               ? "Localisation bloquée. Autorisez-la dans les paramètres du navigateur puis réessayez."
@@ -604,9 +630,17 @@ export default function MapboxMap({
           return;
         }
         if (error.code === error.TIMEOUT) {
+          trackProductEvent("map_geolocation_failed", {
+            source: isManual ? "manual" : "auto",
+            reason: "timeout"
+          });
           setGeoError("Délai de localisation dépassé.");
           return;
         }
+        trackProductEvent("map_geolocation_failed", {
+          source: isManual ? "manual" : "auto",
+          reason: "unavailable"
+        });
         setGeoError("Localisation indisponible.");
       },
       {
@@ -629,12 +663,28 @@ export default function MapboxMap({
 
     mapboxgl.accessToken = accessToken;
 
-    const map = new mapboxgl.Map({
-      container: containerRef.current,
-      style: "mapbox://styles/mapbox/light-v11",
-      center: PARIS_CENTER,
-      zoom: 11.6
-    });
+    if (!mapboxgl.supported()) {
+      trackProductEvent("mapbox_load_failed", { reason: "unsupported" });
+      setMapInitError("Carte indisponible sur ce navigateur.");
+      return;
+    }
+
+    let map: mapboxgl.Map;
+
+    try {
+      map = new mapboxgl.Map({
+        container: containerRef.current,
+        style: "mapbox://styles/mapbox/light-v11",
+        center: PARIS_CENTER,
+        zoom: 11.6
+      });
+    } catch {
+      trackProductEvent("mapbox_load_failed", { reason: "init_error" });
+      setMapInitError("Carte indisponible sur ce navigateur.");
+      return;
+    }
+
+    setMapInitError(null);
 
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
 
@@ -651,6 +701,12 @@ export default function MapboxMap({
           if (!clusterFeature || !clusterFeature.properties) return;
 
           const clusterId = clusterFeature.properties.cluster_id as number;
+          trackProductEvent("map_cluster_clicked", {
+            point_count:
+              typeof clusterFeature.properties.point_count === "number"
+                ? clusterFeature.properties.point_count
+                : null
+          });
           const source = map.getSource(SOURCE_ID) as mapboxgl.GeoJSONSource;
 
           source.getClusterExpansionZoom(clusterId, (error, zoom) => {
@@ -665,6 +721,9 @@ export default function MapboxMap({
           if (!feature || feature.geometry.type !== "Point" || !feature.properties) return;
 
           const slug = String(feature.properties.slug ?? "");
+          trackProductEvent("map_marker_clicked", {
+            practitioner_slug: slug
+          });
 
           onSelectSlugRef.current?.(slug);
         });
@@ -780,7 +839,13 @@ export default function MapboxMap({
 
     if (trackedPopupViewSlugRef.current !== selectedPoint.slug) {
       trackedPopupViewSlugRef.current = selectedPoint.slug;
-      trackPractitionerStat(selectedPoint.slug, "profile_view");
+      trackProductEvent("map_popup_opened", {
+        practitioner_slug: selectedPoint.slug,
+        source: selectionSource === "list" ? "list" : "map"
+      });
+      trackPractitionerStat(selectedPoint.slug, "profile_view", {
+        source: selectionSource === "list" ? "map_list_popup" : "map_popup"
+      });
     }
 
     if (isMobileViewport) {
@@ -817,12 +882,16 @@ export default function MapboxMap({
       const trackedLink = target.closest<HTMLElement>("[data-practitioner-stat-event]");
       const statEvent = trackedLink?.dataset.practitionerStatEvent;
       const practitionerSlug = trackedLink?.dataset.practitionerSlug;
+      const channel = trackedLink?.dataset.practitionerChannel ?? "unknown";
 
       if (
         practitionerSlug &&
         (statEvent === "contact_click" || statEvent === "booking_click")
       ) {
-        trackPractitionerStat(practitionerSlug, statEvent as PractitionerStatEvent);
+        trackPractitionerStat(practitionerSlug, statEvent as PractitionerStatEvent, {
+          source: "map_popup",
+          channel
+        });
       }
     });
   }, [isMobileViewport, selectedSlug, selectionSource]);
@@ -878,12 +947,34 @@ export default function MapboxMap({
   }, [isFullscreen]);
 
   useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (isMobileViewport && !isFullscreen) {
+      map.dragPan.disable();
+      map.touchZoomRotate.disable();
+      map.scrollZoom.disable();
+      map.doubleClickZoom.disable();
+      return;
+    }
+
+    map.dragPan.enable();
+    map.touchZoomRotate.enable();
+    map.scrollZoom.enable();
+    map.doubleClickZoom.enable();
+  }, [isFullscreen, isMobileViewport]);
+
+  useEffect(() => {
     if (locateRequestNonce <= 0) return;
     requestGeolocation(true);
   }, [locateRequestNonce]);
 
   if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN) {
     return <div className="map-fallback">Carte indisponible: token Mapbox manquant.</div>;
+  }
+
+  if (mapInitError) {
+    return <div className="map-fallback">{mapInitError}</div>;
   }
 
   return (

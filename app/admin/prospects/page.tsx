@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import AdminProspectsDashboard, {
   type AdminProspect
 } from "@/components/AdminProspectsDashboard";
@@ -72,6 +73,7 @@ export default async function AdminProspectsPage({
           {errorMessage ? <p className="page-alert">{errorMessage}</p> : null}
 
           <form className="admin-login-form" action="/admin/prospects/login" method="post">
+            <input type="hidden" name="next" value="/admin/prospects" />
             <label className="admin-prospects-label" htmlFor="admin-password">
               Mot de passe admin
             </label>
@@ -124,9 +126,14 @@ export default async function AdminProspectsPage({
         </div>
 
         <form action="/admin/prospects/logout" method="post">
-          <button className="btn btn-secondary" type="submit">
-            Déconnexion
-          </button>
+          <div className="admin-links">
+            <Link className="btn btn-secondary" href="/admin">
+              Pilotage
+            </Link>
+            <button className="btn btn-secondary" type="submit">
+              Déconnexion
+            </button>
+          </div>
         </form>
       </section>
 

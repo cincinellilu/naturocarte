@@ -7,6 +7,21 @@ import {
   GA4_MEASUREMENT_ID,
   type CookieConsent
 } from "@/lib/analytics";
+import { trackProductEvent } from "@/lib/product-events";
+
+function getPageTemplate(pathname: string): string {
+  if (pathname === "/") return "home";
+  if (pathname === "/carte") return "map";
+  if (pathname === "/annuaire-naturopathes") return "directory_hub";
+  if (pathname.startsWith("/annuaire-naturopathes/")) return "directory_department";
+  if (pathname === "/naturopathe-paris") return "paris_hub";
+  if (pathname.startsWith("/naturopathe-paris/")) return "paris_arrondissement";
+  if (pathname.startsWith("/naturopathe/")) return "practitioner_profile";
+  if (pathname.startsWith("/praticiens")) return "practitioner_acquisition";
+  if (pathname.startsWith("/compte")) return "user_account";
+  if (pathname.startsWith("/admin")) return "admin";
+  return "content";
+}
 
 function readConsent(): CookieConsent | null {
   if (typeof window === "undefined") {
@@ -32,6 +47,16 @@ function readConsent(): CookieConsent | null {
 
 export default function Analytics() {
   const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    const search = window.location.search;
+
+    trackProductEvent("landing_page_view", {
+      page_template: getPageTemplate(pathname),
+      has_query: Boolean(search)
+    });
+  }, []);
 
   useEffect(() => {
     const syncConsent = (consent: CookieConsent | null) => {

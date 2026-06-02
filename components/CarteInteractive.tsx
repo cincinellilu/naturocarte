@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import MapboxMap from "@/components/MapboxMap";
+import { trackProductEvent } from "@/lib/product-events";
 import {
   getDepartmentByCode,
   getDepartmentCodeFromPostalCode
@@ -115,6 +116,37 @@ export default function CarteInteractive({
 
   useEffect(() => {
     setHasMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handleQuickNavClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const link = target.closest<HTMLAnchorElement>(".map-mobile-action-link[data-scroll-target]");
+      const targetId = link?.dataset.scrollTarget;
+      const scrollTarget = targetId ? document.getElementById(targetId) : null;
+      if (!link || !targetId || !scrollTarget) return;
+
+      event.preventDefault();
+      trackProductEvent("map_mobile_quick_nav_clicked", {
+        target: targetId
+      });
+
+      const headerOffset = window.matchMedia("(max-width: 760px)").matches ? 112 : 24;
+      const top = scrollTarget.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: Math.max(top, 0),
+        behavior: "smooth"
+      });
+    };
+
+    document.addEventListener("click", handleQuickNavClick);
+
+    return () => {
+      document.removeEventListener("click", handleQuickNavClick);
+    };
   }, []);
 
   useEffect(() => {
@@ -344,9 +376,20 @@ export default function CarteInteractive({
 
         setSuggestions(nextSuggestions);
         setIsSuggestionsOpen(true);
+        trackProductEvent(
+          nextSuggestions.length > 0 ? "map_search_suggestions_loaded" : "map_search_no_results",
+          {
+            query_length: query.length,
+            suggestions_count: nextSuggestions.length
+          }
+        );
       } catch {
         setSuggestions([]);
         setIsSuggestionsOpen(true);
+        trackProductEvent("geocoding_failed", {
+          source: "map_search",
+          query_length: query.length
+        });
       } finally {
         setIsLoadingSuggestions(false);
       }
@@ -376,12 +419,19 @@ export default function CarteInteractive({
   };
 
   const handleListSelect = (slug: string) => {
+    trackProductEvent("map_list_practitioner_clicked", {
+      practitioner_slug: slug
+    });
     setSelectionSource("list");
     setSelectedSlug(slug);
     mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleSelectSuggestion = (suggestion: SearchSuggestion) => {
+    trackProductEvent("map_search_suggestion_selected", {
+      query_length: searchQuery.trim().length,
+      suggestions_count: suggestions.length
+    });
     setSearchCenter({ lng: suggestion.lng, lat: suggestion.lat, label: suggestion.label });
     setSearchQuery(suggestion.label);
     setSuggestions([]);
@@ -390,6 +440,7 @@ export default function CarteInteractive({
   };
 
   const handleClearSearch = () => {
+    trackProductEvent("map_search_cleared");
     setSearchCenter(null);
     setSearchQuery("");
     setSuggestions([]);
@@ -397,11 +448,15 @@ export default function CarteInteractive({
   };
 
   const handleLocateClick = () => {
+    trackProductEvent("map_geolocation_clicked");
     setLocateRequestNonce((current) => current + 1);
   };
 
   const handleToggleFullscreen = () => {
-    setIsFullscreen((current) => !current);
+    setIsFullscreen((current) => {
+      trackProductEvent(current ? "map_fullscreen_closed" : "map_fullscreen_opened");
+      return !current;
+    });
   };
 
   const showNoResults =
@@ -425,7 +480,7 @@ export default function CarteInteractive({
 
   return (
     <div className="map-experience">
-      <div ref={mapSectionRef} className="map-stage">
+      <div ref={mapSectionRef} className="map-stage" id="carte-interactive">
         <div
           ref={mapFrameRef}
           className={[
@@ -490,6 +545,18 @@ export default function CarteInteractive({
             </div>
           </div>
 
+          {isFullscreen ? (
+            <button
+              type="button"
+              className="map-mobile-close-fullscreen"
+              onClick={handleToggleFullscreen}
+              aria-label="Fermer le plein écran"
+            >
+              <span aria-hidden="true">×</span>
+              <strong>Fermer</strong>
+            </button>
+          ) : null}
+
           <MapboxMap
             points={visibleMapPoints}
             selectedSlug={selectedSlug}
@@ -547,10 +614,11 @@ export default function CarteInteractive({
 
             {geoError ? <p className="map-overlay-error">{geoError}</p> : null}
           </div>
+
         </div>
       </div>
 
-      <section className="results-panel">
+      <section className="results-panel" id="praticiens-results">
         <div className="results-panel-head">
           <div>
             <h2 suppressHydrationWarning>{resultsTitle}</h2>
@@ -653,7 +721,13 @@ export default function CarteInteractive({
                 <button
                   type="button"
                   className="btn btn-secondary practitioner-list-more-btn"
-                  onClick={() => setShowAll(true)}
+                  onClick={() => {
+                    trackProductEvent("map_results_show_more_clicked", {
+                      visible_count: 5,
+                      total_count: filteredPractitioners.length
+                    });
+                    setShowAll(true);
+                  }}
                 >
                   Voir plus
                 </button>

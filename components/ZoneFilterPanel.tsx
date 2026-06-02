@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { trackProductEvent } from "@/lib/product-events";
 import { IDF_DEPARTMENTS, getDepartmentByCode } from "@/lib/locations";
 import { PARIS_ARRONDISSEMENTS, toParisArrondissementLabel } from "@/lib/paris";
 
@@ -95,7 +96,16 @@ export default function ZoneFilterPanel({
         </div>
         <div className="zone-filter-actions">
           {activeDepartment ? (
-            <Link className="search-clear-btn" href="/carte">
+            <Link
+              className="search-clear-btn"
+              href="/carte"
+              onClick={() =>
+                trackProductEvent("map_filter_reset", {
+                  previous_zone: activeDepartment.code,
+                  previous_subzone: activeSubzoneKey
+                })
+              }
+            >
               Réinitialiser
             </Link>
           ) : null}
@@ -104,7 +114,14 @@ export default function ZoneFilterPanel({
             className="zone-filter-toggle"
             aria-expanded={isOpen}
             aria-controls="zone-filter-options"
-            onClick={() => setIsOpen((current) => !current)}
+            onClick={() =>
+              setIsOpen((current) => {
+                trackProductEvent(current ? "map_filter_closed" : "map_filter_opened", {
+                  zone: activeDepartment?.code ?? null
+                });
+                return !current;
+              })
+            }
           >
             {isOpen ? "Masquer les filtres" : "Filtrer par zone"}
           </button>
@@ -116,6 +133,12 @@ export default function ZoneFilterPanel({
           <div className="zone-filter-links zone-filter-links--scroll" id="zone-filter-options">
             <Link
               href="/carte"
+              onClick={() =>
+                trackProductEvent("map_filter_selected", {
+                  level: "region",
+                  zone: "idf"
+                })
+              }
               className={["zone-filter-link", !zoneCode ? "zone-filter-link--active" : null]
                 .filter(Boolean)
                 .join(" ")}
@@ -127,6 +150,12 @@ export default function ZoneFilterPanel({
               <Link
                 key={department.code}
                 href={`/carte?zone=${department.code}`}
+                onClick={() =>
+                  trackProductEvent("map_filter_selected", {
+                    level: "department",
+                    zone: department.code
+                  })
+                }
                 className={[
                   "zone-filter-link",
                   zoneCode === department.code ? "zone-filter-link--active" : null
@@ -169,6 +198,13 @@ export default function ZoneFilterPanel({
                       <Link
                         key={option.slug}
                         href={href}
+                        onClick={() =>
+                          trackProductEvent("map_filter_selected", {
+                            level: isParis ? "arrondissement" : "city",
+                            zone: activeDepartment.code,
+                            subzone: option.slug
+                          })
+                        }
                         className={[
                           "zone-filter-link",
                           isActive ? "zone-filter-link--active" : null

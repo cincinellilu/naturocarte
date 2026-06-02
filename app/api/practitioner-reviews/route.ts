@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -29,6 +30,12 @@ export async function POST(request: Request) {
 
     const session = await getCurrentUserSession();
     if (!session) {
+      await recordProductEvent({
+        eventName: "review_auth_required",
+        request,
+        practitionerSlug: body.practitionerSlug,
+        metadata: { practitioner_slug: body.practitionerSlug ?? "" }
+      }).catch(() => {});
       return NextResponse.json({ error: "auth_required" }, { status: 401 });
     }
 
@@ -87,10 +94,29 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     if (insertError) {
+      await recordProductEvent({
+        eventName: "review_submit_failed",
+        request,
+        practitionerId: practitioner.id,
+        metadata: {
+          practitioner_slug: practitionerSlug,
+          reason: "insert_error"
+        }
+      }).catch(() => {});
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 
     revalidatePath(`/naturopathe/${practitionerSlug}`);
+    await recordProductEvent({
+      eventName: "review_created_pending",
+      request,
+      practitionerId: practitioner.id,
+      metadata: {
+        practitioner_slug: practitionerSlug,
+        rating,
+        has_message: Boolean(message)
+      }
+    }).catch(() => {});
 
     return NextResponse.json({
       ok: true,

@@ -3,11 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PractitionerDetailMap from "@/components/PractitionerDetailMap";
 import PractitionerReviewModal from "@/components/PractitionerReviewModal";
+import PractitionerStatsTracker from "@/components/PractitionerStatsTracker";
+import PractitionerTrackedLink from "@/components/PractitionerTrackedLink";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { getDepartmentFromPostalCode } from "@/lib/locations";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
+import { getCurrentUserSession } from "@/lib/user-auth";
 
 export const revalidate = 300;
 
@@ -25,6 +28,7 @@ type Practitioner = {
   email: string | null;
   website: string | null;
   booking_url: string | null;
+  photo_url?: string | null;
   description: string | null;
   status: string;
 };
@@ -37,13 +41,21 @@ type PractitionerReview = {
   published_at: string | null;
 };
 
+type UserAccountRow = {
+  id: string;
+};
+
+type FavoriteRow = {
+  id: string;
+};
+
 async function getPublishedPractitioner(slug: string): Promise<Practitioner | null> {
   const supabase = getSupabaseServerClient();
 
   const { data, error } = await supabase
     .from("practitioners")
     .select(
-      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, description, status"
+      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status"
     )
     .eq("slug", slug)
     .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
@@ -204,6 +216,7 @@ export default async function PractitionerPage({
   const practitioner = await getPublishedPractitioner(decodeURIComponent(slug));
   if (!practitioner) notFound();
 
+  const userSession = await getCurrentUserSession();
   const city = normalizeLocationSegment(practitioner.city);
   const department = getDepartmentFromPostalCode(practitioner.postal_code);
   const title = buildTitle(practitioner);
@@ -214,7 +227,7 @@ export default async function PractitionerPage({
     : null;
 
   const websiteUrl = normalizeWebsiteUrl(practitioner.website);
-  const claimUrl = `/praticiens?claim=${encodeURIComponent(practitioner.slug)}`;
+  const practitionerSpaceUrl = "/praticiens";
   const practitionerInitials = `${practitioner.first_name?.charAt(0) ?? ""}${practitioner.last_name?.charAt(0) ?? ""}`
     .trim()
     .toUpperCase();
@@ -240,6 +253,28 @@ export default async function PractitionerPage({
     ? truncateText(practitionerDescription, 240)
     : "Description non renseignée pour le moment. Cet espace sera utilisé pour présenter la méthode, les spécialisations et les repères utiles.";
   const practitionerReviews = await getPublishedPractitionerReviews(practitioner.id);
+  let isFavorite = false;
+
+  if (userSession) {
+    const supabase = getSupabaseServerClient();
+    const { data: account } = await supabase
+      .from("user_accounts")
+      .select("id")
+      .eq("auth_user_id", userSession.userId)
+      .maybeSingle<UserAccountRow>();
+
+    if (account?.id) {
+      const { data: favorite } = await supabase
+        .from("user_favorite_practitioners")
+        .select("id")
+        .eq("user_account_id", account.id)
+        .eq("practitioner_id", practitioner.id)
+        .maybeSingle<FavoriteRow>();
+
+      isFavorite = Boolean(favorite?.id);
+    }
+  }
+
   const reviewsCount = practitionerReviews.length;
   const ratingAverage = reviewsCount
     ? practitionerReviews.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
@@ -250,21 +285,24 @@ export default async function PractitionerPage({
           href: bookingUrl,
           label: "Prendre rendez-vous",
           variant: "primary" as const,
-          external: true
+          external: true,
+          statEvent: "booking_click" as const
         }
       : null,
     practitioner.phone
       ? {
           href: `tel:${practitioner.phone}`,
           label: "Appeler",
-          variant: bookingUrl ? ("secondary" as const) : ("primary" as const)
+          variant: bookingUrl ? ("secondary" as const) : ("primary" as const),
+          statEvent: "contact_click" as const
         }
       : null,
     practitioner.email
       ? {
           href: `mailto:${practitioner.email}`,
           label: "Envoyer un email",
-          variant: "secondary" as const
+          variant: "secondary" as const,
+          statEvent: "contact_click" as const
         }
       : null,
     websiteUrl
@@ -272,7 +310,8 @@ export default async function PractitionerPage({
           href: websiteUrl,
           label: "Voir le site",
           variant: "secondary" as const,
-          external: true
+          external: true,
+          statEvent: "contact_click" as const
         }
       : null
   ].filter(Boolean) as Array<{
@@ -280,9 +319,12 @@ export default async function PractitionerPage({
     label: string;
     variant: "primary" | "secondary";
     external?: boolean;
+    statEvent: "contact_click" | "booking_click";
   }>;
 
   const sameAs = [bookingUrl, websiteUrl].filter((v): v is string => Boolean(v));
+  const practitionerPath = `/naturopathe/${practitioner.slug}`;
+  const reviewLoginUrl = `/compte?next=${encodeURIComponent(`${practitionerPath}#avis`)}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -341,6 +383,8 @@ export default async function PractitionerPage({
 
   return (
     <article className="article-shell practitioner-page">
+      <PractitionerStatsTracker practitionerSlug={practitioner.slug} />
+
       <div className="practitioner-page-links">
         <p className="breadcrumbs">
           <Link href="/carte">← Retour à la carte</Link>
@@ -368,15 +412,37 @@ export default async function PractitionerPage({
           <section className="practitioner-card practitioner-summary-card">
             <div className="practitioner-summary-top">
               <div className="practitioner-summary-photo" aria-hidden="true">
-                <div className="practitioner-summary-photo-placeholder">
-                  <span>{practitionerInitials || "NC"}</span>
-                </div>
+                {practitioner.photo_url?.trim() ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="practitioner-summary-photo-image"
+                    src={practitioner.photo_url.trim()}
+                    alt=""
+                  />
+                ) : (
+                  <div className="practitioner-summary-photo-placeholder">
+                    <span>{practitionerInitials || "NC"}</span>
+                  </div>
+                )}
               </div>
 
               <div className="practitioner-summary-copy">
                 <p className="practitioner-eyebrow">Fiche praticien</p>
                 <h1>{title}</h1>
                 <p className="practitioner-hero-subtitle">{locationLabel}</p>
+                <form className="practitioner-favorite-form" action="/api/user-favorites" method="post">
+                  <input type="hidden" name="practitioner_slug" value={practitioner.slug} />
+                  <input type="hidden" name="intent" value={isFavorite ? "remove" : "add"} />
+                  <input type="hidden" name="redirect" value={practitionerPath} />
+                  <button
+                    className={`practitioner-favorite-btn${isFavorite ? " is-active" : ""}`}
+                    type="submit"
+                    aria-pressed={isFavorite}
+                  >
+                    <span aria-hidden="true">♡</span>
+                    {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+                  </button>
+                </form>
               </div>
             </div>
 
@@ -397,15 +463,17 @@ export default async function PractitionerPage({
                 {directContactActions.length > 0 ? (
                   <div className="practitioner-contact-actions">
                     {directContactActions.map((action) => (
-                      <Link
+                      <PractitionerTrackedLink
                         key={action.href}
                         className={action.variant === "primary" ? "btn" : "btn btn-secondary"}
                         href={action.href}
+                        practitionerSlug={practitioner.slug}
+                        event={action.statEvent}
                         target={action.external ? "_blank" : undefined}
                         rel={action.external ? "noopener noreferrer" : undefined}
                       >
                         {action.label}
-                      </Link>
+                      </PractitionerTrackedLink>
                     ))}
                   </div>
                 ) : (
@@ -414,7 +482,7 @@ export default async function PractitionerPage({
               </section>
             </div>
 
-            <section className="practitioner-card practitioner-reviews-card">
+            <section className="practitioner-card practitioner-reviews-card" id="avis">
               <div className="practitioner-reviews-header">
                 <div>
                   <p className="practitioner-detail-label">Avis</p>
@@ -489,6 +557,8 @@ export default async function PractitionerPage({
                 <PractitionerReviewModal
                   practitionerSlug={practitioner.slug}
                   practitionerName={`${practitioner.first_name} ${practitioner.last_name}`}
+                  isAuthenticated={Boolean(userSession)}
+                  loginUrl={reviewLoginUrl}
                 />
               </div>
             </section>
@@ -519,22 +589,20 @@ export default async function PractitionerPage({
 
         <div className="practitioner-claim-pane">
           <details className="practitioner-card practitioner-claim-accordion">
-            <summary className="practitioner-claim-summary">
-              Revendiquer ou corriger cette fiche
-            </summary>
+            <summary className="practitioner-claim-summary">Vous êtes ce praticien ?</summary>
             <div className="practitioner-claim-content">
               <p>
-                Si vous êtes le praticien, vous pouvez demander la correction de la fiche,
-                mettre à jour vos coordonnées ou ajouter des informations utiles.
+                Les praticiens référencés peuvent accéder à un espace dédié pour gérer leur
+                fiche et choisir leur offre NaturoCarte.
               </p>
               <ul className="practitioner-edit-list">
-                <li>Corriger l’adresse ou les coordonnées</li>
-                <li>Ajouter une description plus précise</li>
-                <li>Ajouter des photos ou un site web</li>
+                <li>Créer ou retrouver votre accès praticien</li>
+                <li>Modifier les informations visibles sur votre fiche</li>
+                <li>Choisir entre l’offre gratuite et Visibilité+</li>
               </ul>
               <p className="practitioner-form-actions">
-                <Link className="btn btn-secondary practitioner-form-btn" href={claimUrl}>
-                  Ouvrir la demande de correction
+                <Link className="btn btn-secondary practitioner-form-btn" href={practitionerSpaceUrl}>
+                  Accéder à l’espace praticien
                 </Link>
               </p>
             </div>

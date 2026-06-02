@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const CookieBannerNoSSR = dynamic(() => import("./CookieBanner"), {
+const CookieBannerNoSSR = dynamic(() => import("./CookieBanner").then((mod) => mod.default), {
   ssr: false
 });
 

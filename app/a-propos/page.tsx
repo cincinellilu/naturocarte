@@ -107,12 +107,11 @@ export default function AProposPage() {
         <h2 className="about-title">Transparence et mise à jour des informations</h2>
         <p>
           Les fiches contiennent des informations factuelles (coordonnées, localisation,
-          modalités de contact) qui peuvent évoluer. Les professionnels peuvent corriger
-          ou revendiquer leurs informations afin d&apos;améliorer leur exactitude dans le
-          temps.
+          modalités de contact) qui peuvent évoluer. Les professionnels peuvent créer leur
+          espace praticien pour améliorer leur fiche et tenir leurs informations à jour.
         </p>
         <p className="about-inline-link">
-          <Link href="/praticiens">Mettre à jour ou revendiquer une fiche</Link>
+          <Link href="/praticiens">Accéder à l’espace praticien</Link>
         </p>
       </section>
 

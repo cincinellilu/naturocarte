@@ -5,6 +5,7 @@ import DirectorySearchBar from "@/components/DirectorySearchBar";
 import {
   type DepartmentInfo,
   IDF_DEPARTMENTS,
+  getDepartmentAreaLabel,
   getDepartmentFromPostalCode
 } from "@/lib/locations";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
@@ -86,11 +87,11 @@ function buildDepartmentDescription(
   }
 
   if (count === 0) {
-    return `Recherche disponible dans ${department.name}.`;
+    return `Recherche disponible ${getDepartmentAreaLabel(department)}.`;
   }
 
   if (sampleCities.length === 0) {
-    return `${count} praticiens publiés dans ${department.name}.`;
+    return `${count} praticiens publiés ${getDepartmentAreaLabel(department)}.`;
   }
 
   return `${count} praticiens publiés, notamment à ${formatInlineList(sampleCities)}.`;

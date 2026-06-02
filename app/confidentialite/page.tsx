@@ -39,43 +39,80 @@ export default function ConfidentialitePage() {
       <section>
         <h2>Données traitées</h2>
         <p>
-          NaturoCarte collecte les données strictement nécessaires au fonctionnement du
-          service, notamment les informations transmises via le formulaire praticiens:
-          email professionnel, éventuelle référence de fiche revendiquée et métadonnées
-          techniques minimales.
+          NaturoCarte traite les données nécessaires au fonctionnement de l’annuaire, des
+          fiches praticiens, des comptes et des services associés.
+        </p>
+        <p>
+          Pour les visiteurs et utilisateurs: email, nom, prénom, préférences de favoris,
+          avis déposés, notes, commentaires, informations de connexion et métadonnées
+          techniques nécessaires à la sécurité du service.
+        </p>
+        <p>
+          Pour les praticiens: email professionnel, nom, prénom, SIRET, adresse
+          professionnelle, coordonnées publiques choisies, site web, lien de réservation,
+          photo, description, forfait, identifiants de facturation Stripe et statistiques
+          de consultation de la fiche.
+        </p>
+        <p>
+          Les fiches déjà présentes dans l’annuaire peuvent provenir d’informations publiques
+          disponibles en ligne, puis être complétées ou corrigées par le praticien concerné.
         </p>
       </section>
 
       <section>
         <h2>Finalités et bases légales</h2>
         <p>
-          Les données sont utilisées pour traiter les demandes de correction/revendication
-          de fiche et assurer le suivi des échanges avec les praticiens.
+          Les données sont utilisées pour exploiter l’annuaire, afficher les fiches
+          praticiens, permettre la recherche par carte ou par zone, gérer les comptes,
+          envoyer les liens de connexion, enregistrer les favoris, recueillir les avis,
+          permettre aux praticiens de modifier leur fiche et gérer les abonnements payants.
         </p>
         <p>
-          Bases légales: intérêt légitime (gestion de l’annuaire), mesures précontractuelles
-          et obligations légales le cas échéant.
+          Les statistiques de fiche servent à mesurer les consultations et interactions
+          utiles au praticien, notamment les vues de fiche, ouvertures depuis la carte et
+          clics vers les moyens de contact.
+        </p>
+        <p>
+          Bases légales: exécution du contrat ou mesures précontractuelles pour les comptes
+          et abonnements, intérêt légitime pour l’exploitation de l’annuaire, la sécurité et
+          les statistiques internes, consentement pour les cookies de mesure d’audience, et
+          obligations légales pour la facturation.
         </p>
       </section>
 
       <section>
         <h2>Durée de conservation</h2>
         <p>
-          Les données sont conservées pendant la durée nécessaire au traitement de la
-          demande, puis archivées selon les obligations légales applicables.
+          Les données de compte sont conservées pendant la durée d’utilisation du service,
+          puis supprimées ou archivées selon les obligations légales applicables. Les données
+          de facturation sont conservées pendant les durées légales requises.
+        </p>
+        <p>
+          Les avis, favoris, photos et informations de fiche sont conservés tant que le
+          compte ou la fiche concernée est actif, sauf demande de suppression ou obligation
+          contraire. Les statistiques opérationnelles sont conservées le temps nécessaire au
+          suivi du service.
         </p>
       </section>
 
       <section>
         <h2>Destinataires et sous-traitants</h2>
         <p>
-          Les données sont accessibles uniquement aux personnes habilitées. Le site s’appuie
-          sur des prestataires techniques (hébergement et base de données) agissant en
-          qualité de sous-traitants.
+          Les données sont accessibles uniquement aux personnes habilitées et aux
+          prestataires nécessaires au fonctionnement du service.
         </p>
         <p>
-          Pour la mesure d’audience, NaturoCarte utilise Google Analytics 4 (Google Ireland
-          Limited), uniquement après consentement explicite.
+          NaturoCarte utilise notamment Infomaniak pour l’hébergement, Supabase pour la base
+          de données, l’authentification et le stockage, Resend pour l’envoi des emails de
+          connexion, Stripe pour les abonnements et paiements, Mapbox pour les cartes et
+          services de géocodage, et Google Analytics 4 pour la mesure d’audience après
+          consentement.
+        </p>
+        <p>
+          Les coordonnées bancaires ne sont pas stockées par NaturoCarte. Elles sont traitées
+          par Stripe. NaturoCarte conserve uniquement les informations nécessaires au suivi
+          de l’abonnement, comme l’identifiant client, l’identifiant d’abonnement, le statut
+          et les dates utiles.
         </p>
       </section>
 
@@ -83,7 +120,8 @@ export default function ConfidentialitePage() {
         <h2>Transferts hors UE</h2>
         <p>
           Certains prestataires techniques peuvent impliquer des transferts de données hors
-          Union européenne, encadrés par des mécanismes juridiques appropriés.
+          Union européenne. Dans ce cas, ces transferts sont encadrés par les garanties
+          prévues par la réglementation applicable.
         </p>
       </section>
 

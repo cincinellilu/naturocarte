@@ -1,0 +1,186 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+type PractitionerAccountRow = {
+  id: string;
+  practitioner_id: string | null;
+};
+
+type PractitionerRow = {
+  id: string;
+};
+
+type UserAccountRow = {
+  id: string;
+};
+
+type AdminClient = SupabaseClient;
+
+export async function ensureUserAccount(
+  admin: AdminClient,
+  params: { authUserId: string; email: string }
+): Promise<{ ok: true } | { ok: false; error: unknown }> {
+  const normalizedEmail = params.email.toLowerCase();
+  const now = new Date().toISOString();
+
+  const { data: existingByAuth, error: authLookupError } = await admin
+    .from("user_accounts")
+    .select("id")
+    .eq("auth_user_id", params.authUserId)
+    .maybeSingle<UserAccountRow>();
+
+  if (authLookupError) return { ok: false, error: authLookupError };
+
+  if (existingByAuth?.id) {
+    const { error } = await admin
+      .from("user_accounts")
+      .update({ email: normalizedEmail, updated_at: now })
+      .eq("id", existingByAuth.id);
+
+    return error ? { ok: false, error } : { ok: true };
+  }
+
+  const { data: existingByEmail, error: emailLookupError } = await admin
+    .from("user_accounts")
+    .select("id")
+    .ilike("email", normalizedEmail)
+    .limit(1)
+    .maybeSingle<UserAccountRow>();
+
+  if (emailLookupError) return { ok: false, error: emailLookupError };
+
+  if (existingByEmail?.id) {
+    const { error } = await admin
+      .from("user_accounts")
+      .update({ auth_user_id: params.authUserId, email: normalizedEmail, updated_at: now })
+      .eq("id", existingByEmail.id);
+
+    return error ? { ok: false, error } : { ok: true };
+  }
+
+  const { error } = await admin.from("user_accounts").insert({
+    auth_user_id: params.authUserId,
+    email: normalizedEmail
+  });
+
+  return error ? { ok: false, error } : { ok: true };
+}
+
+export async function ensurePractitionerAccount(
+  admin: AdminClient,
+  params: { authUserId: string; email: string }
+): Promise<{ ok: true } | { ok: false; error: unknown }> {
+  const normalizedEmail = params.email.toLowerCase();
+  const now = new Date().toISOString();
+
+  const { data: existingByAuth, error: authLookupError } = await admin
+    .from("practitioner_accounts")
+    .select("id")
+    .eq("auth_user_id", params.authUserId)
+    .maybeSingle<{ id: string }>();
+
+  if (authLookupError) return { ok: false, error: authLookupError };
+
+  if (existingByAuth?.id) {
+    const { error } = await admin
+      .from("practitioner_accounts")
+      .update({ email: normalizedEmail, updated_at: now })
+      .eq("id", existingByAuth.id);
+
+    return error ? { ok: false, error } : { ok: true };
+  }
+
+  const { error } = await admin.from("practitioner_accounts").insert({
+    auth_user_id: params.authUserId,
+    email: normalizedEmail,
+    updated_at: now
+  });
+
+  return error ? { ok: false, error } : { ok: true };
+}
+
+export async function resolvePractitionerAccount(
+  admin: AdminClient,
+  params: { authUserId: string; email: string }
+): Promise<{ isPractitioner: true } | { isPractitioner: false } | { isPractitioner: false; error: unknown }> {
+  const normalizedEmail = params.email.toLowerCase();
+  const now = new Date().toISOString();
+
+  const { data: existingByAuth, error: authLookupError } = await admin
+    .from("practitioner_accounts")
+    .select("id, practitioner_id")
+    .eq("auth_user_id", params.authUserId)
+    .maybeSingle<PractitionerAccountRow>();
+
+  if (authLookupError) return { isPractitioner: false, error: authLookupError };
+
+  if (existingByAuth?.id) {
+    const { error } = await admin
+      .from("practitioner_accounts")
+      .update({ email: normalizedEmail, updated_at: now })
+      .eq("id", existingByAuth.id);
+
+    if (error) return { isPractitioner: false, error };
+    return { isPractitioner: true };
+  }
+
+  const { data: existingByEmail, error: accountEmailLookupError } = await admin
+    .from("practitioner_accounts")
+    .select("id, practitioner_id")
+    .ilike("email", normalizedEmail)
+    .limit(1)
+    .maybeSingle<PractitionerAccountRow>();
+
+  if (accountEmailLookupError) return { isPractitioner: false, error: accountEmailLookupError };
+
+  if (existingByEmail?.id) {
+    const { error } = await admin
+      .from("practitioner_accounts")
+      .update({ auth_user_id: params.authUserId, email: normalizedEmail, updated_at: now })
+      .eq("id", existingByEmail.id);
+
+    if (error) return { isPractitioner: false, error };
+    return { isPractitioner: true };
+  }
+
+  const { data: practitioner, error: practitionerLookupError } = await admin
+    .from("practitioners")
+    .select("id")
+    .ilike("email", normalizedEmail)
+    .limit(1)
+    .maybeSingle<PractitionerRow>();
+
+  if (practitionerLookupError) return { isPractitioner: false, error: practitionerLookupError };
+  if (!practitioner?.id) return { isPractitioner: false };
+
+  const { data: existingByPractitioner, error: practitionerAccountLookupError } = await admin
+    .from("practitioner_accounts")
+    .select("id, practitioner_id")
+    .eq("practitioner_id", practitioner.id)
+    .limit(1)
+    .maybeSingle<PractitionerAccountRow>();
+
+  if (practitionerAccountLookupError) {
+    return { isPractitioner: false, error: practitionerAccountLookupError };
+  }
+
+  if (existingByPractitioner?.id) {
+    const { error } = await admin
+      .from("practitioner_accounts")
+      .update({ auth_user_id: params.authUserId, email: normalizedEmail, updated_at: now })
+      .eq("id", existingByPractitioner.id);
+
+    if (error) return { isPractitioner: false, error };
+    return { isPractitioner: true };
+  }
+
+  const { error: createError } = await admin.from("practitioner_accounts").insert({
+    auth_user_id: params.authUserId,
+    practitioner_id: practitioner.id,
+    email: normalizedEmail,
+    updated_at: now
+  });
+
+  if (createError) return { isPractitioner: false, error: createError };
+
+  return { isPractitioner: true };
+}

@@ -10,9 +10,12 @@ Variables a configurer en production:
 - `NEXT_PUBLIC_SITE_URL=https://naturocarte.fr`
 - `NEXT_PUBLIC_SUPABASE_URL=...`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY=...`
-- `SUPABASE_SERVICE_ROLE_KEY=...` (necessaire pour `app/api/lead-practitioner/route.ts`)
+- `SUPABASE_SERVICE_ROLE_KEY=...` (necessaire pour les routes serveur Supabase: dashboard praticien, avis, favoris, stats)
 - `ADMIN_PROSPECTS_PASSWORD=...` (optionnel: override le mot de passe embarqué pour `/admin/prospects`)
 - `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=...`
+- `STRIPE_SECRET_KEY=...`
+- `STRIPE_VISIBILITY_PRICE_ID=...` (Price Stripe mensuel du forfait Visibilite+)
+- `STRIPE_WEBHOOK_SECRET=...` (secret du webhook Stripe vers `/api/stripe/webhook`)
 - `NODE_ENV=production`
 - `PORT=3000` (ou le port impose par la plateforme)
 
@@ -28,6 +31,7 @@ Le script `start:prod` bind en `0.0.0.0` et utilise `PORT`.
 
 ## 4) Verification rapide post-deploiement
 - `/api/health` -> doit renvoyer `{"ok": true}`
+- Stripe webhook -> doit pointer vers `https://naturocarte.fr/api/stripe/webhook`
 - `/robots.txt` -> doit pointer vers le vrai domaine
 - `/sitemap.xml` -> URLs en `https://naturocarte.fr/...` (pas localhost)
 - `/naturopathe/slug-inexistant` -> HTTP 404

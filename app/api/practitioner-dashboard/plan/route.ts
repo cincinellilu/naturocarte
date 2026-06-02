@@ -1,0 +1,126 @@
+import { NextResponse } from "next/server";
+import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
+import {
+  isPractitionerPlanId,
+  PRACTITIONER_PLAN_PRESENCE,
+  PRACTITIONER_PLAN_VISIBILITY
+} from "@/lib/practitioner-plans";
+import { getSupabaseAdminClient } from "@/lib/supabase-admin";
+import {
+  createBillingPortalSession,
+  createStripeCustomer,
+  createVisibilityCheckoutSession,
+  isStripeBillingConfigured
+} from "@/lib/stripe";
+
+type PractitionerAccountBilling = {
+  id: string;
+  email: string;
+  plan: string;
+  stripe_customer_id: string | null;
+};
+
+export async function POST(request: Request) {
+  const session = await getCurrentPractitionerSession();
+  if (!session) {
+    return NextResponse.redirect(new URL("/praticiens?auth=required", request.url), {
+      status: 303
+    });
+  }
+
+  const formData = await request.formData();
+  const rawPlan = formData.get("plan");
+  const plan = typeof rawPlan === "string" ? rawPlan.trim() : "";
+  const redirectUrl = new URL("/praticiens/dashboard", request.url);
+
+  if (!isPractitionerPlanId(plan)) {
+    redirectUrl.searchParams.set("error", "invalid_plan");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  const supabase = getSupabaseAdminClient();
+  const { data: account, error: accountError } = await supabase
+    .from("practitioner_accounts")
+    .select("id, email, plan, stripe_customer_id")
+    .eq("auth_user_id", session.userId)
+    .maybeSingle<PractitionerAccountBilling>();
+
+  if (accountError || !account) {
+    redirectUrl.searchParams.set("error", "missing_account");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  if (plan === PRACTITIONER_PLAN_PRESENCE) {
+    if (account.stripe_customer_id) {
+      try {
+        const portal = await createBillingPortalSession({
+          customerId: account.stripe_customer_id,
+          returnUrl: new URL("/praticiens/dashboard", request.url).toString()
+        });
+
+        if (portal.url) {
+          return NextResponse.redirect(portal.url, { status: 303 });
+        }
+      } catch (error) {
+        console.error("stripe portal creation error", error);
+        redirectUrl.searchParams.set("error", "portal_failed");
+        return NextResponse.redirect(redirectUrl, { status: 303 });
+      }
+    }
+
+    redirectUrl.searchParams.set("saved", "plan");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  if (plan !== PRACTITIONER_PLAN_VISIBILITY) {
+    redirectUrl.searchParams.set("error", "invalid_plan");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  if (!isStripeBillingConfigured()) {
+    redirectUrl.searchParams.set("error", "stripe_not_configured");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  try {
+    let customerId = account.stripe_customer_id;
+
+    if (!customerId) {
+      const customer = await createStripeCustomer({
+        email: account.email,
+        practitionerAccountId: account.id
+      });
+
+      customerId = customer.id;
+
+      const { error: customerUpdateError } = await supabase
+        .from("practitioner_accounts")
+        .update({
+          stripe_customer_id: customerId,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", account.id);
+
+      if (customerUpdateError) {
+        throw customerUpdateError;
+      }
+    }
+
+    const checkout = await createVisibilityCheckoutSession({
+      customerId,
+      practitionerAccountId: account.id,
+      successUrl: new URL("/praticiens/dashboard?billing=success", request.url).toString(),
+      cancelUrl: new URL("/praticiens/dashboard?plans=open", request.url).toString()
+    });
+
+    if (!checkout.url) {
+      throw new Error("Stripe Checkout did not return a URL.");
+    }
+
+    return NextResponse.redirect(checkout.url, { status: 303 });
+  } catch (error) {
+    console.error("stripe checkout creation error", error);
+    redirectUrl.searchParams.set("error", "plan_failed");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+}

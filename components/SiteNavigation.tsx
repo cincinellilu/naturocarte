@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type NavItem = {
   href: string;
@@ -84,17 +85,20 @@ const navigationItems: NavItem[] = [
 function NavigationLink({
   item,
   pathname,
-  mobile = false
+  mobile = false,
+  hrefOverride = null
 }: {
   item: NavItem;
   pathname: string;
   mobile?: boolean;
+  hrefOverride?: string | null;
 }) {
   const isActive = item.isActive(pathname);
+  const href = hrefOverride ?? item.href;
 
   return (
     <Link
-      href={item.href}
+      href={href}
       className={mobile ? "mobile-tabbar-link" : "site-nav-link"}
       aria-current={isActive ? "page" : undefined}
     >
@@ -114,13 +118,35 @@ function NavigationLink({
 
 export function SiteHeaderNav() {
   const pathname = usePathname();
+  const [practitionerHref, setPractitionerHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetch("/api/session-summary", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { type?: string; href?: string } | null) => {
+        if (mounted && data?.type === "practitioner") {
+          setPractitionerHref(data.href ?? "/praticiens/dashboard");
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <nav className="site-nav" aria-label="Navigation principale">
       <ul className="site-nav-list">
         {navigationItems.map((item) => (
           <li key={item.href}>
-            <NavigationLink item={item} pathname={pathname} />
+            <NavigationLink
+              item={item}
+              pathname={pathname}
+              hrefOverride={item.href === "/praticiens" ? practitionerHref : null}
+            />
           </li>
         ))}
       </ul>
@@ -130,13 +156,36 @@ export function SiteHeaderNav() {
 
 export function MobileTabBar() {
   const pathname = usePathname();
+  const [practitionerHref, setPractitionerHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetch("/api/session-summary", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { type?: string; href?: string } | null) => {
+        if (mounted && data?.type === "practitioner") {
+          setPractitionerHref(data.href ?? "/praticiens/dashboard");
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <nav className="mobile-tabbar" aria-label="Navigation mobile principale">
       <ul className="mobile-tabbar-list">
         {navigationItems.map((item) => (
           <li key={item.href}>
-            <NavigationLink item={item} pathname={pathname} mobile />
+            <NavigationLink
+              item={item}
+              pathname={pathname}
+              mobile
+              hrefOverride={item.href === "/praticiens" ? practitionerHref : null}
+            />
           </li>
         ))}
       </ul>

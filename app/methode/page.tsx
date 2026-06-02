@@ -81,16 +81,16 @@ export default function MethodePage() {
       <section className="about-card">
         <h2 className="about-title">Comment les fiches sont mises à jour</h2>
         <p>
-          Les fiches peuvent évoluer dans le temps. Lorsqu&apos;un praticien revendique
-          ou corrige sa fiche, les informations de contact et de présentation peuvent être
-          ajustées pour rester exactes.
+          Les fiches peuvent évoluer dans le temps. Lorsqu&apos;un praticien crée ou retrouve
+          son espace, les informations de contact et de présentation peuvent être ajustées
+          pour rester exactes.
         </p>
         <p>
           Les modifications sont traitées de manière structurée afin d&apos;éviter les
           doublons, les imprécisions et les changements incohérents.
         </p>
         <p className="about-inline-link">
-          <Link href="/praticiens">Revendiquer ou corriger une fiche</Link>
+          <Link href="/praticiens">Accéder à l’espace praticien</Link>
         </p>
       </section>
 

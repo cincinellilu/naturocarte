@@ -41,6 +41,29 @@ export function getDepartmentFromPostalCode(
   return code ? getDepartmentByCode(code) : null;
 }
 
+export function getDepartmentAreaLabel(department: DepartmentInfo): string {
+  switch (department.code) {
+    case "75":
+      return "à Paris";
+    case "77":
+      return "en Seine-et-Marne";
+    case "78":
+      return "dans les Yvelines";
+    case "91":
+      return "en Essonne";
+    case "92":
+      return "dans les Hauts-de-Seine";
+    case "93":
+      return "en Seine-Saint-Denis";
+    case "94":
+      return "dans le Val-de-Marne";
+    case "95":
+      return "dans le Val-d’Oise";
+    default:
+      return `dans ${department.name}`;
+  }
+}
+
 export function normalizeLocationToken(value: string | null | undefined): string {
   return (value ?? "")
     .normalize("NFD")

@@ -31,9 +31,9 @@ export const legalIdentity: LegalIdentity = {
   editorVatNumber: "TVA non applicable, art. 293 B du CGI",
   publicationDirector: "Lucas CINCINELLI",
   contactEmail: "contact@naturocarte.fr",
-  contactPhone: "NC",
+  contactPhone: "Non communiqué",
   hostName: "Infomaniak",
   hostLegalName: "Infomaniak Network SA",
   hostAddress: "Les Acacias, Genève, Suisse",
-  hostPhone: "NC"
+  hostPhone: "Non communiqué"
 };

@@ -1,12 +1,12 @@
 "use client";
 
 import type { FormEvent } from "react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type ReviewPayload = {
   practitionerSlug: string;
   practitionerName: string;
-  email: string;
   rating: number;
   message: string | null;
 };
@@ -20,20 +20,23 @@ function starLabel(value: number): string {
 
 export default function PractitionerReviewModal({
   practitionerSlug,
-  practitionerName
+  practitionerName,
+  isAuthenticated,
+  loginUrl
 }: {
   practitionerSlug: string;
   practitionerName: string;
+  isAuthenticated: boolean;
+  loginUrl: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [email, setEmail] = useState("");
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canSubmit = useMemo(() => email.trim().length > 0 && !isSubmitting, [email, isSubmitting]);
+  const canSubmit = useMemo(() => !isSubmitting, [isSubmitting]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -73,7 +76,6 @@ export default function PractitionerReviewModal({
     const payload: ReviewPayload = {
       practitionerSlug,
       practitionerName,
-      email: email.trim(),
       rating,
       message: message.trim() ? message.trim() : null
     };
@@ -90,21 +92,32 @@ export default function PractitionerReviewModal({
         body: JSON.stringify(payload)
       });
 
+      if (response.status === 401) {
+        window.location.href = loginUrl;
+        return;
+      }
+
       if (!response.ok) {
         const body = (await response.json().catch(() => null)) as { error?: string } | null;
         throw new Error(body?.error || "server_error");
       }
 
       setSubmitted(true);
-      setEmail("");
       setRating(0);
       setMessage("");
-    } catch (submitError) {
-      const value = submitError instanceof Error ? submitError.message : "server_error";
-      setError(value === "invalid_email" ? "Merci de renseigner un email valide." : "Une erreur est survenue pendant l’envoi.");
+    } catch {
+      setError("Une erreur est survenue pendant l’envoi.");
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Link className="btn btn-secondary practitioner-static-cta practitioner-review-trigger" href={loginUrl}>
+        Se connecter pour laisser un avis
+      </Link>
+    );
   }
 
   return (
@@ -141,13 +154,10 @@ export default function PractitionerReviewModal({
 
             <div className="practitioner-review-header">
               <p className="practitioner-review-eyebrow">Laisser un avis</p>
-              <h3 id="practitioner-review-title">
-                {practitionerName}
-              </h3>
+              <h3 id="practitioner-review-title">{practitionerName}</h3>
               <p className="practitioner-review-intro">
-                Donnez une note de 0 à 5 étoiles, ajoutez un commentaire si vous le
-                souhaitez et laissez-nous votre email pour que nous puissions vous
-                recontacter si besoin.
+                Donnez une note de 0 à 5 étoiles et ajoutez un commentaire si vous le souhaitez.
+                Votre avis sera vérifié avant publication.
               </p>
             </div>
 
@@ -160,21 +170,6 @@ export default function PractitionerReviewModal({
             {error ? <p className="practitioner-review-feedback practitioner-review-feedback--error">{error}</p> : null}
 
             <form className="practitioner-review-form" onSubmit={handleSubmit}>
-              <div className="practitioner-review-field">
-                <label htmlFor="practitioner-review-email" className="practitioner-review-label">
-                  Email
-                </label>
-                <input
-                  id="practitioner-review-email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="practitioner-review-input"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-              </div>
-
               <div className="practitioner-review-field">
                 <label className="practitioner-review-label">Nombre d’étoiles</label>
                 <div className="practitioner-review-rating" role="radiogroup" aria-label="Nombre d’étoiles">

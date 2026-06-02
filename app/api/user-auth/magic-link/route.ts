@@ -1,0 +1,169 @@
+import { NextResponse } from "next/server";
+import {
+  createUserAuthIntentCookieValue,
+  getUserAuthIntentCookieOptions,
+  USER_AUTH_INTENT_COOKIE_NAME
+} from "@/lib/user-auth";
+import { getSupabaseAdminClient } from "@/lib/supabase-admin";
+
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function normalizeText(value: FormDataEntryValue | null): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function getSafeNextPath(value: string): string {
+  if (!value.startsWith("/") || value.startsWith("//")) return "/compte";
+  return value;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+async function sendMagicLinkEmail(params: {
+  email: string;
+  loginUrl: string;
+}): Promise<{ ok: true } | { ok: false; code: "missing_provider" | "send_failed"; error: unknown }> {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim() || "NaturoCarte <onboarding@resend.dev>";
+
+  if (!apiKey) {
+    return { ok: false, code: "missing_provider", error: "Missing RESEND_API_KEY" };
+  }
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: fromEmail,
+      to: [params.email],
+      subject: "Votre lien de connexion NaturoCarte",
+      text: [
+        "Bonjour,",
+        "",
+        "Voici votre lien de connexion à NaturoCarte :",
+        params.loginUrl,
+        "",
+        "Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet email."
+      ].join("\n"),
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #10201b; line-height: 1.55;">
+          <p>Bonjour,</p>
+          <p>Voici votre lien de connexion à NaturoCarte.</p>
+          <p>
+            <a href="${escapeHtml(params.loginUrl)}" style="display: inline-block; padding: 12px 18px; border-radius: 8px; background: #0f766e; color: #ffffff; text-decoration: none; font-weight: 700;">
+              Accéder à mon compte
+            </a>
+          </p>
+          <p style="color: #5f6f69;">Ce lien est personnel. Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet email.</p>
+        </div>
+      `
+    })
+  });
+
+  if (!response.ok) {
+    let details: unknown;
+    try {
+      details = await response.json();
+    } catch {
+      details = await response.text();
+    }
+
+    return { ok: false, code: "send_failed", error: { status: response.status, details } };
+  }
+
+  return { ok: true };
+}
+
+export async function POST(request: Request) {
+  const formData = await request.formData();
+  const email = normalizeText(formData.get("email")).toLowerCase();
+  const nextPath = getSafeNextPath(normalizeText(formData.get("next")) || "/compte");
+  const redirectUrl = new URL("/compte", request.url);
+  redirectUrl.searchParams.set("next", nextPath);
+
+  if (!email || !isValidEmail(email)) {
+    redirectUrl.searchParams.set("error", "invalid_email");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  try {
+    const supabase = getSupabaseAdminClient();
+    const createMagicLink = () =>
+      supabase.auth.admin.generateLink({
+        type: "magiclink",
+        email,
+        options: {
+          redirectTo: `${new URL(request.url).origin}/compte/auth/callback`
+        }
+      });
+
+    let { data, error } = await createMagicLink();
+
+    if (error || !data.properties?.hashed_token) {
+      const { error: createUserError } = await supabase.auth.admin.createUser({
+        email,
+        email_confirm: true
+      });
+
+      if (createUserError) {
+        console.error("user auth creation failed", createUserError);
+        redirectUrl.searchParams.set("error", "auth_failed");
+        return NextResponse.redirect(redirectUrl, { status: 303 });
+      }
+
+      ({ data, error } = await createMagicLink());
+    }
+
+    const tokenHash = data.properties?.hashed_token;
+    const verificationType = data.properties?.verification_type;
+    if (error || !tokenHash || !verificationType) {
+      console.error("user magic link generation failed", error);
+      redirectUrl.searchParams.set("error", "auth_failed");
+      return NextResponse.redirect(redirectUrl, { status: 303 });
+    }
+
+    const callbackUrl = new URL("/compte/auth/callback", request.url);
+    callbackUrl.searchParams.set("token_hash", tokenHash);
+    callbackUrl.searchParams.set("type", verificationType);
+
+    const result = await sendMagicLinkEmail({
+      email,
+      loginUrl: callbackUrl.toString()
+    });
+
+    if (!result.ok) {
+      console.error("user magic link email send failed", result.error);
+      redirectUrl.searchParams.set(
+        "error",
+        result.code === "missing_provider" ? "email_provider_missing" : "email_failed"
+      );
+      return NextResponse.redirect(redirectUrl, { status: 303 });
+    }
+
+    redirectUrl.searchParams.set("auth", "sent");
+    const response = NextResponse.redirect(redirectUrl, { status: 303 });
+    response.cookies.set({
+      name: USER_AUTH_INTENT_COOKIE_NAME,
+      value: createUserAuthIntentCookieValue({ email, nextPath }),
+      ...getUserAuthIntentCookieOptions()
+    });
+
+    return response;
+  } catch (error) {
+    console.error("user magic link error", error);
+    redirectUrl.searchParams.set("error", "server_error");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+}

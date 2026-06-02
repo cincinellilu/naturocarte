@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { getCurrentUserSession } from "@/lib/user-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
-
-function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
 
 function normalizeRating(value: unknown): number | null {
   if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 5) {
@@ -26,22 +23,21 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       practitionerSlug?: string;
       practitionerName?: string;
-      email?: string;
       rating?: unknown;
       message?: string | null;
     };
 
+    const session = await getCurrentUserSession();
+    if (!session) {
+      return NextResponse.json({ error: "auth_required" }, { status: 401 });
+    }
+
     const practitionerSlug = body.practitionerSlug?.trim();
-    const email = body.email?.trim();
     const rating = normalizeRating(body.rating);
     const message = body.message?.trim() || "";
 
     if (!practitionerSlug) {
       return NextResponse.json({ error: "missing_practitioner" }, { status: 400 });
-    }
-
-    if (!email || !isValidEmail(email)) {
-      return NextResponse.json({ error: "invalid_email" }, { status: 400 });
     }
 
     if (rating === null) {
@@ -53,6 +49,16 @@ export async function POST(request: Request) {
     }
 
     const supabase = getSupabaseAdminClient();
+    const { data: account, error: accountError } = await supabase
+      .from("user_accounts")
+      .select("id, email")
+      .eq("auth_user_id", session.userId)
+      .maybeSingle<{ id: string; email: string }>();
+
+    if (accountError || !account) {
+      return NextResponse.json({ error: "missing_account" }, { status: 401 });
+    }
+
     const { data: practitioner, error: practitionerError } = await supabase
       .from("practitioners")
       .select("id, slug, first_name, last_name")
@@ -71,7 +77,8 @@ export async function POST(request: Request) {
       .from("practitioner_reviews")
       .insert({
         practitioner_id: practitioner.id,
-        email,
+        user_account_id: account.id,
+        email: account.email,
         rating,
         message: message || null,
         status: "pending"

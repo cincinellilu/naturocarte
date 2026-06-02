@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
+import MapboxMap from "@/components/MapboxMap";
 import {
   getDepartmentByCode,
   getDepartmentCodeFromPostalCode
 } from "@/lib/locations";
-
-const MapboxMap = dynamic(() => import("@/components/MapboxMap"), {
-  ssr: false,
-  loading: () => <div className="map-fallback map-fallback--loading">Carte interactive en cours de chargement…</div>
-});
 
 const DEBOUNCE_MS = 300;
 const DEFAULT_PROXIMITY = { lng: 2.3522, lat: 48.8566 };
@@ -77,6 +72,15 @@ function haversineDistanceKm(
   return earthRadiusKm * c;
 }
 
+export type CarteInteractiveProps = {
+  practitioners: Practitioner[];
+  mapPoints: MapPoint[];
+  zoneCode?: string | null;
+  activeSubzoneLabel?: string | null;
+  activeLocationLabel?: string | null;
+  activeLocationSummary?: string | null;
+};
+
 export default function CarteInteractive({
   practitioners,
   mapPoints,
@@ -84,14 +88,7 @@ export default function CarteInteractive({
   activeSubzoneLabel = null,
   activeLocationLabel = null,
   activeLocationSummary = null
-}: {
-  practitioners: Practitioner[];
-  mapPoints: MapPoint[];
-  zoneCode?: string | null;
-  activeSubzoneLabel?: string | null;
-  activeLocationLabel?: string | null;
-  activeLocationSummary?: string | null;
-}) {
+}: CarteInteractiveProps) {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [selectionSource, setSelectionSource] = useState<"map" | "list" | null>(null);
 
@@ -100,6 +97,7 @@ export default function CarteInteractive({
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [locateRequestNonce, setLocateRequestNonce] = useState(0);
@@ -114,6 +112,10 @@ export default function CarteInteractive({
 
   const activeDepartment = zoneCode ? getDepartmentByCode(zoneCode) : null;
   const activeZoneLabel = activeDepartment?.name ?? "Île-de-France";
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!activeDepartment) return;
@@ -138,7 +140,9 @@ export default function CarteInteractive({
   const filteredPractitioners = useMemo(() => {
     const referenceCenter = searchCenter
       ? { lat: searchCenter.lat, lng: searchCenter.lng }
-      : userLocation ?? DEFAULT_PROXIMITY;
+      : hasMounted
+        ? userLocation
+        : null;
 
     return practitioners
       .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng))
@@ -147,10 +151,12 @@ export default function CarteInteractive({
         return getDepartmentCodeFromPostalCode(p.postal_code) === activeDepartment.code;
       })
       .map((p) => {
-        const distanceKm = haversineDistanceKm(referenceCenter, {
-          lat: p.lat,
-          lng: p.lng
-        });
+        const distanceKm = referenceCenter
+          ? haversineDistanceKm(referenceCenter, {
+              lat: p.lat,
+              lng: p.lng
+            })
+          : null;
 
         return {
           ...p,
@@ -159,11 +165,13 @@ export default function CarteInteractive({
         };
       })
       .sort((a, b) => {
+        if (!referenceCenter) return 0;
+
         const distanceA = a.searchDistanceKm ?? a.userDistanceKm ?? Number.POSITIVE_INFINITY;
         const distanceB = b.searchDistanceKm ?? b.userDistanceKm ?? Number.POSITIVE_INFINITY;
         return distanceA - distanceB;
       });
-  }, [activeDepartment, practitioners, searchCenter, userLocation]);
+  }, [activeDepartment, hasMounted, practitioners, searchCenter, userLocation]);
 
   useEffect(() => {
     setShowAll(false);
@@ -408,7 +416,7 @@ export default function CarteInteractive({
       : activeDepartment.code === "75"
         ? "Praticiens à Paris"
         : `Praticiens en ${activeDepartment.name}`
-    : "Praticiens en Île-de-France";
+    : "Praticiens autour de vous";
 
   const resultsCaption = activeDepartment
     ? activeLocationSummary ??
@@ -545,7 +553,7 @@ export default function CarteInteractive({
       <section className="results-panel">
         <div className="results-panel-head">
           <div>
-            <h2>{resultsTitle}</h2>
+            <h2 suppressHydrationWarning>{resultsTitle}</h2>
             <p className="directory-caption">{resultsCaption}</p>
           </div>
           <span className="directory-count">{filteredPractitioners.length}</span>

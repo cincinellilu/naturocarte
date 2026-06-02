@@ -6,6 +6,7 @@ import { getSiteUrl } from "@/lib/site";
 import Analytics from "@/components/Analytics";
 import CookieBannerMount from "@/components/CookieBannerMount";
 import CookieSettingsButtonMount from "@/components/CookieSettingsButtonMount";
+import HeaderAccountLink from "@/components/HeaderAccountLink";
 import { MobileTabBar, SiteHeaderNav } from "@/components/SiteNavigation";
 
 const siteUrl = getSiteUrl();
@@ -57,6 +58,8 @@ export default function RootLayout({
                   <Link href="/carte" className="site-header-cta">
                     Ouvrir la carte
                   </Link>
+
+                  <HeaderAccountLink />
                 </div>
               </div>
             </div>

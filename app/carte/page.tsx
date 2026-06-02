@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import CarteInteractive from "@/components/CarteInteractive";
+import CarteInteractiveMount from "@/components/CarteInteractiveMount";
 import ZoneFilterPanel from "@/components/ZoneFilterPanel";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import {
@@ -52,6 +52,7 @@ type PractitionerRow = {
   phone: string | null;
   email: string | null;
   booking_url: string | null;
+  photo_url: string | null;
   description: string | null;
 };
 
@@ -83,7 +84,7 @@ export default async function CartePage({
       supabase
         .from("practitioners")
         .select(
-          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, phone, email, booking_url, description"
+          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, phone, email, booking_url, photo_url, description"
         )
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .order("last_name", { ascending: true })
@@ -167,6 +168,7 @@ export default async function CartePage({
       phone: p.phone,
       email: p.email,
       booking_url: p.booking_url,
+      photo_url: p.photo_url,
       description: p.description
     }));
 
@@ -236,7 +238,7 @@ export default async function CartePage({
           cityOptionsByDepartment={cityOptionsByDepartment}
         />
 
-        <CarteInteractive
+        <CarteInteractiveMount
           practitioners={practitionerItems}
           mapPoints={mapPoints}
           zoneCode={zoneCode}

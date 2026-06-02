@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
-import { IDF_DEPARTMENTS, getDepartmentByCode } from "@/lib/locations";
+import { IDF_DEPARTMENTS, getDepartmentAreaLabel, getDepartmentByCode } from "@/lib/locations";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -76,8 +76,9 @@ export async function generateMetadata({
     };
   }
 
+  const areaLabel = getDepartmentAreaLabel(department);
   const title = `Naturopathe ${department.name} | Liste des praticiens`;
-  const description = `Consultez la liste des naturopathes publiés dans ${department.name} et ouvrez leurs fiches pour comparer les coordonnées et les informations utiles.`;
+  const description = `Consultez la liste des naturopathes publiés ${areaLabel} et ouvrez leurs fiches pour comparer les coordonnées et les informations utiles.`;
 
   return {
     title,
@@ -116,13 +117,14 @@ export default async function DepartmentAnnuairePage({
   const practitioners = await getDepartmentPractitioners(departmentCode);
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/annuaire-naturopathes/${departmentCode}`;
+  const areaLabel = getDepartmentAreaLabel(department);
 
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `Naturopathe ${department.name}`,
     url: canonicalUrl,
-    about: `Liste des naturopathes publiés dans ${department.name}`,
+    about: `Liste des naturopathes publiés ${areaLabel}`,
     inLanguage: "fr-FR",
     mainEntity: {
       "@type": "ItemList",
@@ -171,7 +173,7 @@ export default async function DepartmentAnnuairePage({
             <p className="page-eyebrow">{department.name} • annuaire local</p>
             <h1>Naturopathe {department.name}</h1>
             <p className="page-lead">
-              Parcourez les naturopathes publiés dans {department.name}, puis ouvrez leurs
+              Parcourez les naturopathes publiés {areaLabel}, puis ouvrez leurs
               fiches pour comparer l’adresse, le contact et les informations utiles.
             </p>
 

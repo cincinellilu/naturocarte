@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
+import { IDF_DEPARTMENTS } from "@/lib/locations";
 import { PARIS_ARRONDISSEMENTS } from "@/lib/paris";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
@@ -43,6 +44,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.75
     },
+    ...IDF_DEPARTMENTS.filter((department) => department.code !== "75").map((department) => ({
+      url: `${siteUrl}/annuaire-naturopathes/${department.code}`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.85
+    })),
     { url: `${siteUrl}/carte`, lastModified: now, changeFrequency: "daily", priority: 0.85 },
     {
       url: `${siteUrl}/naturopathe-paris`,
@@ -58,6 +65,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...practitionerEntries,
     { url: `${siteUrl}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${siteUrl}/methode`, lastModified: now, changeFrequency: "monthly", priority: 0.45 },
+    { url: `${siteUrl}/praticiens`, lastModified: now, changeFrequency: "weekly", priority: 0.55 },
     {
       url: `${siteUrl}/mentions-legales`,
       lastModified: now,

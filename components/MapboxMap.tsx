@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
+import { trackPractitionerStat, type PractitionerStatEvent } from "@/components/PractitionerStatsTracker";
 
 const PARIS_CENTER: [number, number] = [2.3522, 48.8566];
 const SOURCE_ID = "practitioners";
@@ -142,19 +143,31 @@ function buildPopupHtml(point: MapPoint): string {
   const phoneLine = point.phone
     ? `<p class="map-popup-detail">
         <span class="map-popup-label">Telephone</span>
-        <a class="map-popup-value" href="tel:${escapeHtml(phoneHref)}">${escapeHtml(point.phone)}</a>
+        <a
+          class="map-popup-value"
+          href="tel:${escapeHtml(phoneHref)}"
+          data-practitioner-stat-event="contact_click"
+          data-practitioner-slug="${escapeHtml(point.slug)}"
+        >${escapeHtml(point.phone)}</a>
       </p>`
     : "";
   const emailLine = point.email
     ? `<p class="map-popup-detail">
         <span class="map-popup-label">Email</span>
-        <a class="map-popup-value" href="mailto:${encodeURIComponent(point.email)}">${escapeHtml(point.email)}</a>
+        <a
+          class="map-popup-value"
+          href="mailto:${encodeURIComponent(point.email)}"
+          data-practitioner-stat-event="contact_click"
+          data-practitioner-slug="${escapeHtml(point.slug)}"
+        >${escapeHtml(point.email)}</a>
       </p>`
     : "";
   const bookingLine = bookingUrl
     ? `<a class="map-popup-secondary" href="${escapeHtml(
         bookingUrl
-      )}" target="_blank" rel="noopener noreferrer">Prendre rendez-vous</a>`
+      )}" target="_blank" rel="noopener noreferrer" data-practitioner-stat-event="booking_click" data-practitioner-slug="${escapeHtml(
+        point.slug
+      )}">Prendre rendez-vous</a>`
     : "";
   const tarifsLine = point.tarifs?.trim()
     ? `<a class="map-popup-secondary" href="/naturopathe/${encodeURIComponent(
@@ -176,6 +189,7 @@ function buildPopupHtml(point: MapPoint): string {
       </div>`;
 
   return `<div class="map-popup">
+    <button class="map-popup-close" type="button" aria-label="Fermer la fiche">×</button>
     <div class="map-popup-layout">
       <div class="map-popup-left">
         <div class="map-popup-visual">${photoMarkup}</div>
@@ -185,6 +199,11 @@ function buildPopupHtml(point: MapPoint): string {
             : ""
         }
         <a class="map-popup-link" href="/naturopathe/${encodeURIComponent(point.slug)}">Voir la fiche</a>
+        <form class="map-popup-favorite-form" action="/api/user-favorites" method="post">
+          <input type="hidden" name="practitioner_slug" value="${escapeHtml(point.slug)}" />
+          <input type="hidden" name="intent" value="add" />
+          <button class="map-popup-favorite-btn" type="submit">Ajouter aux favoris</button>
+        </form>
       </div>
       <div class="map-popup-content">
         <p class="map-popup-name">${escapeHtml(point.first_name)} ${escapeHtml(point.last_name)}</p>
@@ -282,7 +301,11 @@ function MobilePractitionerPopup({
               {point.phone ? (
                 <p className="map-popup-detail">
                   <span className="map-popup-label">Téléphone</span>
-                  <a className="map-popup-value" href={`tel:${phoneHref}`}>
+                  <a
+                    className="map-popup-value"
+                    href={`tel:${phoneHref}`}
+                    onClick={() => trackPractitionerStat(point.slug, "contact_click")}
+                  >
                     {point.phone}
                   </a>
                 </p>
@@ -290,7 +313,11 @@ function MobilePractitionerPopup({
               {point.email ? (
                 <p className="map-popup-detail">
                   <span className="map-popup-label">Email</span>
-                  <a className="map-popup-value" href={`mailto:${encodeURIComponent(point.email)}`}>
+                  <a
+                    className="map-popup-value"
+                    href={`mailto:${encodeURIComponent(point.email)}`}
+                    onClick={() => trackPractitionerStat(point.slug, "contact_click")}
+                  >
                     {point.email}
                   </a>
                 </p>
@@ -299,12 +326,21 @@ function MobilePractitionerPopup({
           ) : null}
 
           <div className="map-popup-actions map-mobile-popup-actions">
+            <form className="map-popup-favorite-form map-mobile-popup-favorite-form" action="/api/user-favorites" method="post">
+              <input type="hidden" name="practitioner_slug" value={point.slug} />
+              <input type="hidden" name="intent" value="add" />
+              <button className="map-popup-favorite-btn map-mobile-popup-favorite-btn" type="submit">
+                Ajouter aux favoris
+              </button>
+            </form>
+
             {bookingUrl ? (
               <a
                 className="map-popup-link map-mobile-popup-link"
                 href={bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackPractitionerStat(point.slug, "booking_click")}
               >
                 Prendre rendez-vous
               </a>
@@ -474,6 +510,7 @@ export default function MapboxMap({
   const interactionsBoundRef = useRef(false);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
   const previousSelectedSlugRef = useRef<string | null>(null);
+  const trackedPopupViewSlugRef = useRef<string | null>(null);
   const onSelectSlugRef = useRef<typeof onSelectSlug>(onSelectSlug);
   const pointsRef = useRef<MapPoint[]>(points);
 
@@ -486,6 +523,14 @@ export default function MapboxMap({
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [mobilePopupPoint, setMobilePopupPoint] = useState<MapPoint | null>(null);
+
+  const removePopupSilently = () => {
+    const popup = popupRef.current;
+    if (!popup) return;
+
+    popupRef.current = null;
+    popup.remove();
+  };
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -663,8 +708,7 @@ export default function MapboxMap({
     return () => {
       interactionsBoundRef.current = false;
 
-      popupRef.current?.remove();
-      popupRef.current = null;
+      removePopupSilently();
 
       userMarkerRef.current?.remove();
       userMarkerRef.current = null;
@@ -718,22 +762,26 @@ export default function MapboxMap({
     if (!map) return;
 
     if (!selectedSlug) {
-      popupRef.current?.remove();
-      popupRef.current = null;
+      removePopupSilently();
       setMobilePopupPoint(null);
+      trackedPopupViewSlugRef.current = null;
       return;
     }
 
     const selectedPoint = pointsRef.current.find((p) => p.slug === selectedSlug);
     if (!selectedPoint) {
-      popupRef.current?.remove();
-      popupRef.current = null;
+      removePopupSilently();
       setMobilePopupPoint(null);
+      trackedPopupViewSlugRef.current = null;
       return;
     }
 
-    popupRef.current?.remove();
-    popupRef.current = null;
+    removePopupSilently();
+
+    if (trackedPopupViewSlugRef.current !== selectedPoint.slug) {
+      trackedPopupViewSlugRef.current = selectedPoint.slug;
+      trackPractitionerStat(selectedPoint.slug, "profile_view");
+    }
 
     if (isMobileViewport) {
       setMobilePopupPoint(selectedPoint);
@@ -751,13 +799,32 @@ export default function MapboxMap({
       });
     }
 
-    popupRef.current = new mapboxgl.Popup({ closeButton: true, closeOnClick: true })
+    const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false })
       .setLngLat([selectedPoint.lng, selectedPoint.lat])
       .setHTML(buildPopupHtml(selectedPoint))
-      .on("close", () => {
-        onSelectSlugRef.current?.(null);
-      })
       .addTo(map);
+
+    popupRef.current = popup;
+    const popupElement = popup.getElement();
+    popupElement?.querySelector(".map-popup-close")?.addEventListener("click", () => {
+      onSelectSlugRef.current?.(null);
+    });
+
+    popupElement?.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const trackedLink = target.closest<HTMLElement>("[data-practitioner-stat-event]");
+      const statEvent = trackedLink?.dataset.practitionerStatEvent;
+      const practitionerSlug = trackedLink?.dataset.practitionerSlug;
+
+      if (
+        practitionerSlug &&
+        (statEvent === "contact_click" || statEvent === "booking_click")
+      ) {
+        trackPractitionerStat(practitionerSlug, statEvent as PractitionerStatEvent);
+      }
+    });
   }, [isMobileViewport, selectedSlug, selectionSource]);
 
   useEffect(() => {
@@ -770,8 +837,7 @@ export default function MapboxMap({
       return;
     }
 
-    popupRef.current?.remove();
-    popupRef.current = null;
+    removePopupSilently();
     setMobilePopupPoint(null);
     onSelectSlugRef.current?.(null);
 
@@ -827,8 +893,7 @@ export default function MapboxMap({
         <MobilePractitionerPopup
           point={mobilePopupPoint}
           onClose={() => {
-            popupRef.current?.remove();
-            popupRef.current = null;
+            removePopupSilently();
             setMobilePopupPoint(null);
             onSelectSlugRef.current?.(null);
           }}

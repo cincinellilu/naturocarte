@@ -1,26 +1,60 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import PractitionerContactForm from "@/components/PractitionerContactForm";
+import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
+import { PRACTITIONER_PLANS } from "@/lib/practitioner-plans";
 
 export const metadata: Metadata = {
-  title: "Espace praticiens",
+  title: "Espace praticien naturopathe",
   description:
-    "Revendiquer, corriger ou enrichir votre fiche praticien sur NaturoCarte.",
-  robots: {
-    index: false,
-    follow: true
-  },
+    "Créez votre fiche naturopathe sur NaturoCarte, connectez-vous à votre espace praticien et choisissez l’offre adaptée à votre visibilité.",
   alternates: {
     canonical: "/praticiens"
+  },
+  openGraph: {
+    title: "Espace praticien naturopathe | NaturoCarte",
+    description:
+      "Créez votre fiche naturopathe sur NaturoCarte, connectez-vous à votre espace praticien et choisissez l’offre adaptée à votre visibilité.",
+    url: "/praticiens",
+    type: "website"
+  },
+  twitter: {
+    card: "summary",
+    title: "Espace praticien naturopathe | NaturoCarte",
+    description:
+      "Créez votre fiche naturopathe sur NaturoCarte, connectez-vous à votre espace praticien et choisissez l’offre adaptée à votre visibilité."
   }
 };
 
 type SearchParams = {
-  claim?: string | string[];
-  submitted?: string | string[];
+  auth?: string | string[];
   error?: string | string[];
+  email?: string | string[];
 };
+
+function getParam(value: string | string[] | undefined): string | null {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}
+
+function getAuthErrorMessage(error: string | null): string | null {
+  switch (error) {
+    case "invalid_email":
+      return "Renseignez un email valide pour recevoir votre lien.";
+    case "email_provider_missing":
+      return "L’envoi d’email NaturoCarte n’est pas encore configuré. Ajoutez RESEND_API_KEY côté serveur.";
+    case "email_failed":
+      return "Le lien a été généré, mais l’email n’a pas pu être envoyé. Vérifiez l’expéditeur Resend.";
+    case "auth_failed":
+      return "Le lien n’a pas pu être validé ou généré. Demandez un nouveau lien de connexion.";
+    case "account_failed":
+      return "Votre compte a été validé, mais l’espace praticien n’a pas pu être initialisé.";
+    case "server_error":
+      return "Une erreur serveur a empêché l’envoi du lien. Réessayez dans quelques instants.";
+    default:
+      return error ? "La connexion n’a pas pu aboutir. Demandez un nouveau lien." : null;
+  }
+}
 
 export default async function PractitionersPage({
   searchParams
@@ -28,13 +62,11 @@ export default async function PractitionersPage({
   searchParams: Promise<SearchParams>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const claimParam = resolvedSearchParams.claim;
-  const claim = Array.isArray(claimParam) ? claimParam[0] : claimParam;
-  const normalizedClaim = claim?.trim() ? claim.trim() : null;
-  const submittedParam = resolvedSearchParams.submitted;
-  const submitted = Array.isArray(submittedParam) ? submittedParam[0] : submittedParam;
-  const errorParam = resolvedSearchParams.error;
-  const error = Array.isArray(errorParam) ? errorParam[0] : errorParam;
+  const auth = getParam(resolvedSearchParams.auth);
+  const error = getParam(resolvedSearchParams.error);
+  const email = getParam(resolvedSearchParams.email);
+  const session = await getCurrentPractitionerSession();
+  const authErrorMessage = getAuthErrorMessage(error);
 
   return (
     <article className="article-shell article-shell--praticiens praticiens-page">
@@ -58,105 +90,103 @@ export default async function PractitionersPage({
                 <Link href="/">Accueil</Link>
               </li>
               <li aria-hidden="true">›</li>
-              <li aria-current="page">Espace praticiens</li>
+              <li aria-current="page">Espace praticien</li>
             </ol>
           </nav>
 
           <div className="page-hero-copy practitioners-hero-copy">
-            <p className="page-eyebrow">Espace praticiens</p>
-            <h1>Revendiquer, corriger ou enrichir votre fiche</h1>
+            <p className="page-eyebrow">Espace praticien</p>
+            <h1>Créez et pilotez votre fiche NaturoCarte</h1>
             <p className="page-lead">
-              Utilisez ce formulaire si vous êtes déjà présent sur NaturoCarte. Le lien depuis
-              une fiche pré-remplit automatiquement votre demande.
+              Recevez un lien de connexion par email. Si c’est votre premier accès, votre fiche
+              sera finalisée depuis le dashboard avec vos informations professionnelles.
             </p>
 
-            <ul className="practitioner-edit-list">
-              <li>Revendiquer une fiche et reprendre la main sur les informations publiques</li>
-              <li>Corriger une adresse, un téléphone, un site web ou une description</li>
-              <li>Ajouter des photos et préparer l’enrichissement futur de la fiche</li>
-            </ul>
-
-            <div className="hero-actions">
-              <Link className="btn" href="#demande">
-                Ouvrir le formulaire
+            {session ? (
+              <Link className="btn practitioner-hero-dashboard-link" href="/praticiens/dashboard">
+                Accéder à mon dashboard
               </Link>
-            </div>
+            ) : (
+              <form
+                className="practitioner-login-form practitioner-login-form--hero"
+                action="/api/practitioner-auth/magic-link"
+                method="post"
+              >
+                <label className="practitioner-form-label" htmlFor="practitioner-email">
+                  Email professionnel
+                </label>
+                <div className="practitioner-login-row">
+                  <input
+                    id="practitioner-email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    className="practitioner-form-input"
+                    placeholder="vous@cabinet.fr"
+                    defaultValue={email ?? ""}
+                  />
+                  <button className="btn practitioner-login-submit" type="submit">
+                    Inscription / Connexion
+                  </button>
+                </div>
+                <p className="practitioner-login-note">
+                  Aucun mot de passe à retenir. Le lien vous connecte ou crée votre espace si
+                  c’est votre première visite.
+                </p>
+              </form>
+            )}
+
+            {auth === "sent" ? (
+              <p className="practitioner-form-feedback practitioner-form-feedback--success">
+                Le lien de connexion a été envoyé. Ouvrez votre email pour accéder à votre espace.
+              </p>
+            ) : null}
+
+            {auth === "required" ? (
+              <p className="practitioner-form-feedback practitioner-form-feedback--error">
+                Connectez-vous pour accéder au dashboard praticien.
+              </p>
+            ) : null}
+
+            {authErrorMessage ? (
+              <p className="practitioner-form-feedback practitioner-form-feedback--error">
+                {authErrorMessage}
+              </p>
+            ) : null}
           </div>
         </div>
       </section>
 
-      <section className="section-shell practitioner-form-section" id="demande">
+      <section className="section-shell practitioner-offers-section" id="offres">
         <div className="section-heading section-heading--stacked">
           <div>
-            <p className="section-eyebrow">Demande praticien</p>
-            <h2>Envoyez votre demande</h2>
+            <p className="section-eyebrow">Offres praticiens</p>
+            <h2>Une fiche gratuite, des options pour suivre votre visibilité</h2>
           </div>
           <p className="section-intro">
-            Réclamation, correction ou enrichissement : le formulaire s’adapte à votre besoin
-            et nous revenons vers vous par email.
+            Le forfait Présence suffit pour être affiché dans l’annuaire avec un contact public.
+            Le forfait Visibilité+ ajoute les statistiques, les avis et les informations enrichies pour
+            les praticiens qui veulent piloter leur présence plus finement.
           </p>
         </div>
 
-        <section className="practitioner-card practitioner-form-card">
-          <p className="practitioner-form-intro">
-            Envoyez votre demande et nous revenons vers vous par email.
-          </p>
-
-          {submitted === "1" ? (
-            <p className="practitioner-form-feedback practitioner-form-feedback--success">
-              Merci, votre demande a bien été envoyée.
-            </p>
-          ) : null}
-
-          {error === "invalid_email" ? (
-            <p className="practitioner-form-feedback practitioner-form-feedback--error">
-              Merci de renseigner un email valide.
-            </p>
-          ) : null}
-
-          {error === "invalid_subject" ? (
-            <p className="practitioner-form-feedback practitioner-form-feedback--error">
-              Merci de sélectionner un sujet valide.
-            </p>
-          ) : null}
-
-          {error === "missing_subject" ? (
-            <p className="practitioner-form-feedback practitioner-form-feedback--error">
-              Merci de renseigner le sujet de votre question.
-            </p>
-          ) : null}
-
-          {error === "missing_phone" ? (
-            <p className="practitioner-form-feedback practitioner-form-feedback--error">
-              Merci de renseigner votre numéro de téléphone pour être recontacté.
-            </p>
-          ) : null}
-
-          {error === "server_error" ? (
-            <p className="practitioner-form-feedback practitioner-form-feedback--error">
-              Une erreur est survenue pendant l’envoi. Merci de réessayer dans quelques
-              instants.
-            </p>
-          ) : null}
-
-          {normalizedClaim ? (
-            <p className="practitioner-form-feedback practitioner-form-feedback--success">
-              Fiche pré-remplie : {normalizedClaim}.{" "}
-              <Link href={`/naturopathe/${encodeURIComponent(normalizedClaim)}`}>
-                Voir la fiche concernée
-              </Link>
-            </p>
-          ) : null}
-
-          {!normalizedClaim ? (
-            <p className="practitioner-form-intro">
-              Si vous venez d’une fiche, le lien “Revendiquer ou corriger la fiche” la
-              pré-remplit automatiquement ici.
-            </p>
-          ) : null}
-
-          <PractitionerContactForm claim={normalizedClaim} />
-        </section>
+        <div className="practitioner-plan-grid">
+          {PRACTITIONER_PLANS.map((plan) => (
+            <article key={plan.id} className="practitioner-plan-card">
+              <div>
+                <p className="practitioner-workspace-label">Le forfait {plan.name}</p>
+                <h3>{plan.price}</h3>
+                <p>{plan.summary}</p>
+              </div>
+              <ul>
+                {plan.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
       </section>
     </article>
   );

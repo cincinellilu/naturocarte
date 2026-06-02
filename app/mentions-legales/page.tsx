@@ -56,9 +56,29 @@ export default function MentionsLegalesPage() {
       <section>
         <h2>Objet du service et limites</h2>
         <p>
-          Le site propose une mise en relation informative via des fiches descriptives.
-          Les contenus publiés ne constituent pas un avis médical, un diagnostic ou une
-          promesse de résultat thérapeutique.
+          NaturoCarte est un annuaire cartographique et local qui aide les utilisateurs à
+          trouver des naturopathes à partir d’une carte, de pages locales et de fiches
+          praticiens.
+        </p>
+        <p>
+          Les fiches peuvent contenir des informations publiques, des informations
+          communiquées par les praticiens ou des données mises à jour depuis leur espace
+          praticien. NaturoCarte ne garantit pas la disponibilité, l’exactitude permanente
+          ou l’exhaustivité de chaque information publiée.
+        </p>
+        <p>
+          Les contenus publiés ne constituent pas un avis médical, un diagnostic, une
+          prescription ou une promesse de résultat thérapeutique. Le choix et la prise de
+          contact avec un praticien relèvent de la responsabilité de l’utilisateur.
+        </p>
+      </section>
+
+      <section>
+        <h2>Comptes praticiens et abonnements</h2>
+        <p>
+          Les praticiens peuvent créer un compte afin de compléter ou modifier leur fiche et,
+          le cas échéant, souscrire à des fonctionnalités payantes. Les paiements et
+          abonnements sont traités par Stripe, prestataire de paiement externe.
         </p>
       </section>
 

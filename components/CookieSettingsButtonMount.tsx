@@ -1,11 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const CookieSettingsButtonNoSSR = dynamic(() => import("./CookieSettingsButton").then((mod) => mod.default), {
-  ssr: false
-});
+import CookieSettingsButton from "./CookieSettingsButton";
 
 export default function CookieSettingsButtonMount() {
-  return <CookieSettingsButtonNoSSR />;
+  return <CookieSettingsButton />;
 }

@@ -28,6 +28,7 @@ npm run start:prod
 ```
 
 Le script `start:prod` bind en `0.0.0.0` et utilise `PORT`.
+Le script `build` nettoie `.next` avant compilation. Apres un deploiement, redemarrer le process Node pour eviter qu'un ancien serveur conserve des references vers des chunks CSS/JS qui n'existent plus.
 
 ## 4) Verification rapide post-deploiement
 - `/api/health` -> doit renvoyer `{"ok": true}`
@@ -41,3 +42,4 @@ Le script `start:prod` bind en `0.0.0.0` et utilise `PORT`.
 - token Mapbox non restreint au domaine prod
 - `SUPABASE_SERVICE_ROLE_KEY` absent alors que la route API en depend
 - app lancee sans `-H 0.0.0.0` donc inaccessible derriere proxy
+- process Node non redemarre apres build: HTML servi avec d'anciens chemins `/_next/static/...`

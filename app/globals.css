@@ -4247,6 +4247,164 @@ body.site-body {
   display: grid;
   gap: 0.7rem;
 }
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.35rem;
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-sm);
+}
+.admin-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  color: var(--muted);
+  font-weight: 800;
+  text-decoration: none;
+}
+.admin-tab:hover,
+.admin-tab.is-active {
+  border-color: rgba(15, 118, 110, 0.16);
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--accent-strong);
+}
+.admin-warning {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(180, 83, 9, 0.2);
+  border-radius: 0.9rem;
+  background: rgba(254, 243, 199, 0.76);
+  color: #92400e;
+  font-weight: 700;
+}
+.admin-clients-panel {
+  gap: 1.2rem;
+}
+.admin-clients-list {
+  display: grid;
+  gap: 0.85rem;
+}
+.admin-client-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid rgba(15, 118, 110, 0.13);
+  border-radius: 1rem;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(248, 253, 251, 0.94)),
+    radial-gradient(circle at top right, rgba(15, 118, 110, 0.07), transparent 30%);
+}
+.admin-client-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(13rem, auto);
+  gap: 1rem;
+  align-items: start;
+}
+.admin-client-main h3 {
+  margin: 0.15rem 0 0.2rem;
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+}
+.admin-client-main p,
+.admin-client-meta span,
+.admin-invoice-row span {
+  color: var(--muted);
+}
+.admin-client-plan {
+  margin: 0;
+  color: var(--accent-strong) !important;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.admin-client-statuses,
+.admin-client-meta,
+.admin-invoice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.admin-client-statuses {
+  justify-content: flex-end;
+}
+.admin-status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 999px;
+  background: rgba(236, 253, 245, 0.82);
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+.admin-client-meta {
+  padding-top: 0.2rem;
+  border-top: 1px solid rgba(15, 118, 110, 0.1);
+  font-size: 0.9rem;
+}
+.admin-active-practitioners-panel {
+  gap: 1.2rem;
+}
+.admin-active-practitioners-list {
+  display: grid;
+  gap: 0.85rem;
+}
+.admin-active-practitioner-card {
+  border-color: rgba(15, 118, 110, 0.16);
+}
+.admin-completion-row {
+  display: grid;
+  gap: 0.55rem;
+}
+.admin-completion-row > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.admin-completion-row strong {
+  color: var(--text-strong);
+}
+.admin-completion-row span {
+  color: var(--accent-strong);
+  font-weight: 900;
+}
+.admin-invoice-list {
+  display: grid;
+  gap: 0.55rem;
+}
+.admin-invoice-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid rgba(15, 118, 110, 0.11);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.82);
+}
+.admin-invoice-row div:first-child {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.admin-invoice-row strong {
+  color: var(--text-strong);
+}
+.admin-invoice-actions .btn {
+  min-height: 2.25rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.88rem;
+}
 .admin-page-header,
 .admin-gate {
   display: flex;
@@ -6205,6 +6363,77 @@ body.site-body::after {
   font-size: 0.86rem;
   font-weight: 850;
 }
+.dashboard-completion-card {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.15rem, 2.6vw, 1.65rem);
+  border: 1px solid rgba(15, 118, 110, 0.16);
+  border-radius: 1.05rem;
+  background:
+    radial-gradient(circle at top right, rgba(31, 157, 127, 0.14), transparent 36%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(246, 255, 251, 0.72));
+  box-shadow: 0 1.2rem 3.4rem rgba(20, 61, 51, 0.08);
+}
+.dashboard-completion-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.dashboard-completion-head h2 {
+  margin: 0.1rem 0 0;
+}
+.dashboard-completion-head > strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.2rem;
+  min-height: 3rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(15, 118, 110, 0.16);
+  border-radius: 0.85rem;
+  background: rgba(236, 253, 245, 0.92);
+  color: var(--accent-strong);
+  font-size: 1.25rem;
+}
+.dashboard-completion-track,
+.admin-completion-track {
+  overflow: hidden;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.12);
+}
+.dashboard-completion-track span,
+.admin-completion-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), #6fbf9c);
+}
+.dashboard-completion-missing {
+  display: grid;
+  gap: 0.5rem;
+}
+.dashboard-completion-missing p,
+.dashboard-completion-missing ul {
+  margin: 0;
+}
+.dashboard-completion-missing ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+.dashboard-completion-missing li {
+  padding: 0.42rem 0.62rem;
+  border: 1px solid rgba(15, 118, 110, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 750;
+}
 .dashboard-edit-heading,
 .dashboard-stats-heading {
   display: flex;
@@ -6737,6 +6966,71 @@ body.site-body::after {
   background: #ffffff;
   color: #475569;
 }
+.partner-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 1.85rem;
+  padding: 0.32rem 0.58rem;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(236, 253, 245, 0.96), rgba(255, 251, 235, 0.92));
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.partner-badge--inline {
+  margin-top: 0.35rem;
+}
+.partner-badge--popup {
+  margin: 0.1rem 0 0.7rem;
+  font-size: 0.72rem;
+}
+.directory-search-result .partner-badge--inline {
+  margin-top: 0;
+}
+.directory-audience-section {
+  display: grid;
+  gap: 1rem;
+  padding-block: 1.35rem;
+}
+.directory-audience-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  padding: 0.35rem;
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 0.9rem 2.4rem rgba(20, 61, 51, 0.06);
+}
+.directory-audience-tabs--compact {
+  margin: 0.4rem 0 1rem;
+}
+.directory-audience-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  color: var(--muted);
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+}
+.directory-audience-tab:hover,
+.directory-audience-tab.is-active {
+  border-color: rgba(15, 118, 110, 0.16);
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--accent-strong);
+}
 @media (max-width: 760px) {
 .directory-search-section {
     padding: 1.1rem 1rem 1.2rem;
@@ -6748,6 +7042,25 @@ body.site-body::after {
 .directory-search-submit {
     width: 100%;
     min-width: 0;
+  }
+  .directory-audience-tabs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-client-main,
+  .admin-invoice-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-client-statuses,
+  .admin-invoice-actions {
+    justify-content: flex-start;
+  }
+
+  .admin-tabs {
+    display: grid;
   }
 }
 .directory-path-grid {

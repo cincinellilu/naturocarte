@@ -80,6 +80,10 @@ export default function MentionsLegalesPage() {
           le cas échéant, souscrire à des fonctionnalités payantes. Les paiements et
           abonnements sont traités par Stripe, prestataire de paiement externe.
         </p>
+        <p>
+          Les conditions applicables aux comptes, forfaits et abonnements sont précisées dans les{" "}
+          <Link href="/conditions-generales">conditions générales d’utilisation et de vente</Link>.
+        </p>
       </section>
 
       <section>

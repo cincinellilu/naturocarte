@@ -68,7 +68,7 @@ export async function ensureUserAccount(
 export async function ensurePractitionerAccount(
   admin: AdminClient,
   params: { authUserId: string; email: string }
-): Promise<{ ok: true } | { ok: false; error: unknown }> {
+): Promise<{ ok: true; accountId: string } | { ok: false; error: unknown }> {
   const normalizedEmail = params.email.toLowerCase();
   const now = new Date().toISOString();
 
@@ -86,22 +86,30 @@ export async function ensurePractitionerAccount(
       .update({ email: normalizedEmail, updated_at: now })
       .eq("id", existingByAuth.id);
 
-    return error ? { ok: false, error } : { ok: true };
+    return error ? { ok: false, error } : { ok: true, accountId: existingByAuth.id };
   }
 
-  const { error } = await admin.from("practitioner_accounts").insert({
-    auth_user_id: params.authUserId,
-    email: normalizedEmail,
-    updated_at: now
-  });
+  const { data, error } = await admin
+    .from("practitioner_accounts")
+    .insert({
+      auth_user_id: params.authUserId,
+      email: normalizedEmail,
+      updated_at: now
+    })
+    .select("id")
+    .single<{ id: string }>();
 
-  return error ? { ok: false, error } : { ok: true };
+  return error || !data?.id ? { ok: false, error } : { ok: true, accountId: data.id };
 }
 
 export async function resolvePractitionerAccount(
   admin: AdminClient,
   params: { authUserId: string; email: string }
-): Promise<{ isPractitioner: true } | { isPractitioner: false } | { isPractitioner: false; error: unknown }> {
+): Promise<
+  | { isPractitioner: true; accountId: string }
+  | { isPractitioner: false }
+  | { isPractitioner: false; error: unknown }
+> {
   const normalizedEmail = params.email.toLowerCase();
   const now = new Date().toISOString();
 
@@ -120,7 +128,7 @@ export async function resolvePractitionerAccount(
       .eq("id", existingByAuth.id);
 
     if (error) return { isPractitioner: false, error };
-    return { isPractitioner: true };
+    return { isPractitioner: true, accountId: existingByAuth.id };
   }
 
   const { data: existingByEmail, error: accountEmailLookupError } = await admin
@@ -139,7 +147,7 @@ export async function resolvePractitionerAccount(
       .eq("id", existingByEmail.id);
 
     if (error) return { isPractitioner: false, error };
-    return { isPractitioner: true };
+    return { isPractitioner: true, accountId: existingByEmail.id };
   }
 
   const { data: practitioner, error: practitionerLookupError } = await admin
@@ -170,17 +178,49 @@ export async function resolvePractitionerAccount(
       .eq("id", existingByPractitioner.id);
 
     if (error) return { isPractitioner: false, error };
-    return { isPractitioner: true };
+    return { isPractitioner: true, accountId: existingByPractitioner.id };
   }
 
-  const { error: createError } = await admin.from("practitioner_accounts").insert({
-    auth_user_id: params.authUserId,
-    practitioner_id: practitioner.id,
-    email: normalizedEmail,
-    updated_at: now
-  });
+  const { data: createdAccount, error: createError } = await admin
+    .from("practitioner_accounts")
+    .insert({
+      auth_user_id: params.authUserId,
+      practitioner_id: practitioner.id,
+      email: normalizedEmail,
+      updated_at: now
+    })
+    .select("id")
+    .single<{ id: string }>();
 
   if (createError) return { isPractitioner: false, error: createError };
+  if (!createdAccount?.id) return { isPractitioner: false, error: new Error("missing_account_id") };
 
-  return { isPractitioner: true };
+  return { isPractitioner: true, accountId: createdAccount.id };
+}
+
+export async function markPractitionerAccountLogin(
+  admin: AdminClient,
+  params: { accountId: string }
+): Promise<{ ok: true } | { ok: false; error: unknown }> {
+  const now = new Date().toISOString();
+
+  const { data: account, error: lookupError } = await admin
+    .from("practitioner_accounts")
+    .select("id, login_count")
+    .eq("id", params.accountId)
+    .maybeSingle<{ id: string; login_count: number | null }>();
+
+  if (lookupError) return { ok: false, error: lookupError };
+  if (!account?.id) return { ok: false, error: new Error("account_not_found") };
+
+  const { error } = await admin
+    .from("practitioner_accounts")
+    .update({
+      last_login_at: now,
+      login_count: (account.login_count ?? 0) + 1,
+      updated_at: now
+    })
+    .eq("id", account.id);
+
+  return error ? { ok: false, error } : { ok: true };
 }

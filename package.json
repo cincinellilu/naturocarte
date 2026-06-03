@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "dev:turbo": "next dev",
-    "build": "next build",
+    "clean": "rm -rf .next",
+    "dev": "node scripts/ensure-dev-port-free.mjs && npm run clean && next dev --webpack",
+    "dev:turbo": "node scripts/ensure-dev-port-free.mjs && npm run clean && next dev",
+    "build": "npm run clean && next build",
     "start": "next start",
     "start:prod": "next start -H 0.0.0.0 -p ${PORT:-3000}",
     "imports:reconcile:paris": "node scripts/imports/reconcile-paris-lot.mjs",

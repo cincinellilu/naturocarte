@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
+import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 const MIN_QUERY_LENGTH = 2;
 const MAX_RESULTS = 8;
+
+type PractitionerSearchRow = {
+  slug: string;
+  first_name: string | null;
+  last_name: string | null;
+  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
+};
 
 function normalizeQuery(value: string | null): string {
   return (value ?? "")
@@ -26,7 +34,7 @@ export async function GET(request: Request) {
 
   const { data, error } = await supabase
     .from("practitioners")
-    .select("slug, first_name, last_name")
+    .select("slug, first_name, last_name, practitioner_accounts(plan, stripe_subscription_status)")
     .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
     .or(`first_name.ilike.${pattern},last_name.ilike.${pattern}`)
     .order("last_name", { ascending: true })
@@ -39,7 +47,10 @@ export async function GET(request: Request) {
   return NextResponse.json({
     results: (data ?? []).map((practitioner) => ({
       label: `${practitioner.first_name ?? ""} ${practitioner.last_name ?? ""}`.trim(),
-      href: `/naturopathe/${practitioner.slug}`
+      href: `/naturopathe/${practitioner.slug}`,
+      is_partner: Boolean(
+        getPartnerAccount((practitioner as PractitionerSearchRow).practitioner_accounts)
+      )
     }))
   });
 }

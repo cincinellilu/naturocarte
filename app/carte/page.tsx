@@ -15,6 +15,7 @@ import {
   parseParisArrondissement,
   toParisArrondissementLabel
 } from "@/lib/paris";
+import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 
 export const revalidate = 300;
 
@@ -49,6 +50,7 @@ type PractitionerRow = {
   city: string | null;
   lat: number | null;
   lng: number | null;
+  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
 type SearchParams = {
@@ -79,7 +81,7 @@ export default async function CartePage({
       supabase
         .from("practitioners")
         .select(
-          "first_name, last_name, slug, adresse, postal_code, city, lat, lng"
+          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, practitioner_accounts(plan, stripe_subscription_status)"
         )
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .order("last_name", { ascending: true })
@@ -159,7 +161,8 @@ export default async function CartePage({
       last_name: p.last_name,
       postal_code: p.postal_code,
       lat: p.lat as number,
-      lng: p.lng as number
+      lng: p.lng as number,
+      is_partner: Boolean(getPartnerAccount(p.practitioner_accounts))
     }));
 
   const practitionerItems = mapPoints.map((p) => {
@@ -172,7 +175,8 @@ export default async function CartePage({
       postal_code: practitioner?.postal_code ?? null,
       city: practitioner?.city ?? null,
       lat: p.lat,
-      lng: p.lng
+      lng: p.lng,
+      is_partner: p.is_partner
     };
   });
 

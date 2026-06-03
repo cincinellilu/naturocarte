@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import PartnerBadge from "@/components/PartnerBadge";
 import { trackProductEvent } from "@/lib/product-events";
 import {
   getDepartmentByCode,
@@ -26,6 +27,7 @@ type Practitioner = {
   city: string | null;
   lat: number;
   lng: number;
+  is_partner?: boolean;
 };
 
 type MapPoint = {
@@ -42,6 +44,7 @@ type MapPoint = {
   rating?: number | null;
   tarifs?: string | null;
   photo_url?: string | null;
+  is_partner?: boolean;
 };
 
 type SearchCenter = { lng: number; lat: number; label: string };
@@ -736,6 +739,7 @@ export default function CarteInteractive({
                         <span className="practitioner-item-name">
                           {p.first_name} {p.last_name}
                         </span>
+                        {p.is_partner ? <PartnerBadge className="partner-badge--inline" /> : null}
                       </span>
                       <span className="practitioner-item-meta">
                         {[p.adresse, p.city].filter(Boolean).join(", ") || "Adresse non renseignée"}

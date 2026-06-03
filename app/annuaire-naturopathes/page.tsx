@@ -12,6 +12,7 @@ import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 
 export const revalidate = 300;
 
@@ -43,6 +44,7 @@ type PractitionerRow = {
   last_name: string;
   city: string | null;
   postal_code: string | null;
+  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
 type DepartmentBucket = {
@@ -57,6 +59,10 @@ type DepartmentSummary = {
   description: string;
   href: string;
   ctaLabel: string;
+};
+
+type SearchParams = {
+  audience?: string | string[];
 };
 
 function normalizeCity(value: string | null | undefined): string | null {
@@ -97,7 +103,22 @@ function buildDepartmentDescription(
   return `${count} praticiens publiés, notamment à ${formatInlineList(sampleCities)}.`;
 }
 
-export default async function AnnuaireNaturopathesPage() {
+function getAudienceParam(value: string | string[] | undefined): "all" | "partners" {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "partenaires" ? "partners" : "all";
+}
+
+function withAudience(href: string, audience: "all" | "partners"): string {
+  return audience === "partners" ? `${href}?audience=partenaires` : href;
+}
+
+export default async function AnnuaireNaturopathesPage({
+  searchParams
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const audience = getAudienceParam(params.audience);
   let practitioners: PractitionerRow[] = [];
 
   try {
@@ -105,13 +126,18 @@ export default async function AnnuaireNaturopathesPage() {
     practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
       supabase
         .from("practitioners")
-        .select("slug, first_name, last_name, city, postal_code")
+        .select("slug, first_name, last_name, city, postal_code, practitioner_accounts(plan, stripe_subscription_status)")
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .range(from, to)
     );
   } catch {
     practitioners = [];
   }
+
+  const visiblePractitioners =
+    audience === "partners"
+      ? practitioners.filter((practitioner) => getPartnerAccount(practitioner.practitioner_accounts))
+      : practitioners;
 
   const buckets = new Map<string, DepartmentBucket>(
     IDF_DEPARTMENTS.map((department) => [
@@ -120,7 +146,7 @@ export default async function AnnuaireNaturopathesPage() {
     ])
   );
 
-  for (const practitioner of practitioners) {
+  for (const practitioner of visiblePractitioners) {
     const department = getDepartmentFromPostalCode(practitioner.postal_code);
     if (!department) continue;
 
@@ -153,7 +179,10 @@ export default async function AnnuaireNaturopathesPage() {
       keyword: buildDepartmentKeyword(department),
       count: bucket.count,
       description: buildDepartmentDescription(department, bucket.count, sampleCities),
-      href: department.code === "75" ? "/naturopathe-paris" : `/annuaire-naturopathes/${department.code}`,
+      href: withAudience(
+        department.code === "75" ? "/naturopathe-paris" : `/annuaire-naturopathes/${department.code}`,
+        audience
+      ),
       ctaLabel: "Voir les praticiens"
     };
   });
@@ -233,6 +262,35 @@ export default async function AnnuaireNaturopathesPage() {
           </p>
           <DirectorySearchBar compact />
         </div>
+      </section>
+
+      <section className="section-shell directory-audience-section" aria-labelledby="directory-audience-title">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <h2 id="directory-audience-title">Quel annuaire voulez-vous consulter ?</h2>
+          </div>
+          <p className="section-intro">
+            Parcourez toutes les fiches publiées ou limitez la recherche aux praticiens
+            partenaires NaturoCarte.
+          </p>
+        </div>
+
+        <nav className="directory-audience-tabs" aria-label="Type de praticiens">
+          <Link
+            className={audience === "all" ? "directory-audience-tab is-active" : "directory-audience-tab"}
+            href="/annuaire-naturopathes"
+          >
+            Tous les naturopathes
+          </Link>
+          <Link
+            className={
+              audience === "partners" ? "directory-audience-tab is-active" : "directory-audience-tab"
+            }
+            href="/annuaire-naturopathes?audience=partenaires"
+          >
+            Naturopathes partenaires
+          </Link>
+        </nav>
       </section>
 
       <section className="section-shell directory-path-section">

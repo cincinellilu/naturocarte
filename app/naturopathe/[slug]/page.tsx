@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PractitionerDetailMap from "@/components/PractitionerDetailMap";
+import PartnerBadge from "@/components/PartnerBadge";
 import PractitionerReviewModal from "@/components/PractitionerReviewModal";
 import PractitionerStatsTracker from "@/components/PractitionerStatsTracker";
 import PractitionerTrackedLink from "@/components/PractitionerTrackedLink";
@@ -11,6 +12,7 @@ import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
 import { getCurrentUserSession } from "@/lib/user-auth";
+import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 
 export const revalidate = 300;
 
@@ -31,6 +33,7 @@ type Practitioner = {
   photo_url?: string | null;
   description: string | null;
   status: string;
+  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
 type PractitionerReview = {
@@ -55,7 +58,7 @@ async function getPublishedPractitioner(slug: string): Promise<Practitioner | nu
   const { data, error } = await supabase
     .from("practitioners")
     .select(
-      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status"
+      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status, practitioner_accounts(plan, stripe_subscription_status)"
     )
     .eq("slug", slug)
     .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
@@ -249,6 +252,7 @@ export default async function PractitionerPage({
       : null;
 
   const practitionerDescription = practitioner.description?.trim() || null;
+  const isPartner = Boolean(getPartnerAccount(practitioner.practitioner_accounts));
   const practitionerDescriptionPreview = practitionerDescription
     ? truncateText(practitionerDescription, 240)
     : "Description non renseignée pour le moment. Cet espace sera utilisé pour présenter la méthode, les spécialisations et les repères utiles.";
@@ -429,6 +433,7 @@ export default async function PractitionerPage({
               <div className="practitioner-summary-copy">
                 <p className="practitioner-eyebrow">Fiche praticien</p>
                 <h1>{title}</h1>
+                {isPartner ? <PartnerBadge /> : null}
                 <p className="practitioner-hero-subtitle">{locationLabel}</p>
                 <form className="practitioner-favorite-form" action="/api/user-favorites" method="post">
                   <input type="hidden" name="practitioner_slug" value={practitioner.slug} />

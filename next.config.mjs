@@ -3,6 +3,28 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   output: "standalone",
+  turbopack: {},
+  allowedDevOrigins: ["localhost", "127.0.0.1"],
+  webpack(config, { dev }) {
+    if (dev) {
+      const ignoredPatterns = Array.isArray(config.watchOptions?.ignored)
+        ? config.watchOptions.ignored
+        : config.watchOptions?.ignored
+          ? [config.watchOptions.ignored]
+          : [];
+
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: [
+          ...ignoredPatterns.filter((pattern) => typeof pattern === "string" && pattern.length > 0),
+          "**/.git/**",
+          "**/.next/**"
+        ]
+      };
+    }
+
+    return config;
+  },
   images: {
     remotePatterns: [
       {

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { ensurePractitionerAccount, resolvePractitionerAccount } from "@/lib/auth-account-routing";
+import {
+  ensurePractitionerAccount,
+  markPractitionerAccountLogin,
+  resolvePractitionerAccount
+} from "@/lib/auth-account-routing";
 import { recordProductEvent } from "@/lib/product-events-server";
 import {
   createPractitionerSessionCookieValue,
@@ -82,6 +86,10 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL("/praticiens?error=account_failed", request.url));
     }
 
+    let practitionerAccountId = practitionerResolution.isPractitioner
+      ? practitionerResolution.accountId
+      : null;
+
     if (!practitionerResolution.isPractitioner) {
       const practitionerAccount = await ensurePractitionerAccount(admin, {
         authUserId: data.user.id,
@@ -92,12 +100,25 @@ export async function GET(request: Request) {
         console.error("practitioner account ensure failed", practitionerAccount.error);
         return NextResponse.redirect(new URL("/praticiens?error=account_failed", request.url));
       }
+
+      practitionerAccountId = practitionerAccount.accountId;
+    }
+
+    if (practitionerAccountId) {
+      const loginTracking = await markPractitionerAccountLogin(admin, {
+        accountId: practitionerAccountId
+      });
+
+      if (!loginTracking.ok) {
+        console.warn("practitioner login activity tracking failed", loginTracking.error);
+      }
     }
 
     const response = NextResponse.redirect(new URL("/praticiens/dashboard", request.url));
     await recordProductEvent({
       eventName: "practitioner_login_success",
       request,
+      practitionerAccountId,
       metadata: { entry: "practitioner_callback" }
     }).catch(() => {});
     response.cookies.set({

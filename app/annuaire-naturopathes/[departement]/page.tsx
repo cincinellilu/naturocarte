@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import PartnerBadge from "@/components/PartnerBadge";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { IDF_DEPARTMENTS, getDepartmentAreaLabel, getDepartmentByCode } from "@/lib/locations";
+import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -17,10 +19,15 @@ type PractitionerRow = {
   city: string | null;
   postal_code: string | null;
   adresse: string | null;
+  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
 type RouteParams = {
   departement: string;
+};
+
+type SearchParams = {
+  audience?: string | string[];
 };
 
 export function generateStaticParams() {
@@ -36,18 +43,36 @@ function normalizeDepartmentCode(value: string | null | undefined): string | nul
   return raw;
 }
 
-async function getDepartmentPractitioners(departmentCode: string): Promise<PractitionerRow[]> {
+function getAudienceParam(value: string | string[] | undefined): "all" | "partners" {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "partenaires" ? "partners" : "all";
+}
+
+function withAudience(href: string, audience: "all" | "partners"): string {
+  return audience === "partners" ? `${href}?audience=partenaires` : href;
+}
+
+async function getDepartmentPractitioners(
+  departmentCode: string,
+  audience: "all" | "partners"
+): Promise<PractitionerRow[]> {
   try {
     const supabase = getSupabaseServerClient();
-    return await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+    const rows = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
       supabase
         .from("practitioners")
-        .select("slug, first_name, last_name, city, postal_code, adresse")
+        .select(
+          "slug, first_name, last_name, city, postal_code, adresse, practitioner_accounts(plan, stripe_subscription_status)"
+        )
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .like("postal_code", `${departmentCode}%`)
         .order("last_name", { ascending: true })
         .range(from, to)
     );
+
+    return audience === "partners"
+      ? rows.filter((practitioner) => getPartnerAccount(practitioner.practitioner_accounts))
+      : rows;
   } catch {
     return [];
   }
@@ -101,20 +126,24 @@ export async function generateMetadata({
 }
 
 export default async function DepartmentAnnuairePage({
-  params
+  params,
+  searchParams
 }: {
   params: Promise<RouteParams>;
+  searchParams: Promise<SearchParams>;
 }) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const audience = getAudienceParam(resolvedSearchParams.audience);
   const departmentCode = normalizeDepartmentCode(resolvedParams.departement);
 
   if (!departmentCode) notFound();
-  if (departmentCode === "75") redirect("/naturopathe-paris");
+  if (departmentCode === "75") redirect(withAudience("/naturopathe-paris", audience));
 
   const department = getDepartmentByCode(departmentCode);
   if (!department) notFound();
 
-  const practitioners = await getDepartmentPractitioners(departmentCode);
+  const practitioners = await getDepartmentPractitioners(departmentCode, audience);
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/annuaire-naturopathes/${departmentCode}`;
   const areaLabel = getDepartmentAreaLabel(department);
@@ -198,9 +227,30 @@ export default async function DepartmentAnnuairePage({
           </p>
         </div>
 
+        <nav className="directory-audience-tabs directory-audience-tabs--compact" aria-label="Type de praticiens">
+          <Link
+            className={audience === "all" ? "directory-audience-tab is-active" : "directory-audience-tab"}
+            href={`/annuaire-naturopathes/${department.code}`}
+          >
+            Tous les naturopathes
+          </Link>
+          <Link
+            className={
+              audience === "partners" ? "directory-audience-tab is-active" : "directory-audience-tab"
+            }
+            href={`/annuaire-naturopathes/${department.code}?audience=partenaires`}
+          >
+            Naturopathes partenaires
+          </Link>
+        </nav>
+
         {practitioners.length === 0 ? (
           <div className="empty-state-panel">
-            <p>Aucun naturopathe n’est publié pour le moment dans ce département.</p>
+            <p>
+              {audience === "partners"
+                ? "Aucun naturopathe partenaire n’est publié pour le moment dans ce département."
+                : "Aucun naturopathe n’est publié pour le moment dans ce département."}
+            </p>
             <p>
               <Link className="btn btn-secondary" href="/annuaire-naturopathes">
                 Revenir à l’annuaire
@@ -215,6 +265,9 @@ export default async function DepartmentAnnuairePage({
                   <strong>
                     {practitioner.first_name} {practitioner.last_name}
                   </strong>
+                  {getPartnerAccount(practitioner.practitioner_accounts) ? (
+                    <PartnerBadge className="partner-badge--inline" />
+                  ) : null}
                   <div className="practitioner-item-meta">
                     {[practitioner.adresse, practitioner.postal_code, practitioner.city]
                       .filter(Boolean)

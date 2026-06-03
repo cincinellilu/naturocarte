@@ -13,7 +13,11 @@ import {
   USER_AUTH_INTENT_COOKIE_NAME,
   USER_SESSION_COOKIE_NAME
 } from "@/lib/user-auth";
-import { ensureUserAccount, resolvePractitionerAccount } from "@/lib/auth-account-routing";
+import {
+  ensureUserAccount,
+  markPractitionerAccountLogin,
+  resolvePractitionerAccount
+} from "@/lib/auth-account-routing";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -98,9 +102,18 @@ export async function GET(request: Request) {
     }
 
     if (practitionerResolution.isPractitioner) {
+      const loginTracking = await markPractitionerAccountLogin(admin, {
+        accountId: practitionerResolution.accountId
+      });
+
+      if (!loginTracking.ok) {
+        console.warn("practitioner login activity tracking failed", loginTracking.error);
+      }
+
       await recordProductEvent({
         eventName: "practitioner_login_success",
         request,
+        practitionerAccountId: practitionerResolution.accountId,
         metadata: { entry: "user_callback" }
       }).catch(() => {});
       const response = NextResponse.redirect(new URL("/praticiens/dashboard", request.url));

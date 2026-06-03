@@ -162,6 +162,10 @@ export default function ConfidentialitePage() {
           Pour les informations éditeur/hébergeur, consultez{" "}
           <Link href="/mentions-legales">les mentions légales</Link>.
         </p>
+        <p>
+          Les conditions applicables aux comptes et abonnements sont disponibles dans les{" "}
+          <Link href="/conditions-generales">conditions générales</Link>.
+        </p>
       </section>
     </article>
   );

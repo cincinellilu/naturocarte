@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import PartnerBadge from "@/components/PartnerBadge";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
+import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import {
@@ -42,9 +44,29 @@ type PractitionerRow = {
   city: string | null;
   postal_code: string | null;
   adresse: string | null;
+  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
-export default async function NaturopatheParisPage() {
+type SearchParams = {
+  audience?: string | string[];
+};
+
+function getAudienceParam(value: string | string[] | undefined): "all" | "partners" {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "partenaires" ? "partners" : "all";
+}
+
+function withAudience(href: string, audience: "all" | "partners"): string {
+  return audience === "partners" ? `${href}?audience=partenaires` : href;
+}
+
+export default async function NaturopatheParisPage({
+  searchParams
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const audience = getAudienceParam(params.audience);
   let practitioners: PractitionerRow[] = [];
 
   try {
@@ -52,7 +74,9 @@ export default async function NaturopatheParisPage() {
     practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
       supabase
         .from("practitioners")
-        .select("slug, first_name, last_name, city, postal_code, adresse")
+        .select(
+          "slug, first_name, last_name, city, postal_code, adresse, practitioner_accounts(plan, stripe_subscription_status)"
+        )
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .or("city.ilike.%paris%,postal_code.like.75%")
         .order("last_name", { ascending: true })
@@ -60,6 +84,12 @@ export default async function NaturopatheParisPage() {
     );
   } catch {
     practitioners = [];
+  }
+
+  if (audience === "partners") {
+    practitioners = practitioners.filter((practitioner) =>
+      getPartnerAccount(practitioner.practitioner_accounts)
+    );
   }
 
   const siteUrl = getSiteUrl().replace(/\/$/, "");
@@ -216,7 +246,7 @@ export default async function NaturopatheParisPage() {
               </div>
               <Link
                 className="practitioner-item-link"
-                href={`/naturopathe-paris/${arrondissement}`}
+                href={withAudience(`/naturopathe-paris/${arrondissement}`, audience)}
               >
                 Voir la page
               </Link>
@@ -258,6 +288,22 @@ export default async function NaturopatheParisPage() {
             avant de choisir un arrondissement précis.
           </p>
         </div>
+        <nav className="directory-audience-tabs directory-audience-tabs--compact" aria-label="Type de praticiens">
+          <Link
+            className={audience === "all" ? "directory-audience-tab is-active" : "directory-audience-tab"}
+            href="/naturopathe-paris"
+          >
+            Tous les naturopathes
+          </Link>
+          <Link
+            className={
+              audience === "partners" ? "directory-audience-tab is-active" : "directory-audience-tab"
+            }
+            href="/naturopathe-paris?audience=partenaires"
+          >
+            Naturopathes partenaires
+          </Link>
+        </nav>
         <details className="faq-item">
           <summary className="faq-question">Afficher la liste ({practitioners.length})</summary>
           {practitioners.length === 0 ? (
@@ -270,6 +316,9 @@ export default async function NaturopatheParisPage() {
                     <strong>
                       {p.first_name} {p.last_name}
                     </strong>
+                    {getPartnerAccount(p.practitioner_accounts) ? (
+                      <PartnerBadge className="partner-badge--inline" />
+                    ) : null}
                     <div className="practitioner-item-meta">
                       {[p.adresse, p.postal_code, p.city].filter(Boolean).join(", ")}
                     </div>

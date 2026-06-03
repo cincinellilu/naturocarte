@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import PartnerBadge from "@/components/PartnerBadge";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import {
   formatParisPostalCode,
@@ -10,6 +11,7 @@ import {
   toParisArrondissementLabel
 } from "@/lib/paris";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
+import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -22,10 +24,15 @@ type PractitionerRow = {
   city: string | null;
   postal_code: string | null;
   adresse: string | null;
+  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
 type RouteParams = {
   arrondissement: string;
+};
+
+type SearchParams = {
+  audience?: string | string[];
 };
 
 export function generateStaticParams() {
@@ -35,22 +42,34 @@ export function generateStaticParams() {
 }
 
 async function getArrondissementPractitioners(
-  arrondissement: number
+  arrondissement: number,
+  audience: "all" | "partners"
 ): Promise<PractitionerRow[]> {
   try {
     const supabase = getSupabaseServerClient();
-    return await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+    const rows = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
       supabase
         .from("practitioners")
-        .select("slug, first_name, last_name, city, postal_code, adresse")
+        .select(
+          "slug, first_name, last_name, city, postal_code, adresse, practitioner_accounts(plan, stripe_subscription_status)"
+        )
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .eq("postal_code", formatParisPostalCode(arrondissement))
         .order("last_name", { ascending: true })
         .range(from, to)
     );
+
+    return audience === "partners"
+      ? rows.filter((practitioner) => getPartnerAccount(practitioner.practitioner_accounts))
+      : rows;
   } catch {
     return [];
   }
+}
+
+function getAudienceParam(value: string | string[] | undefined): "all" | "partners" {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "partenaires" ? "partners" : "all";
 }
 
 export async function generateMetadata({
@@ -94,15 +113,19 @@ export async function generateMetadata({
 }
 
 export default async function NaturopatheParisArrondissementPage({
-  params
+  params,
+  searchParams
 }: {
   params: Promise<RouteParams>;
+  searchParams: Promise<SearchParams>;
 }) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const audience = getAudienceParam(resolvedSearchParams.audience);
   const arrondissement = parseParisArrondissement(resolvedParams.arrondissement);
   if (!arrondissement) notFound();
 
-  const practitioners = await getArrondissementPractitioners(arrondissement);
+  const practitioners = await getArrondissementPractitioners(arrondissement, audience);
   const postalCode = formatParisPostalCode(arrondissement);
 
   const siteUrl = getSiteUrl().replace(/\/$/, "");
@@ -267,8 +290,28 @@ export default async function NaturopatheParisArrondissementPage({
             <h2>Praticiens référencés ({practitioners.length})</h2>
           </div>
         </div>
+        <nav className="directory-audience-tabs directory-audience-tabs--compact" aria-label="Type de praticiens">
+          <Link
+            className={audience === "all" ? "directory-audience-tab is-active" : "directory-audience-tab"}
+            href={`/naturopathe-paris/${arrondissement}`}
+          >
+            Tous les naturopathes
+          </Link>
+          <Link
+            className={
+              audience === "partners" ? "directory-audience-tab is-active" : "directory-audience-tab"
+            }
+            href={`/naturopathe-paris/${arrondissement}?audience=partenaires`}
+          >
+            Naturopathes partenaires
+          </Link>
+        </nav>
         {practitioners.length === 0 ? (
-          <p>Aucun naturopathe n’est encore référencé pour ce secteur.</p>
+          <p>
+            {audience === "partners"
+              ? "Aucun naturopathe partenaire n’est encore référencé pour ce secteur."
+              : "Aucun naturopathe n’est encore référencé pour ce secteur."}
+          </p>
         ) : (
           <ul className="practitioner-list">
             {practitioners.map((p) => (
@@ -277,6 +320,9 @@ export default async function NaturopatheParisArrondissementPage({
                   <strong>
                     {p.first_name} {p.last_name}
                   </strong>
+                  {getPartnerAccount(p.practitioner_accounts) ? (
+                    <PartnerBadge className="partner-badge--inline" />
+                  ) : null}
                   <div className="practitioner-item-meta">
                     {[p.adresse, p.postal_code, p.city].filter(Boolean).join(", ")}
                   </div>

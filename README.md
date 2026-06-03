@@ -22,12 +22,15 @@ npm run dev
 ```
 
 Le site sera disponible sur `http://localhost:3000`.
+Le script verifie d'abord que le port `3000` est libre, puis nettoie automatiquement `.next` avant de lancer Next, pour eviter qu'un serveur local serve des chunks CSS/JS obsoletes.
 
 ## Build de production
 
 ```bash
 npm run build
 ```
+
+Le build nettoie aussi `.next` avant compilation. Si le CSS ne charge pas en local, arreter le serveur Next actif puis relancer `npm run dev`.
 
 ## Lancer la version production
 

@@ -296,6 +296,15 @@ export default async function AdminPage({
 
         <AdminPanel title="Back-office disponible" description="Accès rapides aux autres vues internes.">
           <div className="admin-action-list">
+            <Link className="btn" href="/admin/clients">
+              Suivre les clients
+            </Link>
+            <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
+              Praticiens actifs
+            </Link>
+            <Link className="btn btn-secondary" href="/admin/clients/visibilite-plus">
+              Clients Visibilité+
+            </Link>
             <Link className="btn" href="/admin/prospects">
               Suivre les prospects
             </Link>
@@ -315,6 +324,12 @@ export default async function AdminPage({
 function AdminLinks() {
   return (
     <div className="admin-links">
+      <Link className="btn btn-secondary" href="/admin/clients">
+        Clients
+      </Link>
+      <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
+        Praticiens actifs
+      </Link>
       <Link className="btn btn-secondary" href="/admin/prospects">
         Prospects
       </Link>

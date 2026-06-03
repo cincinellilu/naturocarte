@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import PractitionerOnboardingForm from "@/components/PractitionerOnboardingForm";
 import PractitionerWrongAccountNotice from "@/components/PractitionerWrongAccountNotice";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
+import { getPractitionerProfileCompletion } from "@/lib/practitioner-profile-completion";
 import {
   getPractitionerPlan,
   PRACTITIONER_PLAN_VISIBILITY,
@@ -242,6 +243,11 @@ export default async function PractitionerDashboardPage({
   const stats = practitioner
     ? await getProfileStats(practitioner.id)
     : { profile_views: 0, contact_clicks: 0, booking_clicks: 0 };
+  const profileCompletion = getPractitionerProfileCompletion({
+    practitioner,
+    plan: plan.id,
+    contactSlot
+  });
 
   return (
     <article className="article-shell practitioner-dashboard-page">
@@ -382,6 +388,38 @@ export default async function PractitionerDashboardPage({
               )}
             </div>
           </section>
+
+          {!profileCompletion.isComplete ? (
+            <section className="dashboard-completion-card" aria-labelledby="profile-completion-title">
+              <div className="dashboard-completion-head">
+                <div>
+                  <p className="section-eyebrow">Complétion de la fiche</p>
+                  <h2 id="profile-completion-title">
+                    Votre fiche est complétée à {profileCompletion.percent} %
+                  </h2>
+                </div>
+                <strong>{profileCompletion.percent} %</strong>
+              </div>
+              <div
+                className="dashboard-completion-track"
+                role="progressbar"
+                aria-valuenow={profileCompletion.percent}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`Fiche complétée à ${profileCompletion.percent} %`}
+              >
+                <span style={{ width: `${profileCompletion.percent}%` }} />
+              </div>
+              <div className="dashboard-completion-missing">
+                <p>À compléter pour atteindre 100 % avec le forfait {plan.name} :</p>
+                <ul>
+                  {profileCompletion.missingItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          ) : null}
 
           <section className="dashboard-edit-section" id="edition">
             <form className="dashboard-profile-form" action="/api/practitioner-dashboard/profile" method="post">

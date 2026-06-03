@@ -58,6 +58,38 @@ async function stripeRequest<T extends StripeObject>(
   return payload;
 }
 
+async function stripeGet<T extends StripeObject>(
+  path: string,
+  params: Record<string, string | number | boolean | null | undefined>
+): Promise<T> {
+  const secretKey = getStripeSecretKey();
+  if (!secretKey) {
+    throw new Error("Missing STRIPE_SECRET_KEY.");
+  }
+
+  const query = toFormBody(params).toString();
+  const url = `https://api.stripe.com/v1${path}${query ? `?${query}` : ""}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${secretKey}`,
+      "Stripe-Version": STRIPE_API_VERSION
+    },
+    cache: "no-store"
+  });
+
+  const payload = (await response.json()) as T & {
+    error?: { message?: string };
+  };
+
+  if (!response.ok) {
+    throw new Error(payload.error?.message || `Stripe request failed: ${response.status}`);
+  }
+
+  return payload;
+}
+
 export async function createStripeCustomer(params: {
   email: string;
   practitionerAccountId: string;
@@ -107,6 +139,83 @@ export async function createBillingPortalSession(params: {
   }>("/billing_portal/sessions", {
     customer: params.customerId,
     return_url: params.returnUrl
+  });
+}
+
+export type StripeInvoiceSummary = {
+  id: string;
+  number: string | null;
+  status: string | null;
+  amountPaid: number;
+  amountDue: number;
+  currency: string | null;
+  createdAt: string | null;
+  periodStart: string | null;
+  periodEnd: string | null;
+  hostedInvoiceUrl: string | null;
+  invoicePdf: string | null;
+};
+
+function asStripeString(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function asStripeNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function toIsoFromUnix(value: unknown): string | null {
+  const timestamp = asStripeNumber(value);
+  return timestamp ? new Date(timestamp * 1000).toISOString() : null;
+}
+
+function getInvoicePeriod(invoice: StripeObject): { start: string | null; end: string | null } {
+  const lines = invoice.lines;
+  const data =
+    lines && typeof lines === "object" && Array.isArray((lines as StripeObject).data)
+      ? ((lines as StripeObject).data as unknown[])
+      : [];
+  const firstLine = data[0];
+  const period =
+    firstLine && typeof firstLine === "object"
+      ? ((firstLine as StripeObject).period as StripeObject | undefined)
+      : undefined;
+
+  return {
+    start: toIsoFromUnix(period?.start ?? invoice.period_start),
+    end: toIsoFromUnix(period?.end ?? invoice.period_end)
+  };
+}
+
+export async function listStripeCustomerInvoices(params: {
+  customerId: string;
+  subscriptionId?: string | null;
+  limit?: number;
+}): Promise<StripeInvoiceSummary[]> {
+  const payload = await stripeGet<{
+    data?: StripeObject[];
+  }>("/invoices", {
+    customer: params.customerId,
+    subscription: params.subscriptionId || undefined,
+    limit: params.limit ?? 12
+  });
+
+  return (payload.data ?? []).map((invoice) => {
+    const period = getInvoicePeriod(invoice);
+
+    return {
+      id: asStripeString(invoice.id) ?? "",
+      number: asStripeString(invoice.number),
+      status: asStripeString(invoice.status),
+      amountPaid: asStripeNumber(invoice.amount_paid) ?? 0,
+      amountDue: asStripeNumber(invoice.amount_due) ?? 0,
+      currency: asStripeString(invoice.currency),
+      createdAt: toIsoFromUnix(invoice.created),
+      periodStart: period.start,
+      periodEnd: period.end,
+      hostedInvoiceUrl: asStripeString(invoice.hosted_invoice_url),
+      invoicePdf: asStripeString(invoice.invoice_pdf)
+    };
   });
 }
 

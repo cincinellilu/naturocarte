@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import PartnerBadge from "@/components/PartnerBadge";
 import { trackProductEvent } from "@/lib/product-events";
 
 type SearchResult = {
   label: string;
   href: string;
+  is_partner?: boolean;
 };
 
 type DirectorySearchBarProps = {
@@ -128,6 +130,7 @@ export default function DirectorySearchBar({
                 }}
               >
                 <span className="directory-search-result-label">{result.label}</span>
+                {result.is_partner ? <PartnerBadge className="partner-badge--inline" /> : null}
                 <span className="directory-search-result-helper">Praticien · Ouvrir la fiche</span>
               </button>
             ))

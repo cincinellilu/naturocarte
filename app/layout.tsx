@@ -95,6 +95,7 @@ export default function RootLayout({
                 </p>
                 <p className="site-footer-legal">
                   <Link href="/mentions-legales" prefetch={false}>Mentions légales</Link> ·{" "}
+                  <Link href="/conditions-generales" prefetch={false}>Conditions générales</Link> ·{" "}
                   <Link href="/confidentialite" prefetch={false}>Confidentialité</Link> ·{" "}
                   <CookieSettingsButtonMount />
                 </p>

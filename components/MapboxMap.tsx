@@ -24,6 +24,7 @@ type MapPoint = {
   rating?: number | null;
   tarifs?: string | null;
   photo_url?: string | null;
+  is_partner?: boolean;
 };
 
 type SelectionSource = "map" | "list" | null;
@@ -190,6 +191,9 @@ function buildPopupHtml(point: MapPoint): string {
     : `<div class="map-popup-photo-placeholder" aria-hidden="true">
         <span class="map-popup-photo-initials">${escapeHtml(initials || "NC")}</span>
       </div>`;
+  const partnerBadge = point.is_partner
+    ? `<span class="partner-badge partner-badge--popup">Partenaire NaturoCarte</span>`
+    : "";
 
   return `<div class="map-popup">
     <button class="map-popup-close" type="button" aria-label="Fermer la fiche">×</button>
@@ -210,6 +214,7 @@ function buildPopupHtml(point: MapPoint): string {
       </div>
       <div class="map-popup-content">
         <p class="map-popup-name">${escapeHtml(point.first_name)} ${escapeHtml(point.last_name)}</p>
+        ${partnerBadge}
         ${ratingLine}
         ${
           phoneLine || emailLine
@@ -287,6 +292,10 @@ function MobilePractitionerPopup({
           <p className="map-popup-name">
             {point.first_name} {point.last_name}
           </p>
+
+          {point.is_partner ? (
+            <span className="partner-badge partner-badge--popup">Partenaire NaturoCarte</span>
+          ) : null}
 
           {ratingValue ? (
             <div className="map-popup-rating" aria-label={`Note ${ratingValue.toFixed(1)} sur 5`}>

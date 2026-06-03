@@ -376,9 +376,9 @@ export default async function PractitionerDashboardPage({
                   Voir la fiche publique
                 </Link>
               ) : (
-                <Link className="btn btn-secondary" href="#edition">
+                <a className="btn btn-secondary" href="#edition">
                   Compléter ma fiche
-                </Link>
+                </a>
               )}
             </div>
           </section>

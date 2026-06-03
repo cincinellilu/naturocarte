@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSessionSummary } from "@/components/SessionSummaryProvider";
 
 type NavItem = {
   href: string;
@@ -101,6 +101,7 @@ function NavigationLink({
       href={href}
       className={mobile ? "mobile-tabbar-link" : "site-nav-link"}
       aria-current={isActive ? "page" : undefined}
+      prefetch={false}
     >
       {mobile ? (
         <>
@@ -118,24 +119,9 @@ function NavigationLink({
 
 export function SiteHeaderNav() {
   const pathname = usePathname();
-  const [practitionerHref, setPractitionerHref] = useState<string | null>(null);
-
-  useEffect(() => {
-    let mounted = true;
-
-    fetch("/api/session-summary", { cache: "no-store" })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { type?: string; href?: string } | null) => {
-        if (mounted && data?.type === "practitioner") {
-          setPractitionerHref(data.href ?? "/praticiens/dashboard");
-        }
-      })
-      .catch(() => undefined);
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const session = useSessionSummary();
+  const practitionerHref =
+    session.type === "practitioner" ? session.href ?? "/praticiens/dashboard" : null;
 
   return (
     <nav className="site-nav" aria-label="Navigation principale">
@@ -156,24 +142,9 @@ export function SiteHeaderNav() {
 
 export function MobileTabBar() {
   const pathname = usePathname();
-  const [practitionerHref, setPractitionerHref] = useState<string | null>(null);
-
-  useEffect(() => {
-    let mounted = true;
-
-    fetch("/api/session-summary", { cache: "no-store" })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { type?: string; href?: string } | null) => {
-        if (mounted && data?.type === "practitioner") {
-          setPractitionerHref(data.href ?? "/praticiens/dashboard");
-        }
-      })
-      .catch(() => undefined);
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const session = useSessionSummary();
+  const practitionerHref =
+    session.type === "practitioner" ? session.href ?? "/praticiens/dashboard" : null;
 
   return (
     <nav className="mobile-tabbar" aria-label="Navigation mobile principale">

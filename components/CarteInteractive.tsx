@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import MapboxMap from "@/components/MapboxMap";
+import dynamic from "next/dynamic";
 import { trackProductEvent } from "@/lib/product-events";
 import {
   getDepartmentByCode,
@@ -11,6 +11,11 @@ import {
 
 const DEBOUNCE_MS = 300;
 const DEFAULT_PROXIMITY = { lng: 2.3522, lat: 48.8566 };
+
+const MapboxMap = dynamic(() => import("@/components/MapboxMap"), {
+  ssr: false,
+  loading: () => <div className="map-fallback map-fallback--loading">Carte interactive en cours de chargement…</div>
+});
 
 type Practitioner = {
   slug: string;
@@ -104,6 +109,7 @@ export default function CarteInteractive({
   const [locateRequestNonce, setLocateRequestNonce] = useState(0);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [shouldLoadMap, setShouldLoadMap] = useState(false);
 
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
   const mapFrameRef = useRef<HTMLDivElement | null>(null);
@@ -148,6 +154,32 @@ export default function CarteInteractive({
       document.removeEventListener("click", handleQuickNavClick);
     };
   }, []);
+
+  useEffect(() => {
+    const target = mapFrameRef.current;
+    if (!target || shouldLoadMap) return;
+
+    if (!("IntersectionObserver" in window)) {
+      const timeout = globalThis.setTimeout(() => setShouldLoadMap(true), 1200);
+      return () => globalThis.clearTimeout(timeout);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoadMap(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "0px" }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [shouldLoadMap]);
 
   useEffect(() => {
     if (!activeDepartment) return;
@@ -408,6 +440,8 @@ export default function CarteInteractive({
   }, [searchQuery]);
 
   const handleMapSelect = (slug: string | null) => {
+    setShouldLoadMap(true);
+
     if (!slug) {
       setSelectionSource(null);
       setSelectedSlug(null);
@@ -422,6 +456,7 @@ export default function CarteInteractive({
     trackProductEvent("map_list_practitioner_clicked", {
       practitioner_slug: slug
     });
+    setShouldLoadMap(true);
     setSelectionSource("list");
     setSelectedSlug(slug);
     mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -433,6 +468,7 @@ export default function CarteInteractive({
       suggestions_count: suggestions.length
     });
     setSearchCenter({ lng: suggestion.lng, lat: suggestion.lat, label: suggestion.label });
+    setShouldLoadMap(true);
     setSearchQuery(suggestion.label);
     setSuggestions([]);
     setIsSuggestionsOpen(false);
@@ -449,10 +485,12 @@ export default function CarteInteractive({
 
   const handleLocateClick = () => {
     trackProductEvent("map_geolocation_clicked");
+    setShouldLoadMap(true);
     setLocateRequestNonce((current) => current + 1);
   };
 
   const handleToggleFullscreen = () => {
+    setShouldLoadMap(true);
     setIsFullscreen((current) => {
       trackProductEvent(current ? "map_fullscreen_closed" : "map_fullscreen_opened");
       return !current;
@@ -557,17 +595,21 @@ export default function CarteInteractive({
             </button>
           ) : null}
 
-          <MapboxMap
-            points={visibleMapPoints}
-            selectedSlug={selectedSlug}
-            selectionSource={selectionSource}
-            onSelectSlug={handleMapSelect}
-            searchCenter={searchCenter ? { lng: searchCenter.lng, lat: searchCenter.lat } : null}
-            activeZoneCode={activeDepartment?.code ?? null}
-            locateRequestNonce={locateRequestNonce}
-            onGeoErrorChange={setGeoError}
-            isFullscreen={isFullscreen}
-          />
+          {shouldLoadMap ? (
+            <MapboxMap
+              points={visibleMapPoints}
+              selectedSlug={selectedSlug}
+              selectionSource={selectionSource}
+              onSelectSlug={handleMapSelect}
+              searchCenter={searchCenter ? { lng: searchCenter.lng, lat: searchCenter.lat } : null}
+              activeZoneCode={activeDepartment?.code ?? null}
+              locateRequestNonce={locateRequestNonce}
+              onGeoErrorChange={setGeoError}
+              isFullscreen={isFullscreen}
+            />
+          ) : (
+            <div className="map-fallback map-fallback--loading">Carte interactive en cours de chargement…</div>
+          )}
 
           <div
             className={[

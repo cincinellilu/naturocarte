@@ -49,11 +49,6 @@ type PractitionerRow = {
   city: string | null;
   lat: number | null;
   lng: number | null;
-  phone: string | null;
-  email: string | null;
-  booking_url: string | null;
-  photo_url: string | null;
-  description: string | null;
 };
 
 type SearchParams = {
@@ -84,7 +79,7 @@ export default async function CartePage({
       supabase
         .from("practitioners")
         .select(
-          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, phone, email, booking_url, photo_url, description"
+          "first_name, last_name, slug, adresse, postal_code, city, lat, lng"
         )
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .order("last_name", { ascending: true })
@@ -164,12 +159,7 @@ export default async function CartePage({
       last_name: p.last_name,
       postal_code: p.postal_code,
       lat: p.lat as number,
-      lng: p.lng as number,
-      phone: p.phone,
-      email: p.email,
-      booking_url: p.booking_url,
-      photo_url: p.photo_url,
-      description: p.description
+      lng: p.lng as number
     }));
 
   const practitionerItems = mapPoints.map((p) => {
@@ -203,7 +193,7 @@ export default async function CartePage({
       <nav className="breadcrumb-nav" aria-label="Fil d’Ariane">
         <ol>
           <li>
-            <Link href="/">Accueil</Link>
+            <Link href="/" prefetch={false}>Accueil</Link>
           </li>
           <li aria-hidden="true">›</li>
           <li aria-current="page">Carte</li>
@@ -269,7 +259,7 @@ export default async function CartePage({
           </p>
         </div>
         <div className="directory-promo-actions">
-          <Link className="btn" href="/annuaire-naturopathes">
+          <Link className="btn" href="/annuaire-naturopathes" prefetch={false}>
             Parcourir l’annuaire
           </Link>
         </div>
@@ -288,9 +278,9 @@ export default async function CartePage({
         <details className="faq-item">
           <summary className="faq-question">Dois-je commencer par la carte ou l’annuaire ?</summary>
           <p className="faq-answer">
-            Commencez par la <Link href="/carte">carte</Link> si vous avez déjà une adresse
+            Commencez par la <Link href="/carte" prefetch={false}>carte</Link> si vous avez déjà une adresse
             précise. Si vous préférez partir d’un département ou de Paris, utilisez
-            l’<Link href="/annuaire-naturopathes">annuaire</Link>.
+            l’<Link href="/annuaire-naturopathes" prefetch={false}>annuaire</Link>.
           </p>
         </details>
 
@@ -298,7 +288,7 @@ export default async function CartePage({
           <summary className="faq-question">Comment chercher seulement dans un département ?</summary>
           <p className="faq-answer">
             Utilisez les filtres de zone au-dessus de la carte, ou commencez par la page{" "}
-            <Link href="/annuaire-naturopathes">annuaire</Link> pour ouvrir directement le
+            <Link href="/annuaire-naturopathes" prefetch={false}>annuaire</Link> pour ouvrir directement le
             bon territoire.
           </p>
         </details>
@@ -306,7 +296,7 @@ export default async function CartePage({
         <details className="faq-item">
           <summary className="faq-question">Comment comparer plusieurs praticiens ?</summary>
           <p className="faq-answer">
-            Ouvrez 2 ou 3 fiches depuis la <Link href="/carte">carte</Link> pour vérifier
+            Ouvrez 2 ou 3 fiches depuis la <Link href="/carte" prefetch={false}>carte</Link> pour vérifier
             l’adresse, les coordonnées et le lien de prise de rendez-vous quand il est
             disponible.
           </p>

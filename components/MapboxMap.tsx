@@ -541,6 +541,7 @@ export default function MapboxMap({
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [mobilePopupPoint, setMobilePopupPoint] = useState<MapPoint | null>(null);
+  const [pointDetails, setPointDetails] = useState<Record<string, Partial<MapPoint>>>({});
   const [mapInitError, setMapInitError] = useState<string | null>(null);
 
   const removePopupSilently = () => {
@@ -577,6 +578,33 @@ export default function MapboxMap({
   useEffect(() => {
     pointsRef.current = points;
   }, [points]);
+
+  useEffect(() => {
+    if (!selectedSlug || pointDetails[selectedSlug]) return;
+
+    const controller = new AbortController();
+
+    fetch(`/api/practitioner-map-detail?slug=${encodeURIComponent(selectedSlug)}`, {
+      signal: controller.signal
+    })
+      .then((response) => (response.ok ? response.json() : { detail: null }))
+      .then((data: { detail?: Partial<MapPoint> | null }) => {
+        if (!data.detail) return;
+        setPointDetails((current) => ({
+          ...current,
+          [selectedSlug]: data.detail ?? {}
+        }));
+      })
+      .catch((error) => {
+        if (error?.name !== "AbortError") {
+          setPointDetails((current) => ({ ...current, [selectedSlug]: {} }));
+        }
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, [pointDetails, selectedSlug]);
 
   const requestGeolocation = (isManual = false) => {
     const map = mapRef.current;
@@ -827,13 +855,18 @@ export default function MapboxMap({
       return;
     }
 
-    const selectedPoint = pointsRef.current.find((p) => p.slug === selectedSlug);
-    if (!selectedPoint) {
+    const baseSelectedPoint = pointsRef.current.find((p) => p.slug === selectedSlug);
+    if (!baseSelectedPoint) {
       removePopupSilently();
       setMobilePopupPoint(null);
       trackedPopupViewSlugRef.current = null;
       return;
     }
+
+    const selectedPoint = {
+      ...baseSelectedPoint,
+      ...(pointDetails[selectedSlug] ?? {})
+    };
 
     removePopupSilently();
 
@@ -894,7 +927,7 @@ export default function MapboxMap({
         });
       }
     });
-  }, [isMobileViewport, selectedSlug, selectionSource]);
+  }, [isMobileViewport, pointDetails, selectedSlug, selectionSource]);
 
   useEffect(() => {
     const map = mapRef.current;

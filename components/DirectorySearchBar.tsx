@@ -1,23 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { trackProductEvent } from "@/lib/product-events";
-
-type PractitionerEntry = {
-  slug: string;
-  first_name: string;
-  last_name: string;
-};
 
 type SearchResult = {
   label: string;
   href: string;
-  keywords: string;
 };
 
 type DirectorySearchBarProps = {
-  practitioners: PractitionerEntry[];
   compact?: boolean;
 };
 
@@ -30,43 +22,46 @@ function normalizeSearchValue(value: string): string {
     .trim();
 }
 
-function getQueryScore(query: string, keywords: string): number {
-  if (!query) return 0;
-  if (keywords === query) return 120;
-  if (keywords.startsWith(query)) return 90;
-  if (keywords.includes(query)) return 60;
-  return 0;
-}
-
 export default function DirectorySearchBar({
-  practitioners,
   compact = false
 }: DirectorySearchBarProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const normalizedQuery = useMemo(() => normalizeSearchValue(query), [query]);
 
-  const results = useMemo(() => {
-    return practitioners
-      .map((practitioner) => {
-        const firstName = practitioner.first_name.trim();
-        const lastName = practitioner.last_name.trim();
-        const fullName = `${firstName} ${lastName}`.trim();
+  useEffect(() => {
+    if (normalizedQuery.length < 2) {
+      setResults([]);
+      setIsLoading(false);
+      return;
+    }
 
-        return {
-          label: fullName,
-          href: `/naturopathe/${practitioner.slug}`,
-          keywords: normalizeSearchValue([fullName, firstName, lastName].join(" "))
-        };
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => {
+      setIsLoading(true);
+
+      fetch(`/api/practitioner-search?q=${encodeURIComponent(query.trim())}`, {
+        signal: controller.signal
       })
-      .map((item) => ({ ...item, score: getQueryScore(normalizedQuery, item.keywords) }))
-      .filter((item) => item.score > 0)
-      .sort((left, right) => {
-        if (right.score !== left.score) return right.score - left.score;
-        return left.label.localeCompare(right.label, "fr", { sensitivity: "base" });
-      })
-      .slice(0, 6);
-  }, [normalizedQuery, practitioners]);
+        .then((response) => (response.ok ? response.json() : { results: [] }))
+        .then((data: { results?: SearchResult[] }) => {
+          setResults(data.results ?? []);
+        })
+        .catch((error) => {
+          if (error?.name !== "AbortError") setResults([]);
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setIsLoading(false);
+        });
+    }, 220);
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [normalizedQuery, query]);
 
   function openBestResult() {
     trackProductEvent(
@@ -99,7 +94,11 @@ export default function DirectorySearchBar({
           onChange={(event) => setQuery(event.target.value)}
           autoComplete="off"
         />
-        <button type="submit" className="btn directory-search-submit" disabled={results.length === 0}>
+        <button
+          type="submit"
+          className="btn directory-search-submit"
+          disabled={results.length === 0 || isLoading}
+        >
           Rechercher
         </button>
       </form>
@@ -112,7 +111,9 @@ export default function DirectorySearchBar({
 
       {query.trim() ? (
         <div className="directory-search-results" role="listbox" aria-label="Suggestions de recherche">
-          {results.length > 0 ? (
+          {isLoading ? (
+            <p className="directory-search-empty">Recherche en cours...</p>
+          ) : results.length > 0 ? (
             results.map((result) => (
               <button
                 key={result.href}
@@ -130,11 +131,11 @@ export default function DirectorySearchBar({
                 <span className="directory-search-result-helper">Praticien · Ouvrir la fiche</span>
               </button>
             ))
-          ) : (
+          ) : normalizedQuery.length >= 2 ? (
             <p className="directory-search-empty">
               Aucun résultat direct. Essayez un nom de praticien.
             </p>
-          )}
+          ) : null}
         </div>
       ) : null}
     </div>

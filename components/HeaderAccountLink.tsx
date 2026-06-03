@@ -1,40 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-type SessionSummary = {
-  type: "anonymous" | "user" | "practitioner";
-  href: string;
-  initials: string | null;
-  photoUrl: string | null;
-};
+import { useSessionSummary } from "@/components/SessionSummaryProvider";
 
 export default function HeaderAccountLink() {
-  const [summary, setSummary] = useState<SessionSummary>({
-    type: "anonymous",
-    href: "/compte",
-    initials: null,
-    photoUrl: null
-  });
-
-  useEffect(() => {
-    let mounted = true;
-
-    fetch("/api/session-summary", { cache: "no-store" })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: SessionSummary | null) => {
-        if (mounted && data) setSummary(data);
-      })
-      .catch(() => undefined);
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const summary = useSessionSummary();
 
   return (
-    <Link href={summary.href} className="site-account-link" aria-label="Mon compte">
+    <Link href={summary.href} className="site-account-link" aria-label="Mon compte" prefetch={false}>
       {summary.photoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img className="site-account-avatar-image" src={summary.photoUrl} alt="" />

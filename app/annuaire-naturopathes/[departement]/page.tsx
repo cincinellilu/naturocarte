@@ -178,9 +178,9 @@ export default async function DepartmentAnnuairePage({
             </p>
 
             <div className="hero-actions">
-              <Link className="btn" href="#praticiens">
+              <a className="btn" href="#praticiens">
                 Voir la liste
-              </Link>
+              </a>
             </div>
           </div>
         </div>

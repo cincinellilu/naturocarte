@@ -100,7 +100,7 @@ export default function CookieBanner() {
       </p>
       <p style={{ margin: "6px 0 0", fontSize: "0.82rem", color: "var(--muted)" }}>
         Détails:{" "}
-        <Link href="/confidentialite" style={{ color: "var(--accent-strong)" }}>
+        <Link href="/confidentialite" style={{ color: "var(--accent-strong)" }} prefetch={false}>
           politique de confidentialité
         </Link>
         .

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 import { getSiteUrl } from "@/lib/site";
 import Analytics from "@/components/Analytics";
 import CookieBannerMount from "@/components/CookieBannerMount";
 import CookieSettingsButtonMount from "@/components/CookieSettingsButtonMount";
 import HeaderAccountLink from "@/components/HeaderAccountLink";
+import { SessionSummaryProvider } from "@/components/SessionSummaryProvider";
 import { MobileTabBar, SiteHeaderNav } from "@/components/SiteNavigation";
 
 const siteUrl = getSiteUrl();
@@ -39,11 +39,12 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className="site-body" suppressHydrationWarning>
         <Analytics />
+        <SessionSummaryProvider>
         <div className="site-shell">
           <header className="site-header">
             <div className="container">
               <div className="site-header-inner">
-                <Link href="/" className="site-brand" aria-label="NaturoCarte, retour a l’accueil">
+                <Link href="/" className="site-brand" aria-label="NaturoCarte, retour a l’accueil" prefetch={false}>
                   <span className="site-brand-mark" aria-hidden="true">
                     N
                   </span>
@@ -55,7 +56,7 @@ export default function RootLayout({
                 <div className="site-header-actions">
                   <SiteHeaderNav />
 
-                  <Link href="/carte" className="site-header-cta">
+                  <Link href="/carte" className="site-header-cta" prefetch={false}>
                     Ouvrir la carte
                   </Link>
 
@@ -80,11 +81,11 @@ export default function RootLayout({
                 </div>
 
                 <nav className="site-footer-links" aria-label="Liens de pied de page">
-                  <Link href="/carte">Carte</Link>
-                  <Link href="/annuaire-naturopathes">Annuaire</Link>
-                  <Link href="/praticiens">Espace praticiens</Link>
-                  <Link href="/methode">Méthode</Link>
-                  <Link href="/a-propos">À propos</Link>
+                  <Link href="/carte" prefetch={false}>Carte</Link>
+                  <Link href="/annuaire-naturopathes" prefetch={false}>Annuaire</Link>
+                  <Link href="/praticiens" prefetch={false}>Espace praticiens</Link>
+                  <Link href="/methode" prefetch={false}>Méthode</Link>
+                  <Link href="/a-propos" prefetch={false}>À propos</Link>
                 </nav>
               </div>
 
@@ -93,8 +94,8 @@ export default function RootLayout({
                   Couverture actuelle: Paris et les départements d’Île-de-France.
                 </p>
                 <p className="site-footer-legal">
-                  <Link href="/mentions-legales">Mentions légales</Link> ·{" "}
-                  <Link href="/confidentialite">Confidentialité</Link> ·{" "}
+                  <Link href="/mentions-legales" prefetch={false}>Mentions légales</Link> ·{" "}
+                  <Link href="/confidentialite" prefetch={false}>Confidentialité</Link> ·{" "}
                   <CookieSettingsButtonMount />
                 </p>
               </div>
@@ -104,6 +105,7 @@ export default function RootLayout({
           <MobileTabBar />
           <CookieBannerMount />
         </div>
+        </SessionSummaryProvider>
       </body>
     </html>
   );

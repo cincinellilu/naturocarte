@@ -65,7 +65,7 @@ export default function HomePage() {
             </p>
 
             <div className="hero-actions">
-              <Link href="/carte" className="btn">
+              <Link href="/carte" className="btn" prefetch={false}>
                 Ouvrir la carte
               </Link>
             </div>
@@ -81,7 +81,7 @@ export default function HomePage() {
                   <h3>Choisissez une zone</h3>
                   <p>
                     Recherchez une ville, un département ou naviguez directement{" "}
-                    <Link href="/carte">sur la carte</Link>.
+                    <Link href="/carte" prefetch={false}>sur la carte</Link>.
                   </p>
                 </div>
               </article>
@@ -114,7 +114,12 @@ export default function HomePage() {
           <p className="home-quick-zones-label">Départements couverts</p>
           <div className="home-chip-row">
             {IDF_DEPARTMENTS.map((department) => (
-              <Link key={department.code} href={`/carte?zone=${department.code}`} className="home-chip">
+              <Link
+                key={department.code}
+                href={`/carte?zone=${department.code}`}
+                className="home-chip"
+                prefetch={false}
+              >
                 {department.name}
               </Link>
             ))}

@@ -200,7 +200,7 @@ export default async function AnnuaireNaturopathesPage() {
           <nav className="breadcrumb-nav directory-hero-breadcrumb" aria-label="Fil d’Ariane">
             <ol>
               <li>
-                <Link href="/">Accueil</Link>
+                <Link href="/" prefetch={false}>Accueil</Link>
               </li>
               <li aria-hidden="true">›</li>
               <li aria-current="page">Annuaire naturopathes</li>
@@ -216,9 +216,9 @@ export default async function AnnuaireNaturopathesPage() {
             </p>
 
             <div className="hero-actions">
-              <Link className="btn" href="#departements">
+              <a className="btn" href="#departements">
                 Rechercher par département
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -231,7 +231,7 @@ export default async function AnnuaireNaturopathesPage() {
             Saisissez le nom d’un praticien pour ouvrir directement sa fiche et retrouver ses
             informations utiles en quelques secondes.
           </p>
-          <DirectorySearchBar practitioners={practitioners} compact />
+          <DirectorySearchBar compact />
         </div>
       </section>
 
@@ -327,7 +327,7 @@ export default async function AnnuaireNaturopathesPage() {
         </div>
 
         <div className="hero-actions">
-          <Link className="btn" href="/carte">
+          <Link className="btn" href="/carte" prefetch={false}>
             Ouvrir la carte
           </Link>
         </div>

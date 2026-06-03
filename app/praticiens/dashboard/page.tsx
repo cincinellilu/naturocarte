@@ -49,6 +49,8 @@ type Practitioner = {
   adresse: string | null;
   postal_code: string | null;
   city: string | null;
+  lat: number | null;
+  lng: number | null;
   phone: string | null;
   email: string | null;
   website: string | null;
@@ -96,6 +98,8 @@ function getDashboardErrorMessage(error: string | null): string | null {
       return "La géolocalisation d’adresse n’est pas configurée : le token Mapbox est manquant.";
     case "address_not_found":
       return "L’adresse n’a pas pu être géolocalisée. Vérifiez le numéro, la voie, le code postal et la ville.";
+    case "invalid_address":
+      return "Renseignez une adresse complète avec numéro et voie, code postal à 5 chiffres et ville.";
     case "missing_account":
       return "Votre compte praticien n’a pas pu être retrouvé. Reconnectez-vous.";
     case "lookup_failed":
@@ -133,6 +137,14 @@ function getDashboardErrorMessage(error: string | null): string | null {
     default:
       return error ? "Une action n’a pas pu être enregistrée. Vérifiez les informations puis réessayez." : null;
   }
+}
+
+function getDashboardSuccessMessage(saved: string | null): string | null {
+  if (saved === "claimed") {
+    return null;
+  }
+
+  return saved ? "Modifications enregistrées." : null;
 }
 
 async function getProfileStats(practitionerId: string): Promise<StatsRow> {
@@ -180,6 +192,8 @@ export default async function PractitionerDashboardPage({
   const plans = getParam(params.plans);
   const billing = getParam(params.billing);
   const errorMessage = getDashboardErrorMessage(error);
+  const successMessage = getDashboardSuccessMessage(saved);
+  const isClaimedSuccess = saved === "claimed";
   const supabase = getSupabaseAdminClient();
   const { data: account } = await supabase
     .from("practitioner_accounts")
@@ -233,7 +247,7 @@ export default async function PractitionerDashboardPage({
   if (practitionerId) {
     const { data } = await supabase
       .from("practitioners")
-      .select("id, slug, first_name, last_name, siret, adresse, postal_code, city, phone, email, website, booking_url, photo_url, description, status")
+      .select("id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status")
       .eq("id", practitionerId)
       .maybeSingle<Practitioner>();
 
@@ -267,9 +281,9 @@ export default async function PractitionerDashboardPage({
         </form>
       </section>
 
-      {saved ? (
+      {successMessage ? (
         <p className="practitioner-form-feedback practitioner-form-feedback--success">
-          Modifications enregistrées.
+          {successMessage}
         </p>
       ) : null}
 
@@ -277,6 +291,42 @@ export default async function PractitionerDashboardPage({
         <p className="practitioner-form-feedback practitioner-form-feedback--error">
           {errorMessage}
         </p>
+      ) : null}
+
+      {isClaimedSuccess ? (
+        <div className="dashboard-modal-backdrop" role="presentation">
+          <section
+            className="dashboard-modal dashboard-claim-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="claim-success-title"
+          >
+            <Link
+              className="dashboard-modal-close"
+              href="/praticiens/dashboard"
+              aria-label="Fermer la confirmation"
+            >
+              ×
+            </Link>
+            <div>
+              <p className="section-eyebrow">Fiche rattachée</p>
+              <h2 id="claim-success-title">Votre fiche est maintenant reliée à votre espace</h2>
+            </div>
+            <p>
+              Vous pouvez à présent compléter ou modifier les informations visibles sur votre
+              fiche. Si vous souhaitez ajouter plus de détails, une photo, plusieurs contacts
+              et suivre les statistiques, vous pouvez aussi passer au forfait Visibilité+.
+            </p>
+            <div className="dashboard-modal-actions dashboard-subscription-actions">
+              <Link className="btn" href="/praticiens/dashboard#edition">
+                Compléter ma fiche
+              </Link>
+              <Link className="btn btn-secondary" href="/praticiens/dashboard?plans=open#forfaits">
+                Découvrir Visibilité+
+              </Link>
+            </div>
+          </section>
+        </div>
       ) : null}
 
       {billing === "success" ? (
@@ -371,6 +421,9 @@ export default async function PractitionerDashboardPage({
                   {practitioner.first_name} {practitioner.last_name}
                 </h2>
                 <p>{getAddressLine(practitioner) || "Adresse à compléter pour apparaître correctement sur la carte."}</p>
+                <a className="dashboard-inline-link" href="#adresse">
+                  Modifier l’adresse du cabinet
+                </a>
                 <div className="dashboard-profile-badges">
                   <span>{isPublicPractitioner(practitioner) ? "Fiche publiée" : "Fiche à compléter"}</span>
                   {practitioner.siret ? <span>SIRET {practitioner.siret}</span> : null}
@@ -423,6 +476,48 @@ export default async function PractitionerDashboardPage({
 
           <section className="dashboard-edit-section" id="edition">
             <form className="dashboard-profile-form" action="/api/practitioner-dashboard/profile" method="post">
+              <fieldset className="dashboard-fieldset" id="adresse">
+                <legend>Adresse du cabinet</legend>
+                <p className="dashboard-help">
+                  Cette adresse positionne votre fiche sur la carte. En cas de modification,
+                  NaturoCarte recalcule automatiquement les coordonnées.
+                </p>
+                <div className="dashboard-address-grid">
+                  <label className="practitioner-form-label">
+                    Adresse
+                    <input
+                      className="practitioner-form-input"
+                      name="adresse"
+                      defaultValue={practitioner.adresse ?? ""}
+                      placeholder="12 rue de la Paix"
+                      required
+                    />
+                  </label>
+                  <label className="practitioner-form-label">
+                    Code postal
+                    <input
+                      className="practitioner-form-input"
+                      name="postal_code"
+                      defaultValue={practitioner.postal_code ?? ""}
+                      inputMode="numeric"
+                      pattern="[0-9]{5}"
+                      placeholder="75001"
+                      required
+                    />
+                  </label>
+                  <label className="practitioner-form-label">
+                    Ville
+                    <input
+                      className="practitioner-form-input"
+                      name="city"
+                      defaultValue={practitioner.city ?? ""}
+                      placeholder="Paris"
+                      required
+                    />
+                  </label>
+                </div>
+              </fieldset>
+
               <fieldset className="dashboard-fieldset">
                 <legend>Contact public</legend>
                 {!isPaid ? (

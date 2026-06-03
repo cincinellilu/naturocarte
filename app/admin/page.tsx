@@ -302,6 +302,9 @@ export default async function AdminPage({
             <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
               Praticiens actifs
             </Link>
+            <Link className="btn btn-secondary" href="/admin/campagnes">
+              Campagnes email
+            </Link>
             <Link className="btn btn-secondary" href="/admin/clients/visibilite-plus">
               Clients Visibilité+
             </Link>
@@ -329,6 +332,9 @@ function AdminLinks() {
       </Link>
       <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
         Praticiens actifs
+      </Link>
+      <Link className="btn btn-secondary" href="/admin/campagnes">
+        Campagnes email
       </Link>
       <Link className="btn btn-secondary" href="/admin/prospects">
         Prospects

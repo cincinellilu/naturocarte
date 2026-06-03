@@ -10,6 +10,20 @@ import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 const CONTACT_SLOTS = ["phone", "email", "booking_url"] as const;
 
+type PractitionerAddressRow = {
+  slug: string;
+  adresse: string | null;
+  postal_code: string | null;
+  city: string | null;
+  lat: number | null;
+  lng: number | null;
+};
+
+type GeocodedAddress = {
+  lat: number;
+  lng: number;
+};
+
 function isContactSlot(value: string): value is (typeof CONTACT_SLOTS)[number] {
   return CONTACT_SLOTS.includes(value as (typeof CONTACT_SLOTS)[number]);
 }
@@ -18,6 +32,45 @@ function normalizeNullable(value: FormDataEntryValue | null): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed ? trimmed : null;
+}
+
+async function geocodePractitionerAddress(params: {
+  addressLine: string;
+  postalCode: string;
+  city: string;
+}): Promise<GeocodedAddress | null> {
+  const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN?.trim();
+  if (!token) return null;
+
+  const query = `${params.addressLine}, ${params.postalCode} ${params.city}, France`;
+  const searchParams = new URLSearchParams({
+    q: query,
+    access_token: token,
+    country: "fr",
+    limit: "1",
+    language: "fr",
+    types: "address",
+    proximity: "2.3522,48.8566"
+  });
+
+  const response = await fetch(`https://api.mapbox.com/search/geocode/v6/forward?${searchParams.toString()}`, {
+    method: "GET",
+    cache: "no-store"
+  });
+
+  if (!response.ok) return null;
+
+  const payload = (await response.json()) as {
+    features?: Array<{ geometry?: { coordinates?: [number, number] } }>;
+  };
+  const coordinates = payload.features?.[0]?.geometry?.coordinates;
+  const lng = coordinates?.[0];
+  const lat = coordinates?.[1];
+
+  if (typeof lat !== "number" || typeof lng !== "number") return null;
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+  return { lat, lng };
 }
 
 export async function POST(request: Request) {
@@ -35,10 +88,18 @@ export async function POST(request: Request) {
   const bookingUrl = normalizeNullable(formData.get("booking_url"));
   const website = normalizeNullable(formData.get("website"));
   const description = normalizeNullable(formData.get("description"));
+  const adresse = normalizeNullable(formData.get("adresse"));
+  const postalCode = normalizeNullable(formData.get("postal_code"));
+  const city = normalizeNullable(formData.get("city"));
   const redirectUrl = new URL("/praticiens/dashboard", request.url);
 
   if (!isContactSlot(contactSlot)) {
     redirectUrl.searchParams.set("error", "invalid_contact_slot");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  if (!adresse || !postalCode || !/^\d{5}$/.test(postalCode) || !city) {
+    redirectUrl.searchParams.set("error", "invalid_address");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
 
@@ -54,18 +115,74 @@ export async function POST(request: Request) {
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
 
+  const { data: currentPractitioner, error: practitionerLookupError } = await supabase
+    .from("practitioners")
+    .select("slug, adresse, postal_code, city, lat, lng")
+    .eq("id", account.practitioner_id)
+    .maybeSingle<PractitionerAddressRow>();
+
+  if (practitionerLookupError || !currentPractitioner) {
+    redirectUrl.searchParams.set("error", "missing_practitioner");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  const addressChanged =
+    adresse !== (currentPractitioner.adresse ?? "") ||
+    postalCode !== (currentPractitioner.postal_code ?? "") ||
+    city !== (currentPractitioner.city ?? "");
+  const coordinatesMissing =
+    typeof currentPractitioner.lat !== "number" ||
+    !Number.isFinite(currentPractitioner.lat) ||
+    typeof currentPractitioner.lng !== "number" ||
+    !Number.isFinite(currentPractitioner.lng);
+
+  let coordinates: GeocodedAddress | null = null;
+  if (addressChanged || coordinatesMissing) {
+    if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN?.trim()) {
+      redirectUrl.searchParams.set("error", "missing_mapbox_token");
+      return NextResponse.redirect(redirectUrl, { status: 303 });
+    }
+
+    coordinates = await geocodePractitionerAddress({
+      addressLine: adresse,
+      postalCode,
+      city
+    });
+
+    if (!coordinates) {
+      await recordProductEvent({
+        eventName: "practitioner_profile_address_failed",
+        request,
+        practitionerAccountId: account.id,
+        practitionerId: account.practitioner_id,
+        metadata: { reason: "address_not_found", postal_code: postalCode, city }
+      }).catch(() => {});
+      redirectUrl.searchParams.set("error", "address_not_found");
+      return NextResponse.redirect(redirectUrl, { status: 303 });
+    }
+  }
+
   const plan = account.plan === PRACTITIONER_PLAN_VISIBILITY
     ? PRACTITIONER_PLAN_VISIBILITY
     : PRACTITIONER_PLAN_PRESENCE;
 
+  const addressPayload = {
+    adresse,
+    postal_code: postalCode,
+    city,
+    ...(coordinates ? { lat: coordinates.lat, lng: coordinates.lng } : {})
+  };
+
   const updatePayload =
     plan === PRACTITIONER_PLAN_PRESENCE
       ? {
+          ...addressPayload,
           phone: contactSlot === "phone" ? phone : null,
           email: contactSlot === "email" ? email : null,
           booking_url: contactSlot === "booking_url" ? bookingUrl : null
         }
       : {
+          ...addressPayload,
           phone,
           email,
           booking_url: bookingUrl,
@@ -91,6 +208,7 @@ export async function POST(request: Request) {
     .eq("id", account.id);
 
   revalidatePath(`/naturopathe/${practitioner.slug}`);
+  revalidatePath("/carte");
   await recordProductEvent({
     eventName: "practitioner_profile_updated",
     request,
@@ -103,7 +221,10 @@ export async function POST(request: Request) {
       has_email: Boolean(email),
       has_booking_url: Boolean(bookingUrl),
       has_website: Boolean(website),
-      has_description: Boolean(description)
+      has_description: Boolean(description),
+      address_changed: addressChanged,
+      coordinates_were_missing: coordinatesMissing,
+      coordinates_updated: Boolean(coordinates)
     }
   }).catch(() => {});
   redirectUrl.searchParams.set("saved", "profile");

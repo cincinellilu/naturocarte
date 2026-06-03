@@ -1,8 +1,8 @@
 import { PRACTITIONER_PLAN_VISIBILITY } from "@/lib/practitioner-plans";
 
 export type PractitionerAccountPlanRow = {
-  plan: string | null;
-  stripe_subscription_status: string | null;
+  plan?: string | null;
+  stripe_subscription_status?: string | null;
 };
 
 export function isVisibilitySubscriptionActive(status: string | null | undefined): boolean {

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export type SessionSummary = {
   type: "anonymous" | "user" | "practitioner";
@@ -16,10 +16,16 @@ const DEFAULT_SESSION_SUMMARY: SessionSummary = {
   photoUrl: null
 };
 
-const SessionSummaryContext = createContext<SessionSummary>(DEFAULT_SESSION_SUMMARY);
+let cachedSessionSummary: SessionSummary | null = null;
 
-export function SessionSummaryProvider({ children }: { children: React.ReactNode }) {
-  const [summary, setSummary] = useState<SessionSummary>(DEFAULT_SESSION_SUMMARY);
+export default function SessionSummaryProvider({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
+
+export function useSessionSummary() {
+  const [summary, setSummary] = useState<SessionSummary>(
+    cachedSessionSummary ?? DEFAULT_SESSION_SUMMARY
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -27,7 +33,9 @@ export function SessionSummaryProvider({ children }: { children: React.ReactNode
     fetch("/api/session-summary", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((data: SessionSummary | null) => {
-        if (mounted && data) setSummary(data);
+        if (!data) return;
+        cachedSessionSummary = data;
+        if (mounted) setSummary(data);
       })
       .catch(() => undefined);
 
@@ -36,11 +44,5 @@ export function SessionSummaryProvider({ children }: { children: React.ReactNode
     };
   }, []);
 
-  const value = useMemo(() => summary, [summary]);
-
-  return <SessionSummaryContext.Provider value={value}>{children}</SessionSummaryContext.Provider>;
-}
-
-export function useSessionSummary() {
-  return useContext(SessionSummaryContext);
+  return summary;
 }

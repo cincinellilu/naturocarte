@@ -13,6 +13,11 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
+import {
+  getVisiblePublicContacts,
+  isPractitionerClaimed,
+  type PractitionerPublicAccountInput
+} from "@/lib/practitioner-public-contact";
 
 export const revalidate = 300;
 
@@ -33,7 +38,10 @@ type Practitioner = {
   photo_url?: string | null;
   description: string | null;
   status: string;
-  practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
+  practitioner_accounts:
+    | PractitionerPublicAccountInput[]
+    | PractitionerPublicAccountInput
+    | null;
 };
 
 type PractitionerReview = {
@@ -58,7 +66,7 @@ async function getPublishedPractitioner(slug: string): Promise<Practitioner | nu
   const { data, error } = await supabase
     .from("practitioners")
     .select(
-      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status, practitioner_accounts(plan, stripe_subscription_status)"
+      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
     )
     .eq("slug", slug)
     .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
@@ -230,6 +238,15 @@ export default async function PractitionerPage({
     : null;
 
   const websiteUrl = normalizeWebsiteUrl(practitioner.website);
+  const visibleContacts = getVisiblePublicContacts({
+    practitioner: {
+      phone: practitioner.phone,
+      email: practitioner.email,
+      booking_url: bookingUrl,
+      website: websiteUrl
+    },
+    accounts: practitioner.practitioner_accounts
+  });
   const practitionerSpaceUrl = "/praticiens";
   const practitionerInitials = `${practitioner.first_name?.charAt(0) ?? ""}${practitioner.last_name?.charAt(0) ?? ""}`
     .trim()
@@ -253,6 +270,7 @@ export default async function PractitionerPage({
 
   const practitionerDescription = practitioner.description?.trim() || null;
   const isPartner = Boolean(getPartnerAccount(practitioner.practitioner_accounts));
+  const isClaimed = isPractitionerClaimed(practitioner.practitioner_accounts);
   const practitionerDescriptionPreview = practitionerDescription
     ? truncateText(practitionerDescription, 240)
     : "Description non renseignée pour le moment. Cet espace sera utilisé pour présenter la méthode, les spécialisations et les repères utiles.";
@@ -283,42 +301,43 @@ export default async function PractitionerPage({
   const ratingAverage = reviewsCount
     ? practitionerReviews.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
     : null;
-  const directContactActions = [
-    bookingUrl
-      ? {
-          href: bookingUrl,
-          label: "Prendre rendez-vous",
-          variant: "primary" as const,
-          external: true,
-          statEvent: "booking_click" as const
-        }
-      : null,
-    practitioner.phone
-      ? {
-          href: `tel:${practitioner.phone}`,
-          label: "Appeler",
-          variant: bookingUrl ? ("secondary" as const) : ("primary" as const),
-          statEvent: "contact_click" as const
-        }
-      : null,
-    practitioner.email
-      ? {
-          href: `mailto:${practitioner.email}`,
-          label: "Envoyer un email",
-          variant: "secondary" as const,
-          statEvent: "contact_click" as const
-        }
-      : null,
-    websiteUrl
-      ? {
-          href: websiteUrl,
-          label: "Voir le site",
-          variant: "secondary" as const,
-          external: true,
-          statEvent: "contact_click" as const
-        }
-      : null
-  ].filter(Boolean) as Array<{
+  const directContactActions = visibleContacts.map((contact, index) => {
+    if (contact.type === "booking_url") {
+      return {
+        href: contact.value,
+        label: "Prendre rendez-vous",
+        variant: index === 0 ? ("primary" as const) : ("secondary" as const),
+        external: true,
+        statEvent: "booking_click" as const
+      };
+    }
+
+    if (contact.type === "phone") {
+      return {
+        href: `tel:${contact.value}`,
+        label: "Appeler",
+        variant: index === 0 ? ("primary" as const) : ("secondary" as const),
+        statEvent: "contact_click" as const
+      };
+    }
+
+    if (contact.type === "email") {
+      return {
+        href: `mailto:${contact.value}`,
+        label: "Envoyer un email",
+        variant: index === 0 ? ("primary" as const) : ("secondary" as const),
+        statEvent: "contact_click" as const
+      };
+    }
+
+    return {
+      href: contact.value,
+      label: "Voir le site",
+      variant: index === 0 ? ("primary" as const) : ("secondary" as const),
+      external: true,
+      statEvent: "contact_click" as const
+    };
+  }) as Array<{
     href: string;
     label: string;
     variant: "primary" | "secondary";
@@ -326,7 +345,13 @@ export default async function PractitionerPage({
     statEvent: "contact_click" | "booking_click";
   }>;
 
-  const sameAs = [bookingUrl, websiteUrl].filter((v): v is string => Boolean(v));
+  const visibleBookingUrl =
+    visibleContacts.find((contact) => contact.type === "booking_url")?.value ?? null;
+  const visibleWebsiteUrl =
+    visibleContacts.find((contact) => contact.type === "website")?.value ?? null;
+  const visiblePhone = visibleContacts.find((contact) => contact.type === "phone")?.value ?? null;
+  const visibleEmail = visibleContacts.find((contact) => contact.type === "email")?.value ?? null;
+  const sameAs = [visibleBookingUrl, visibleWebsiteUrl].filter((v): v is string => Boolean(v));
   const practitionerPath = `/naturopathe/${practitioner.slug}`;
   const reviewLoginUrl = `/compte?next=${encodeURIComponent(`${practitionerPath}#avis`)}`;
 
@@ -355,8 +380,8 @@ export default async function PractitionerPage({
       longitude: practitioner.lng
     },
     knowsLanguage: "fr",
-    telephone: practitioner.phone || undefined,
-    email: practitioner.email || undefined,
+    telephone: visiblePhone || undefined,
+    email: visibleEmail || undefined,
     sameAs: sameAs.length > 0 ? sameAs : undefined
   };
 
@@ -596,18 +621,34 @@ export default async function PractitionerPage({
           <details className="practitioner-card practitioner-claim-accordion">
             <summary className="practitioner-claim-summary">Vous êtes ce praticien ?</summary>
             <div className="practitioner-claim-content">
-              <p>
-                Les praticiens référencés peuvent accéder à un espace dédié pour gérer leur
-                fiche et choisir leur offre NaturoCarte.
-              </p>
+              {isClaimed ? (
+                <p>
+                  Cette fiche est déjà rattachée à un espace praticien. Connectez-vous pour la
+                  gérer depuis le dashboard NaturoCarte.
+                </p>
+              ) : (
+                <p>
+                  Cette fiche a été créée à partir d’informations publiques. Vous pouvez la
+                  revendiquer en moins de deux minutes pour la rattacher à votre espace praticien.
+                </p>
+              )}
               <ul className="practitioner-edit-list">
-                <li>Créer ou retrouver votre accès praticien</li>
+                <li>{isClaimed ? "Retrouver votre accès praticien" : "Confirmer qu’il s’agit bien de vous"}</li>
                 <li>Modifier les informations visibles sur votre fiche</li>
                 <li>Choisir entre l’offre gratuite et Visibilité+</li>
               </ul>
               <p className="practitioner-form-actions">
-                <Link className="btn btn-secondary practitioner-form-btn" href={practitionerSpaceUrl}>
-                  Accéder à l’espace praticien
+                <Link
+                  className="btn btn-secondary practitioner-form-btn"
+                  href={
+                    isClaimed
+                      ? practitionerSpaceUrl
+                      : `/revendiquer?first_name=${encodeURIComponent(
+                          practitioner.first_name
+                        )}&last_name=${encodeURIComponent(practitioner.last_name)}`
+                  }
+                >
+                  {isClaimed ? "Accéder à l’espace praticien" : "Revendiquer cette fiche"}
                 </Link>
               </p>
             </div>

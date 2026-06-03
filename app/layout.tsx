@@ -6,7 +6,6 @@ import Analytics from "@/components/Analytics";
 import CookieBannerMount from "@/components/CookieBannerMount";
 import CookieSettingsButtonMount from "@/components/CookieSettingsButtonMount";
 import HeaderAccountLink from "@/components/HeaderAccountLink";
-import { SessionSummaryProvider } from "@/components/SessionSummaryProvider";
 import { MobileTabBar, SiteHeaderNav } from "@/components/SiteNavigation";
 
 const siteUrl = getSiteUrl();
@@ -39,7 +38,6 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className="site-body" suppressHydrationWarning>
         <Analytics />
-        <SessionSummaryProvider>
         <div className="site-shell">
           <header className="site-header">
             <div className="container">
@@ -106,7 +104,6 @@ export default function RootLayout({
           <MobileTabBar />
           <CookieBannerMount />
         </div>
-        </SessionSummaryProvider>
       </body>
     </html>
   );

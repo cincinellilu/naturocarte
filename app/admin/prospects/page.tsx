@@ -133,6 +133,9 @@ export default async function AdminProspectsPage({
             <Link className="btn btn-secondary" href="/admin/clients">
               Clients
             </Link>
+            <Link className="btn btn-secondary" href="/admin/campagnes">
+              Campagnes email
+            </Link>
             <button className="btn btn-secondary" type="submit">
               Déconnexion
             </button>

@@ -297,6 +297,9 @@ function AdminLinks() {
       <Link className="btn btn-secondary" href="/admin/clients">
         Clients
       </Link>
+      <Link className="btn btn-secondary" href="/admin/campagnes">
+        Campagnes email
+      </Link>
       <Link className="btn btn-secondary" href="/admin/prospects">
         Prospects
       </Link>
@@ -370,4 +373,3 @@ function ActivePractitionerCard({ account }: { account: ActivePractitionerRow })
     </article>
   );
 }
-

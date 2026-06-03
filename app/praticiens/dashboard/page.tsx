@@ -134,6 +134,10 @@ function getDashboardErrorMessage(error: string | null): string | null {
       return "L’espace de gestion Stripe n’a pas pu être ouvert. Réessayez dans quelques instants.";
     case "plan_failed":
       return "La souscription n’a pas pu être initialisée. Réessayez dans quelques instants.";
+    case "delete_confirmation_required":
+      return "Pour supprimer votre fiche, saisissez exactement SUPPRIMER dans le champ de confirmation.";
+    case "profile_delete_failed":
+      return "La fiche n’a pas pu être supprimée. Réessayez dans quelques instants.";
     default:
       return error ? "Une action n’a pas pu être enregistrée. Vérifiez les informations puis réessayez." : null;
   }
@@ -142,6 +146,10 @@ function getDashboardErrorMessage(error: string | null): string | null {
 function getDashboardSuccessMessage(saved: string | null): string | null {
   if (saved === "claimed") {
     return null;
+  }
+
+  if (saved === "profile_deleted") {
+    return "Votre fiche a été retirée de la carte et de l’annuaire.";
   }
 
   return saved ? "Modifications enregistrées." : null;
@@ -670,6 +678,42 @@ export default async function PractitionerDashboardPage({
           ))}
         </div>
       </details>
+
+      {practitioner ? (
+        <section className="dashboard-danger-zone" aria-labelledby="delete-profile-title">
+          <div>
+            <p className="section-eyebrow">Zone sensible</p>
+            <h2 id="delete-profile-title">Supprimer ma fiche NaturoCarte</h2>
+            <p>
+              Cette action retire votre fiche de la carte, de l’annuaire, des pages locales et de
+              la recherche. Votre espace praticien reste accessible si vous souhaitez recréer une
+              fiche plus tard.
+            </p>
+            {isPaid ? (
+              <p>
+                Si vous avez un abonnement Visibilité+, la suppression de la fiche ne résilie pas
+                automatiquement l’abonnement. Utilisez le portail Stripe dans les forfaits pour le
+                gérer.
+              </p>
+            ) : null}
+          </div>
+          <form className="dashboard-delete-profile-form" action="/api/practitioner-dashboard/delete-profile" method="post">
+            <label className="practitioner-form-label">
+              Saisissez SUPPRIMER pour confirmer
+              <input
+                className="practitioner-form-input"
+                name="confirmation"
+                autoComplete="off"
+                placeholder="SUPPRIMER"
+                required
+              />
+            </label>
+            <button className="btn btn-secondary dashboard-danger-btn" type="submit">
+              Supprimer ma fiche
+            </button>
+          </form>
+        </section>
+      ) : null}
     </article>
   );
 }

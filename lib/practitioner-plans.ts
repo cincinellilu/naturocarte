@@ -18,8 +18,9 @@ export const PRACTITIONER_PLANS = [
     id: PRACTITIONER_PLAN_VISIBILITY,
     name: "Visibilité+",
     price: "5 €/mois",
-    summary: "Débloquer les signaux qui aident à suivre et améliorer la fiche.",
+    summary: "Devenir partenaire NaturoCarte et débloquer les signaux qui aident à suivre et améliorer la fiche.",
     features: [
+      "Badge Partenaire NaturoCarte",
       "Tous les contacts actifs",
       "Photo de profil",
       "Description enrichie",

@@ -5,7 +5,6 @@ import {
   isAdminProspectsConfigured
 } from "@/lib/admin-prospects-auth";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
-import { isVisibilitySubscriptionActive } from "@/lib/practitioner-partner";
 import {
   getPractitionerPlan,
   PRACTITIONER_PLAN_PRESENCE,
@@ -99,8 +98,7 @@ function formatDate(value: string | null | undefined) {
 
 function getSubscriptionLabel(account: PractitionerAccountRow) {
   if (account.plan !== PRACTITIONER_PLAN_VISIBILITY) return "Forfait gratuit";
-  if (isVisibilitySubscriptionActive(account.stripe_subscription_status)) return "Abonnement actif";
-  return `À vérifier: ${account.stripe_subscription_status ?? "statut absent"}`;
+  return "Forfait Visibilité+";
 }
 
 async function loadActivePractitioners(planFilter: PlanFilter): Promise<ActivePractitionerRow[]> {

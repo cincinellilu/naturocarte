@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { trackPractitionerStat, type PractitionerStatEvent } from "@/components/PractitionerStatsTracker";
+import { PARTNER_DIRECTORY_HREF } from "@/components/PartnerBadge";
 import { trackProductEvent } from "@/lib/product-events";
 
 const PARIS_CENTER: [number, number] = [2.3522, 48.8566];
@@ -192,7 +193,7 @@ function buildPopupHtml(point: MapPoint): string {
         <span class="map-popup-photo-initials">${escapeHtml(initials || "NC")}</span>
       </div>`;
   const partnerBadge = point.is_partner
-    ? `<span class="partner-badge partner-badge--popup">Partenaire NaturoCarte</span>`
+    ? `<a class="partner-badge partner-badge--popup" href="${PARTNER_DIRECTORY_HREF}">Partenaire NaturoCarte</a>`
     : "";
 
   return `<div class="map-popup">
@@ -294,7 +295,9 @@ function MobilePractitionerPopup({
           </p>
 
           {point.is_partner ? (
-            <span className="partner-badge partner-badge--popup">Partenaire NaturoCarte</span>
+            <a className="partner-badge partner-badge--popup" href={PARTNER_DIRECTORY_HREF}>
+              Partenaire NaturoCarte
+            </a>
           ) : null}
 
           {ratingValue ? (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import DirectorySearchBar from "@/components/DirectorySearchBar";
+import PartnerBadge from "@/components/PartnerBadge";
 import {
   type DepartmentInfo,
   IDF_DEPARTMENTS,
@@ -42,6 +43,7 @@ type PractitionerRow = {
   slug: string;
   first_name: string;
   last_name: string;
+  adresse: string | null;
   city: string | null;
   postal_code: string | null;
   practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
@@ -126,7 +128,7 @@ export default async function AnnuaireNaturopathesPage({
     practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
       supabase
         .from("practitioners")
-        .select("slug, first_name, last_name, city, postal_code, practitioner_accounts(plan, stripe_subscription_status)")
+        .select("slug, first_name, last_name, adresse, city, postal_code, practitioner_accounts(plan, stripe_subscription_status)")
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .range(from, to)
     );
@@ -138,6 +140,11 @@ export default async function AnnuaireNaturopathesPage({
     audience === "partners"
       ? practitioners.filter((practitioner) => getPartnerAccount(practitioner.practitioner_accounts))
       : practitioners;
+  const listedPartnerPractitioners = [...visiblePractitioners].sort((left, right) => {
+    const leftName = `${left.last_name} ${left.first_name}`;
+    const rightName = `${right.last_name} ${right.first_name}`;
+    return leftName.localeCompare(rightName, "fr", { sensitivity: "base" });
+  });
 
   const buckets = new Map<string, DepartmentBucket>(
     IDF_DEPARTMENTS.map((department) => [
@@ -245,8 +252,8 @@ export default async function AnnuaireNaturopathesPage({
             </p>
 
             <div className="hero-actions">
-              <a className="btn" href="#departements">
-                Rechercher par département
+              <a className="btn" href={audience === "partners" ? "#partenaires" : "#departements"}>
+                {audience === "partners" ? "Voir les partenaires" : "Rechercher par département"}
               </a>
             </div>
           </div>
@@ -293,84 +300,130 @@ export default async function AnnuaireNaturopathesPage({
         </nav>
       </section>
 
-      <section className="section-shell directory-path-section">
-        <div className="section-heading section-heading--stacked">
-          <div>
-            <p className="section-eyebrow">Comment trouver un naturopathe</p>
-            <h2>Trois étapes simples depuis l’annuaire</h2>
+      {audience === "partners" ? (
+        <section className="section-shell directory-partners-section" id="partenaires">
+          <div className="section-heading section-heading--stacked">
+            <div>
+              <p className="section-eyebrow">Naturopathes partenaires</p>
+              <h2>Les praticiens partenaires NaturoCarte</h2>
+            </div>
+            <p className="section-intro">
+              Ces praticiens soutiennent activement la plateforme via le forfait Visibilité+.
+              Ouvrez une fiche pour consulter les informations publiques disponibles.
+            </p>
           </div>
-          <p className="section-intro">
-            Commencez par une zone, ouvrez la liste correspondante, puis consultez les fiches
-            qui vous semblent les plus utiles.
-          </p>
-        </div>
 
-        <div className="directory-path-grid">
-          <article className="surface-card directory-path-card">
-            <p className="directory-path-index">1</p>
-            <h3>Choisissez une zone</h3>
-            <p>
-              Sélectionnez Paris ou un département pour accéder directement à la bonne liste de
-              praticiens.
+          {listedPartnerPractitioners.length === 0 ? (
+            <p className="directory-partners-empty">
+              Aucun naturopathe partenaire n’est publié pour le moment.
             </p>
-          </article>
-
-          <article className="surface-card directory-path-card">
-            <p className="directory-path-index">2</p>
-            <h3>Ouvrez la liste des praticiens</h3>
-            <p>
-              Parcourez les naturopathes publiés dans la zone choisie et repérez ceux qui vous
-              intéressent.
-            </p>
-          </article>
-
-          <article className="surface-card directory-path-card">
-            <p className="directory-path-index">3</p>
-            <h3>Comparez les fiches</h3>
-            <p>
-              Consultez le contact, l’adresse, le site web et les informations utiles avant de
-              choisir.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section className="section-shell directory-departments-section" id="departements">
-        <div className="section-heading section-heading--stacked">
-          <div>
-            <p className="section-eyebrow">Départements</p>
-            <h2>Choisissez une zone en un clic</h2>
-          </div>
-          <p className="section-intro">
-            Chaque carte ouvre directement les praticiens publiés dans la zone choisie.
-          </p>
-        </div>
-
-        <div className="department-grid">
-          {departmentSummaries.map((item) => (
-            <article key={item.department.code} className="surface-card department-card">
+          ) : (
+            <ul className="practitioner-list directory-partner-list">
+              {listedPartnerPractitioners.map((practitioner) => (
+                <li key={practitioner.slug}>
+                  <div>
+                    <div className="directory-partner-heading">
+                      <strong>
+                        {practitioner.first_name} {practitioner.last_name}
+                      </strong>
+                      <PartnerBadge className="partner-badge--inline" />
+                    </div>
+                    <div className="practitioner-item-meta">
+                      {[practitioner.adresse, practitioner.postal_code, practitioner.city]
+                        .filter(Boolean)
+                        .join(", ") || "Zone non renseignée"}
+                    </div>
+                  </div>
+                  <Link className="practitioner-item-link" href={`/naturopathe/${practitioner.slug}`}>
+                    Voir la fiche
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ) : (
+        <>
+          <section className="section-shell directory-path-section">
+            <div className="section-heading section-heading--stacked">
               <div>
-                <p className="section-eyebrow">Département {item.department.code}</p>
-                <h3>{item.keyword}</h3>
+                <p className="section-eyebrow">Comment trouver un naturopathe</p>
+                <h2>Trois étapes simples depuis l’annuaire</h2>
               </div>
+              <p className="section-intro">
+                Commencez par une zone, ouvrez la liste correspondante, puis consultez les fiches
+                qui vous semblent les plus utiles.
+              </p>
+            </div>
 
-              <div className="department-card-meta">
-                <span className="directory-count">
-                  {item.count} fiche{item.count > 1 ? "s" : ""}
-                </span>
+            <div className="directory-path-grid">
+              <article className="surface-card directory-path-card">
+                <p className="directory-path-index">1</p>
+                <h3>Choisissez une zone</h3>
+                <p>
+                  Sélectionnez Paris ou un département pour accéder directement à la bonne liste de
+                  praticiens.
+                </p>
+              </article>
+
+              <article className="surface-card directory-path-card">
+                <p className="directory-path-index">2</p>
+                <h3>Ouvrez la liste des praticiens</h3>
+                <p>
+                  Parcourez les naturopathes publiés dans la zone choisie et repérez ceux qui vous
+                  intéressent.
+                </p>
+              </article>
+
+              <article className="surface-card directory-path-card">
+                <p className="directory-path-index">3</p>
+                <h3>Comparez les fiches</h3>
+                <p>
+                  Consultez le contact, l’adresse, le site web et les informations utiles avant de
+                  choisir.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section className="section-shell directory-departments-section" id="departements">
+            <div className="section-heading section-heading--stacked">
+              <div>
+                <p className="section-eyebrow">Départements</p>
+                <h2>Choisissez une zone en un clic</h2>
               </div>
+              <p className="section-intro">
+                Chaque carte ouvre directement les praticiens publiés dans la zone choisie.
+              </p>
+            </div>
 
-              <p className="practitioner-item-meta">{item.description}</p>
+            <div className="department-grid">
+              {departmentSummaries.map((item) => (
+                <article key={item.department.code} className="surface-card department-card">
+                  <div>
+                    <p className="section-eyebrow">Département {item.department.code}</p>
+                    <h3>{item.keyword}</h3>
+                  </div>
 
-              <div className="department-card-actions">
-                <Link className="practitioner-item-link" href={item.href}>
-                  {item.ctaLabel}
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+                  <div className="department-card-meta">
+                    <span className="directory-count">
+                      {item.count} fiche{item.count > 1 ? "s" : ""}
+                    </span>
+                  </div>
+
+                  <p className="practitioner-item-meta">{item.description}</p>
+
+                  <div className="department-card-actions">
+                    <Link className="practitioner-item-link" href={item.href}>
+                      {item.ctaLabel}
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
 
       <section className="section-shell section-shell--compact directory-map-cta">
         <div className="section-heading section-heading--stacked">

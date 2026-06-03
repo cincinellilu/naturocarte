@@ -122,6 +122,7 @@ export async function createVisibilityCheckoutSession(params: {
     client_reference_id: params.practitionerAccountId,
     success_url: params.successUrl,
     cancel_url: params.cancelUrl,
+    locale: "fr",
     "line_items[0][price]": priceId,
     "line_items[0][quantity]": 1,
     "metadata[practitioner_account_id]": params.practitionerAccountId,
@@ -138,6 +139,7 @@ export async function createBillingPortalSession(params: {
     url: string | null;
   }>("/billing_portal/sessions", {
     customer: params.customerId,
+    locale: "fr",
     return_url: params.returnUrl
   });
 }

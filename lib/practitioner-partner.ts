@@ -5,17 +5,10 @@ export type PractitionerAccountPlanRow = {
   stripe_subscription_status?: string | null;
 };
 
-export function isVisibilitySubscriptionActive(status: string | null | undefined): boolean {
-  return status === "active" || status === "trialing";
-}
-
 export function isPartnerAccount(
   account: PractitionerAccountPlanRow | null | undefined
 ): boolean {
-  return (
-    account?.plan === PRACTITIONER_PLAN_VISIBILITY &&
-    isVisibilitySubscriptionActive(account.stripe_subscription_status)
-  );
+  return account?.plan === PRACTITIONER_PLAN_VISIBILITY;
 }
 
 export function getPartnerAccount(

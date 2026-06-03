@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PractitionerDetailMap from "@/components/PractitionerDetailMap";
-import PartnerBadge from "@/components/PartnerBadge";
+import PartnerBadge, { PARTNER_DIRECTORY_HREF } from "@/components/PartnerBadge";
 import PractitionerReviewModal from "@/components/PractitionerReviewModal";
 import PractitionerStatsTracker from "@/components/PractitionerStatsTracker";
 import PractitionerTrackedLink from "@/components/PractitionerTrackedLink";
@@ -273,7 +273,7 @@ export default async function PractitionerPage({
   const isClaimed = isPractitionerClaimed(practitioner.practitioner_accounts);
   const practitionerDescriptionPreview = practitionerDescription
     ? truncateText(practitionerDescription, 240)
-    : "Description non renseignée pour le moment. Cet espace sera utilisé pour présenter la méthode, les spécialisations et les repères utiles.";
+    : null;
   const practitionerReviews = await getPublishedPractitionerReviews(practitioner.id);
   let isFavorite = false;
 
@@ -458,7 +458,7 @@ export default async function PractitionerPage({
               <div className="practitioner-summary-copy">
                 <p className="practitioner-eyebrow">Fiche praticien</p>
                 <h1>{title}</h1>
-                {isPartner ? <PartnerBadge /> : null}
+                {isPartner ? <PartnerBadge href={PARTNER_DIRECTORY_HREF} /> : null}
                 <p className="practitioner-hero-subtitle">{locationLabel}</p>
                 <form className="practitioner-favorite-form" action="/api/user-favorites" method="post">
                   <input type="hidden" name="practitioner_slug" value={practitioner.slug} />
@@ -476,11 +476,13 @@ export default async function PractitionerPage({
               </div>
             </div>
 
-            <div className="practitioner-summary-description-panel">
-              <p className="practitioner-summary-description">
-                {practitionerDescriptionPreview}
-              </p>
-            </div>
+            {practitionerDescriptionPreview ? (
+              <div className="practitioner-summary-description-panel">
+                <p className="practitioner-summary-description">
+                  {practitionerDescriptionPreview}
+                </p>
+              </div>
+            ) : null}
 
             <div className="practitioner-summary-address">
               <p className="practitioner-detail-label">Adresse</p>

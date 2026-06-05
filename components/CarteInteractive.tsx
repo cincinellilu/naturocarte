@@ -113,6 +113,7 @@ export default function CarteInteractive({
   const [geoError, setGeoError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [shouldLoadMap, setShouldLoadMap] = useState(false);
+  const suppressAutocompleteRef = useRef(false);
 
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
   const mapFrameRef = useRef<HTMLDivElement | null>(null);
@@ -332,6 +333,11 @@ export default function CarteInteractive({
   useEffect(() => {
     const query = searchQuery.trim();
 
+    if (suppressAutocompleteRef.current) {
+      suppressAutocompleteRef.current = false;
+      return;
+    }
+
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
       debounceRef.current = null;
@@ -342,34 +348,31 @@ export default function CarteInteractive({
       abortControllerRef.current = null;
     }
 
-    if (query.length < 3) {
+    if (query.length < 2) {
       setSuggestions([]);
       setIsLoadingSuggestions(false);
       return;
     }
 
     debounceRef.current = setTimeout(async () => {
-      const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-
-      if (!token) {
-        setSuggestions([]);
-        setIsLoadingSuggestions(false);
-        setIsSuggestionsOpen(true);
-        return;
-      }
-
       setIsLoadingSuggestions(true);
 
       const controller = new AbortController();
       abortControllerRef.current = controller;
 
       try {
+        const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+        if (!token) {
+          throw new Error("Missing Mapbox token");
+        }
+
         const params = new URLSearchParams({
           q: query,
           access_token: token,
           country: "fr",
           limit: "5",
           language: "fr",
+          autocomplete: "true",
           proximity: `${DEFAULT_PROXIMITY.lng},${DEFAULT_PROXIMITY.lat}`
         });
 
@@ -472,6 +475,7 @@ export default function CarteInteractive({
     });
     setSearchCenter({ lng: suggestion.lng, lat: suggestion.lat, label: suggestion.label });
     setShouldLoadMap(true);
+    suppressAutocompleteRef.current = true;
     setSearchQuery(suggestion.label);
     setSuggestions([]);
     setIsSuggestionsOpen(false);
@@ -503,7 +507,7 @@ export default function CarteInteractive({
   const showNoResults =
     isSuggestionsOpen &&
     !isLoadingSuggestions &&
-    searchQuery.trim().length >= 3 &&
+    searchQuery.trim().length >= 2 &&
     suggestions.length === 0;
 
   const resultsTitle = activeDepartment
@@ -557,7 +561,7 @@ export default function CarteInteractive({
                   setIsSuggestionsOpen(true);
                 }}
                 onFocus={() => {
-                  if (searchQuery.trim().length >= 3) setIsSuggestionsOpen(true);
+                  if (searchQuery.trim().length >= 2) setIsSuggestionsOpen(true);
                 }}
                 autoComplete="off"
               />

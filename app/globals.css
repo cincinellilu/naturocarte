@@ -5003,8 +5003,13 @@ h3,
   border-color: var(--line);
 }
 .search-card {
+  display: grid;
+  gap: 0.55rem;
   border-radius: 1.2rem;
   background: #ffffff;
+}
+.map-experience .search-card {
+  overflow: visible;
 }
 .search-label {
   color: var(--text-strong);
@@ -5018,6 +5023,7 @@ h3,
 }
 .search-dropdown {
   border-radius: 1rem;
+  z-index: 40;
   box-shadow: var(--shadow-lg);
 }
 .search-suggestion-btn:hover {

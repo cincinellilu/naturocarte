@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import {
   ADMIN_PROSPECTS_COOKIE_NAME,
   getAdminProspectsSessionValue,
   isAdminProspectsConfigured,
   verifyAdminProspectsPassword
 } from "@/lib/admin-prospects-auth";
-import { getSiteUrl } from "@/lib/site";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     typeof rawNext === "string" && rawNext.startsWith("/admin") && !rawNext.startsWith("//")
       ? rawNext
       : "/admin/prospects";
-  const redirectUrl = new URL(nextPath, getSiteUrl());
+  const redirectUrl = createAppUrl(nextPath, request);
 
   if (!isAdminProspectsConfigured()) {
     redirectUrl.searchParams.set("error", "missing_config");

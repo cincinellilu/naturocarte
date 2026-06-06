@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { PRACTITIONER_STATUS_HIDDEN_CONTACTED } from "@/lib/practitioner-status";
@@ -18,7 +19,7 @@ type PractitionerRow = {
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
   if (!session) {
-    return NextResponse.redirect(new URL("/praticiens?auth=required", request.url), {
+    return NextResponse.redirect(createAppUrl("/praticiens?auth=required", request), {
       status: 303
     });
   }
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
   const rawConfirmation = formData.get("confirmation");
   const confirmation =
     typeof rawConfirmation === "string" ? rawConfirmation.trim().toUpperCase() : "";
-  const redirectUrl = new URL("/praticiens/dashboard", request.url);
+  const redirectUrl = createAppUrl("/praticiens/dashboard", request);
 
   if (confirmation !== "SUPPRIMER") {
     redirectUrl.searchParams.set("error", "delete_confirmation_required");

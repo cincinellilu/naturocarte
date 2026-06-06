@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import { ensureUserAccount } from "@/lib/auth-account-routing";
 import {
   getCurrentPractitionerSession,
@@ -14,7 +15,7 @@ import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
   if (!session) {
-    return NextResponse.redirect(new URL("/praticiens?auth=required", request.url), {
+    return NextResponse.redirect(createAppUrl("/praticiens?auth=required", request), {
       status: 303
     });
   }
@@ -27,9 +28,10 @@ export async function POST(request: Request) {
 
   if (!userAccount.ok) {
     console.error("user account creation after practitioner delete failed", userAccount.error);
-    return NextResponse.redirect(new URL("/praticiens/dashboard?error=account_update_failed", request.url), {
-      status: 303
-    });
+    return NextResponse.redirect(
+      createAppUrl("/praticiens/dashboard?error=account_update_failed", request),
+      { status: 303 }
+    );
   }
 
   const { error } = await supabase
@@ -39,12 +41,13 @@ export async function POST(request: Request) {
 
   if (error) {
     console.error("practitioner space delete failed", error);
-    return NextResponse.redirect(new URL("/praticiens/dashboard?error=account_update_failed", request.url), {
-      status: 303
-    });
+    return NextResponse.redirect(
+      createAppUrl("/praticiens/dashboard?error=account_update_failed", request),
+      { status: 303 }
+    );
   }
 
-  const response = NextResponse.redirect(new URL("/compte", request.url), { status: 303 });
+  const response = NextResponse.redirect(createAppUrl("/compte", request), { status: 303 });
   response.cookies.set({
     name: USER_SESSION_COOKIE_NAME,
     value: createUserSessionCookieValue({ userId: session.userId, email: session.email }),

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { createAppUrl, getSafeAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
@@ -20,15 +21,7 @@ function normalizeText(value: FormDataEntryValue | null): string {
 function getSafeRedirect(request: Request, value: string): URL {
   const fallback = request.headers.get("referer") || "/compte";
   const target = value || fallback;
-
-  try {
-    const url = new URL(target, request.url);
-    const current = new URL(request.url);
-    if (url.origin !== current.origin) return new URL("/compte", request.url);
-    return url;
-  } catch {
-    return new URL("/compte", request.url);
-  }
+  return getSafeAppUrl(request, target, "/compte");
 }
 
 export async function POST(request: Request) {
@@ -51,7 +44,7 @@ export async function POST(request: Request) {
       practitionerSlug,
       metadata: { practitioner_slug: practitionerSlug }
     }).catch(() => {});
-    const loginUrl = new URL("/compte", request.url);
+    const loginUrl = createAppUrl("/compte", request);
     loginUrl.searchParams.set("next", redirectUrl.pathname + redirectUrl.search + redirectUrl.hash);
     loginUrl.searchParams.set("auth", "required");
     return NextResponse.redirect(loginUrl, { status: 303 });

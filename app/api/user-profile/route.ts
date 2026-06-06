@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import {
   createUserSessionCookieValue,
   getCurrentUserSession,
@@ -18,14 +19,16 @@ function isValidEmail(value: string): boolean {
 export async function POST(request: Request) {
   const session = await getCurrentUserSession();
   if (!session) {
-    return NextResponse.redirect(new URL("/compte?auth=required", request.url), { status: 303 });
+    return NextResponse.redirect(createAppUrl("/compte?auth=required", request), {
+      status: 303
+    });
   }
 
   const formData = await request.formData();
   const firstName = normalizeText(formData.get("first_name"));
   const lastName = normalizeText(formData.get("last_name"));
   const email = normalizeText(formData.get("email")).toLowerCase();
-  const redirectUrl = new URL("/compte", request.url);
+  const redirectUrl = createAppUrl("/compte", request);
 
   if (!firstName || !lastName || !email || !isValidEmail(email)) {
     redirectUrl.searchParams.set("error", "invalid_profile");

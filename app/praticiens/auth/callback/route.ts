@@ -5,6 +5,7 @@ import {
   markPractitionerAccountLogin,
   resolvePractitionerAccount
 } from "@/lib/auth-account-routing";
+import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
 import {
   createPractitionerSessionCookieValue,
@@ -71,7 +72,7 @@ export async function GET(request: Request) {
         request,
         metadata: { reason: "auth_failed" }
       }).catch(() => {});
-      return NextResponse.redirect(new URL("/praticiens?error=auth_failed", request.url));
+      return NextResponse.redirect(createAppUrl("/praticiens?error=auth_failed", request));
     }
 
     const normalizedEmail = data.user.email.toLowerCase();
@@ -83,7 +84,7 @@ export async function GET(request: Request) {
 
     if ("error" in practitionerResolution) {
       console.error("practitioner account resolution failed", practitionerResolution.error);
-      return NextResponse.redirect(new URL("/praticiens?error=account_failed", request.url));
+      return NextResponse.redirect(createAppUrl("/praticiens?error=account_failed", request));
     }
 
     let practitionerAccountId = practitionerResolution.isPractitioner
@@ -98,7 +99,7 @@ export async function GET(request: Request) {
 
       if (!practitionerAccount.ok) {
         console.error("practitioner account ensure failed", practitionerAccount.error);
-        return NextResponse.redirect(new URL("/praticiens?error=account_failed", request.url));
+        return NextResponse.redirect(createAppUrl("/praticiens?error=account_failed", request));
       }
 
       practitionerAccountId = practitionerAccount.accountId;
@@ -114,7 +115,7 @@ export async function GET(request: Request) {
       }
     }
 
-    const response = NextResponse.redirect(new URL("/praticiens/dashboard", request.url));
+    const response = NextResponse.redirect(createAppUrl("/praticiens/dashboard", request));
     await recordProductEvent({
       eventName: "practitioner_login_success",
       request,
@@ -134,6 +135,6 @@ export async function GET(request: Request) {
     return response;
   } catch (error) {
     console.error("practitioner auth callback error", error);
-    return NextResponse.redirect(new URL("/praticiens?error=server_error", request.url));
+    return NextResponse.redirect(createAppUrl("/praticiens?error=server_error", request));
   }
 }

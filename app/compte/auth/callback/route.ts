@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
+import { createAppUrl } from "@/lib/app-url";
 import {
   createPractitionerSessionCookieValue,
   getPractitionerSessionCookieOptions,
@@ -80,7 +81,7 @@ export async function GET(request: Request) {
         request,
         metadata: { reason: "auth_failed" }
       }).catch(() => {});
-      return NextResponse.redirect(new URL("/compte?error=auth_failed", request.url));
+      return NextResponse.redirect(createAppUrl("/compte?error=auth_failed", request));
     }
 
     const cookieStore = await cookies();
@@ -98,7 +99,7 @@ export async function GET(request: Request) {
 
     if ("error" in practitionerResolution) {
       console.error("practitioner account resolution failed", practitionerResolution.error);
-      return NextResponse.redirect(new URL("/compte?error=account_failed", request.url));
+      return NextResponse.redirect(createAppUrl("/compte?error=account_failed", request));
     }
 
     if (practitionerResolution.isPractitioner) {
@@ -116,7 +117,7 @@ export async function GET(request: Request) {
         practitionerAccountId: practitionerResolution.accountId,
         metadata: { entry: "user_callback" }
       }).catch(() => {});
-      const response = NextResponse.redirect(new URL("/praticiens/dashboard", request.url));
+      const response = NextResponse.redirect(createAppUrl("/praticiens/dashboard", request));
       response.cookies.set({
         name: PRACTITIONER_SESSION_COOKIE_NAME,
         value: createPractitionerSessionCookieValue({ userId: data.user.id, email: normalizedEmail }),
@@ -135,10 +136,12 @@ export async function GET(request: Request) {
 
     if (!userAccount.ok) {
       console.error("user account ensure failed", userAccount.error);
-      return NextResponse.redirect(new URL("/compte?error=account_failed", request.url));
+      return NextResponse.redirect(createAppUrl("/compte?error=account_failed", request));
     }
 
-    const response = NextResponse.redirect(new URL(getSafeNextPath(shouldUseIntent ? intent?.nextPath : null), request.url));
+    const response = NextResponse.redirect(
+      createAppUrl(getSafeNextPath(shouldUseIntent ? intent?.nextPath : null), request)
+    );
     await recordProductEvent({
       eventName: "user_login_success",
       request,
@@ -157,6 +160,6 @@ export async function GET(request: Request) {
     return response;
   } catch (error) {
     console.error("user auth callback error", error);
-    return NextResponse.redirect(new URL("/compte?error=server_error", request.url));
+    return NextResponse.redirect(createAppUrl("/compte?error=server_error", request));
   }
 }

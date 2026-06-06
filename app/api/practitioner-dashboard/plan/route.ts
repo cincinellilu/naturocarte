@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import {
@@ -24,7 +25,7 @@ type PractitionerAccountBilling = {
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
   if (!session) {
-    return NextResponse.redirect(new URL("/praticiens?auth=required", request.url), {
+    return NextResponse.redirect(createAppUrl("/praticiens?auth=required", request), {
       status: 303
     });
   }
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const rawPlan = formData.get("plan");
   const plan = typeof rawPlan === "string" ? rawPlan.trim() : "";
-  const redirectUrl = new URL("/praticiens/dashboard", request.url);
+  const redirectUrl = createAppUrl("/praticiens/dashboard", request);
 
   if (!isPractitionerPlanId(plan)) {
     redirectUrl.searchParams.set("error", "invalid_plan");
@@ -61,7 +62,7 @@ export async function POST(request: Request) {
         }).catch(() => {});
         const portal = await createBillingPortalSession({
           customerId: account.stripe_customer_id,
-          returnUrl: new URL("/praticiens/dashboard", request.url).toString()
+          returnUrl: createAppUrl("/praticiens/dashboard", request).toString()
         });
 
         if (portal.url) {
@@ -115,8 +116,8 @@ export async function POST(request: Request) {
     const checkout = await createVisibilityCheckoutSession({
       customerId,
       practitionerAccountId: account.id,
-      successUrl: new URL("/praticiens/dashboard?billing=success", request.url).toString(),
-      cancelUrl: new URL("/praticiens/dashboard?plans=open", request.url).toString()
+      successUrl: createAppUrl("/praticiens/dashboard?billing=success", request).toString(),
+      cancelUrl: createAppUrl("/praticiens/dashboard?plans=open", request).toString()
     });
 
     if (!checkout.url) {

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import {
   createUserAuthIntentCookieValue,
   getUserAuthIntentCookieOptions,
@@ -91,7 +92,7 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const email = normalizeText(formData.get("email")).toLowerCase();
   const nextPath = getSafeNextPath(normalizeText(formData.get("next")) || "/compte");
-  const redirectUrl = new URL("/compte", request.url);
+  const redirectUrl = createAppUrl("/compte", request);
   redirectUrl.searchParams.set("next", nextPath);
 
   if (!email || !isValidEmail(email)) {
@@ -106,7 +107,7 @@ export async function POST(request: Request) {
         type: "magiclink",
         email,
         options: {
-          redirectTo: `${new URL(request.url).origin}/compte/auth/callback`
+          redirectTo: createAppUrl("/compte/auth/callback", request).toString()
         }
       });
 
@@ -135,7 +136,7 @@ export async function POST(request: Request) {
       return NextResponse.redirect(redirectUrl, { status: 303 });
     }
 
-    const callbackUrl = new URL("/compte/auth/callback", request.url);
+    const callbackUrl = createAppUrl("/compte/auth/callback", request);
     callbackUrl.searchParams.set("token_hash", tokenHash);
     callbackUrl.searchParams.set("type", verificationType);
 

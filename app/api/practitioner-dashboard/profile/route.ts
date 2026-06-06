@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import {
@@ -76,7 +77,7 @@ async function geocodePractitionerAddress(params: {
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
   if (!session) {
-    return NextResponse.redirect(new URL("/praticiens?auth=required", request.url), {
+    return NextResponse.redirect(createAppUrl("/praticiens?auth=required", request), {
       status: 303
     });
   }
@@ -91,7 +92,7 @@ export async function POST(request: Request) {
   const adresse = normalizeNullable(formData.get("adresse"));
   const postalCode = normalizeNullable(formData.get("postal_code"));
   const city = normalizeNullable(formData.get("city"));
-  const redirectUrl = new URL("/praticiens/dashboard", request.url);
+  const redirectUrl = createAppUrl("/praticiens/dashboard", request);
 
   if (!isContactSlot(contactSlot)) {
     redirectUrl.searchParams.set("error", "invalid_contact_slot");

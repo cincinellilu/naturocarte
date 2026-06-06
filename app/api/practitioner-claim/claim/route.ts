@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import {
   createPractitionerSessionCookieValue,
   getPractitionerSessionCookieOptions,
@@ -200,7 +201,7 @@ async function getOrCreateAuthUserId(params: {
   request: Request;
   supabase: ReturnType<typeof getSupabaseAdminClient>;
 }): Promise<string | null> {
-  const redirectTo = `${new URL(params.request.url).origin}/praticiens/auth/callback`;
+  const redirectTo = createAppUrl("/praticiens/auth/callback", params.request).toString();
   const link = await params.supabase.auth.admin.generateLink({
     type: "magiclink",
     email: params.email,

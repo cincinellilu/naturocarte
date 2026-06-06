@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
@@ -103,7 +104,7 @@ async function geocodePractitionerAddress(params: {
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
   if (!session) {
-    return NextResponse.redirect(new URL("/praticiens?auth=required", request.url), {
+    return NextResponse.redirect(createAppUrl("/praticiens?auth=required", request), {
       status: 303
     });
   }
@@ -115,7 +116,7 @@ export async function POST(request: Request) {
   const addressLine = normalizeText(formData.get("address_line"));
   const postalCode = normalizeText(formData.get("postal_code"));
   const city = normalizeText(formData.get("city"));
-  const redirectUrl = new URL("/praticiens/dashboard", request.url);
+  const redirectUrl = createAppUrl("/praticiens/dashboard", request);
 
   if (!firstName || !lastName || siret.length !== 14 || !addressLine || !/^\d{5}$/.test(postalCode) || !city) {
     redirectUrl.searchParams.set("error", "invalid_profile");

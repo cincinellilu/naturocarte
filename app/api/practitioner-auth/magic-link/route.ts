@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -78,7 +79,7 @@ async function sendMagicLinkEmail(params: {
 }
 
 export async function POST(request: Request) {
-  const redirectUrl = new URL("/praticiens", request.url);
+  const redirectUrl = createAppUrl("/praticiens", request);
 
   try {
     const formData = await request.formData();
@@ -97,7 +98,7 @@ export async function POST(request: Request) {
         type: "magiclink",
         email,
         options: {
-          redirectTo: `${new URL(request.url).origin}/praticiens/auth/callback`
+          redirectTo: createAppUrl("/praticiens/auth/callback", request).toString()
         }
       });
 
@@ -126,7 +127,7 @@ export async function POST(request: Request) {
       return NextResponse.redirect(redirectUrl, { status: 303 });
     }
 
-    const callbackUrl = new URL("/praticiens/auth/callback", request.url);
+    const callbackUrl = createAppUrl("/praticiens/auth/callback", request);
     callbackUrl.searchParams.set("token_hash", tokenHash);
     callbackUrl.searchParams.set("type", verificationType);
 

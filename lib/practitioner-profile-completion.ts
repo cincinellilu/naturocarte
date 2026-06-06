@@ -35,7 +35,13 @@ function hasText(value: string | null | undefined): boolean {
 }
 
 function isPublishedStatus(status: string | null | undefined): boolean {
-  return status === "published" || status === "published_contacted";
+  return (
+    status === "published" ||
+    status === "published_contacted" ||
+    status === "published_contacted_claimed" ||
+    status === "published_contacted_clicked" ||
+    status === "published_contacted_not_claimed"
+  );
 }
 
 function hasSelectedContact(

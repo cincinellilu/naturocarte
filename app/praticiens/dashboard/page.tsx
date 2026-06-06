@@ -10,6 +10,7 @@ import {
   PRACTITIONER_PLAN_VISIBILITY,
   PRACTITIONER_PLANS
 } from "@/lib/practitioner-plans";
+import { isPublicPractitionerStatus } from "@/lib/practitioner-status";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export const dynamic = "force-dynamic";
@@ -87,7 +88,7 @@ function getAddressLine(practitioner: Practitioner): string {
 }
 
 function isPublicPractitioner(practitioner: Practitioner): boolean {
-  return ["published", "published_contacted"].includes(practitioner.status);
+  return isPublicPractitionerStatus(practitioner.status);
 }
 
 function getDashboardErrorMessage(error: string | null): string | null {

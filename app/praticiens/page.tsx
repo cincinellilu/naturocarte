@@ -43,6 +43,8 @@ function getAuthErrorMessage(error: string | null): string | null {
       return "Renseignez un email valide pour recevoir votre lien.";
     case "email_provider_missing":
       return "Le lien de connexion n’a pas pu être envoyé pour le moment.";
+    case "email_rate_limited":
+      return "Trop de demandes d’envoi ont été faites. Attendez un peu puis réessayez.";
     case "email_failed":
       return "Le lien de connexion n’a pas pu être envoyé. Réessayez dans quelques instants.";
     case "auth_failed":

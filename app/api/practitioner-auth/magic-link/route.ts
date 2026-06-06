@@ -24,7 +24,9 @@ function escapeHtml(value: string): string {
 async function sendMagicLinkEmail(params: {
   email: string;
   loginUrl: string;
-}): Promise<{ ok: true } | { ok: false; code: "missing_provider" | "send_failed"; error: unknown }> {
+}): Promise<
+  { ok: true } | { ok: false; code: "missing_provider" | "send_failed" | "rate_limited"; error: unknown }
+> {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim() || "NaturoCarte <onboarding@resend.dev>";
 
@@ -73,7 +75,11 @@ async function sendMagicLinkEmail(params: {
       details = await response.text();
     }
 
-    return { ok: false, code: "send_failed", error: { status: response.status, details } };
+    return {
+      ok: false,
+      code: response.status === 429 ? "rate_limited" : "send_failed",
+      error: { status: response.status, details }
+    };
   }
 
   return { ok: true };
@@ -82,7 +88,7 @@ async function sendMagicLinkEmail(params: {
 async function sendSupabaseMagicLink(params: {
   email: string;
   redirectTo: string;
-}): Promise<{ ok: true } | { ok: false; code: "send_failed"; error: unknown }> {
+}): Promise<{ ok: true } | { ok: false; code: "send_failed" | "rate_limited"; error: unknown }> {
   const supabase = getSupabaseAuthClient();
   const { error } = await supabase.auth.signInWithOtp({
     email: params.email,
@@ -93,7 +99,13 @@ async function sendSupabaseMagicLink(params: {
   });
 
   if (error) {
-    return { ok: false, code: "send_failed", error };
+    return {
+      ok: false,
+      code: error.status === 429 || error.code === "over_email_send_rate_limit"
+        ? "rate_limited"
+        : "send_failed",
+      error
+    };
   }
 
   return { ok: true };
@@ -127,7 +139,10 @@ export async function POST(request: Request) {
           request,
           metadata: { reason: "supabase_fallback_failed" }
         }).catch(() => {});
-        redirectUrl.searchParams.set("error", "email_failed");
+        redirectUrl.searchParams.set(
+          "error",
+          fallbackResult.code === "rate_limited" ? "email_rate_limited" : "email_failed"
+        );
         return NextResponse.redirect(redirectUrl, { status: 303 });
       }
 
@@ -178,23 +193,51 @@ export async function POST(request: Request) {
     const callbackUrl = createAppUrl("/praticiens/auth/callback", request);
     callbackUrl.searchParams.set("token_hash", tokenHash);
     callbackUrl.searchParams.set("type", verificationType);
+    const loginUrl = callbackUrl.toString();
 
     const result = await sendMagicLinkEmail({
       email,
-      loginUrl: callbackUrl.toString()
+      loginUrl
     });
 
     if (!result.ok) {
       console.error("practitioner magic link email send failed", result.error);
+
+      const fallbackResult = await sendSupabaseMagicLink({
+        email,
+        redirectTo: callbackRedirectTo
+      });
+
+      if (!fallbackResult.ok) {
+        console.error("practitioner fallback magic link send failed after resend error", {
+          resend: result.error,
+          supabase: fallbackResult.error
+        });
+        await recordProductEvent({
+          eventName: "practitioner_login_link_failed",
+          request,
+          metadata: {
+            reason: fallbackResult.code,
+            primary_provider: "resend",
+            fallback_provider: "supabase_auth"
+          }
+        }).catch(() => {});
+        redirectUrl.searchParams.set(
+          "error",
+          fallbackResult.code === "rate_limited" ? "email_rate_limited" : "email_failed"
+        );
+        return NextResponse.redirect(redirectUrl, { status: 303 });
+      }
+
+      redirectUrl.searchParams.set("auth", "sent");
       await recordProductEvent({
-        eventName: "practitioner_login_link_failed",
+        eventName: "practitioner_login_link_requested",
         request,
-        metadata: { reason: result.code }
+        metadata: {
+          delivery_provider: "supabase_auth_fallback",
+          primary_provider_error: result.code
+        }
       }).catch(() => {});
-      redirectUrl.searchParams.set(
-        "error",
-        result.code === "missing_provider" ? "email_provider_missing" : "email_failed"
-      );
       return NextResponse.redirect(redirectUrl, { status: 303 });
     }
 

@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
+import {
+  canUseSupabaseAuthEmailFallback,
+  mapAuthEmailErrorCodeToQueryParam,
+  sendAuthMagicLinkEmail
+} from "@/lib/auth-email";
 import { getSupabaseAuthClient } from "@/lib/supabase-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -10,79 +15,6 @@ function isValidEmail(value: string): boolean {
 
 function normalizeText(value: FormDataEntryValue | null): string {
   return typeof value === "string" ? value.trim() : "";
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-async function sendMagicLinkEmail(params: {
-  email: string;
-  loginUrl: string;
-}): Promise<
-  { ok: true } | { ok: false; code: "missing_provider" | "send_failed" | "rate_limited"; error: unknown }
-> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim() || "NaturoCarte <onboarding@resend.dev>";
-
-  if (!apiKey) {
-    return { ok: false, code: "missing_provider", error: "Missing RESEND_API_KEY" };
-  }
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      from: fromEmail,
-      to: [params.email],
-      subject: "Votre lien de connexion NaturoCarte",
-      text: [
-        "Bonjour,",
-        "",
-        "Voici votre lien de connexion à l’espace praticien NaturoCarte :",
-        params.loginUrl,
-        "",
-        "Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet email."
-      ].join("\n"),
-      html: `
-        <div style="font-family: Arial, sans-serif; color: #10201b; line-height: 1.55;">
-          <p>Bonjour,</p>
-          <p>Voici votre lien de connexion à l’espace praticien NaturoCarte.</p>
-          <p>
-            <a href="${escapeHtml(params.loginUrl)}" style="display: inline-block; padding: 12px 18px; border-radius: 8px; background: #0f766e; color: #ffffff; text-decoration: none; font-weight: 700;">
-              Accéder à mon espace praticien
-            </a>
-          </p>
-          <p style="color: #5f6f69;">Ce lien est personnel. Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet email.</p>
-        </div>
-      `
-    })
-  });
-
-  if (!response.ok) {
-    let details: unknown;
-    try {
-      details = await response.json();
-    } catch {
-      details = await response.text();
-    }
-
-    return {
-      ok: false,
-      code: response.status === 429 ? "rate_limited" : "send_failed",
-      error: { status: response.status, details }
-    };
-  }
-
-  return { ok: true };
 }
 
 async function sendSupabaseMagicLink(params: {
@@ -126,7 +58,7 @@ export async function POST(request: Request) {
     redirectUrl.searchParams.set("email", email);
     const callbackRedirectTo = createAppUrl("/praticiens/auth/callback", request).toString();
 
-    if (!process.env.RESEND_API_KEY?.trim()) {
+    if (!process.env.RESEND_API_KEY?.trim() && canUseSupabaseAuthEmailFallback()) {
       const fallbackResult = await sendSupabaseMagicLink({
         email,
         redirectTo: callbackRedirectTo
@@ -195,7 +127,8 @@ export async function POST(request: Request) {
     callbackUrl.searchParams.set("type", verificationType);
     const loginUrl = callbackUrl.toString();
 
-    const result = await sendMagicLinkEmail({
+    const result = await sendAuthMagicLinkEmail({
+      audience: "practitioner",
       email,
       loginUrl
     });
@@ -203,41 +136,54 @@ export async function POST(request: Request) {
     if (!result.ok) {
       console.error("practitioner magic link email send failed", result.error);
 
-      const fallbackResult = await sendSupabaseMagicLink({
-        email,
-        redirectTo: callbackRedirectTo
-      });
-
-      if (!fallbackResult.ok) {
-        console.error("practitioner fallback magic link send failed after resend error", {
-          resend: result.error,
-          supabase: fallbackResult.error
+      if (canUseSupabaseAuthEmailFallback() && result.code !== "missing_provider") {
+        const fallbackResult = await sendSupabaseMagicLink({
+          email,
+          redirectTo: callbackRedirectTo
         });
+
+        if (!fallbackResult.ok) {
+          console.error("practitioner fallback magic link send failed after resend error", {
+            resend: result.error,
+            supabase: fallbackResult.error
+          });
+          await recordProductEvent({
+            eventName: "practitioner_login_link_failed",
+            request,
+            metadata: {
+              reason: fallbackResult.code,
+              primary_provider: "resend",
+              fallback_provider: "supabase_auth"
+            }
+          }).catch(() => {});
+          redirectUrl.searchParams.set(
+            "error",
+            fallbackResult.code === "rate_limited" ? "email_rate_limited" : "email_failed"
+          );
+          return NextResponse.redirect(redirectUrl, { status: 303 });
+        }
+
+        redirectUrl.searchParams.set("auth", "sent");
         await recordProductEvent({
-          eventName: "practitioner_login_link_failed",
+          eventName: "practitioner_login_link_requested",
           request,
           metadata: {
-            reason: fallbackResult.code,
-            primary_provider: "resend",
-            fallback_provider: "supabase_auth"
+            delivery_provider: "supabase_auth_fallback",
+            primary_provider_error: result.code
           }
         }).catch(() => {});
-        redirectUrl.searchParams.set(
-          "error",
-          fallbackResult.code === "rate_limited" ? "email_rate_limited" : "email_failed"
-        );
         return NextResponse.redirect(redirectUrl, { status: 303 });
       }
 
-      redirectUrl.searchParams.set("auth", "sent");
       await recordProductEvent({
-        eventName: "practitioner_login_link_requested",
+        eventName: "practitioner_login_link_failed",
         request,
         metadata: {
-          delivery_provider: "supabase_auth_fallback",
-          primary_provider_error: result.code
+          reason: result.code,
+          delivery_provider: "resend"
         }
       }).catch(() => {});
+      redirectUrl.searchParams.set("error", mapAuthEmailErrorCodeToQueryParam(result.code));
       return NextResponse.redirect(redirectUrl, { status: 303 });
     }
 

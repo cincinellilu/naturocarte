@@ -148,7 +148,7 @@ export default async function AccountPage({
 
           {auth === "sent" ? (
             <p className="practitioner-form-feedback practitioner-form-feedback--success">
-              Lien envoyé. Vérifiez votre boîte email pour ouvrir votre compte.
+              L’email de connexion NaturoCarte a été envoyé. Vérifiez votre boîte mail pour ouvrir votre compte.
             </p>
           ) : null}
           {auth === "required" ? (

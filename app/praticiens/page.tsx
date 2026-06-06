@@ -42,9 +42,9 @@ function getAuthErrorMessage(error: string | null): string | null {
     case "invalid_email":
       return "Renseignez un email valide pour recevoir votre lien.";
     case "email_provider_missing":
-      return "L’envoi d’email NaturoCarte n’est pas encore configuré. Ajoutez RESEND_API_KEY côté serveur.";
+      return "Le lien de connexion n’a pas pu être envoyé pour le moment.";
     case "email_failed":
-      return "Le lien a été généré, mais l’email n’a pas pu être envoyé. Vérifiez l’expéditeur Resend.";
+      return "Le lien de connexion n’a pas pu être envoyé. Réessayez dans quelques instants.";
     case "auth_failed":
       return "Le lien n’a pas pu être validé ou généré. Demandez un nouveau lien de connexion.";
     case "account_failed":

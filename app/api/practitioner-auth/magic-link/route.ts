@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAppUrl } from "@/lib/app-url";
 import { recordProductEvent } from "@/lib/product-events-server";
+import { getSupabaseAuthClient } from "@/lib/supabase-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 function isValidEmail(value: string): boolean {
@@ -78,6 +79,26 @@ async function sendMagicLinkEmail(params: {
   return { ok: true };
 }
 
+async function sendSupabaseMagicLink(params: {
+  email: string;
+  redirectTo: string;
+}): Promise<{ ok: true } | { ok: false; code: "send_failed"; error: unknown }> {
+  const supabase = getSupabaseAuthClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email: params.email,
+    options: {
+      emailRedirectTo: params.redirectTo,
+      shouldCreateUser: true
+    }
+  });
+
+  if (error) {
+    return { ok: false, code: "send_failed", error };
+  }
+
+  return { ok: true };
+}
+
 export async function POST(request: Request) {
   const redirectUrl = createAppUrl("/praticiens", request);
 
@@ -91,6 +112,33 @@ export async function POST(request: Request) {
     }
 
     redirectUrl.searchParams.set("email", email);
+    const callbackRedirectTo = createAppUrl("/praticiens/auth/callback", request).toString();
+
+    if (!process.env.RESEND_API_KEY?.trim()) {
+      const fallbackResult = await sendSupabaseMagicLink({
+        email,
+        redirectTo: callbackRedirectTo
+      });
+
+      if (!fallbackResult.ok) {
+        console.error("practitioner fallback magic link send failed", fallbackResult.error);
+        await recordProductEvent({
+          eventName: "practitioner_login_link_failed",
+          request,
+          metadata: { reason: "supabase_fallback_failed" }
+        }).catch(() => {});
+        redirectUrl.searchParams.set("error", "email_failed");
+        return NextResponse.redirect(redirectUrl, { status: 303 });
+      }
+
+      redirectUrl.searchParams.set("auth", "sent");
+      await recordProductEvent({
+        eventName: "practitioner_login_link_requested",
+        request,
+        metadata: { delivery_provider: "supabase_auth" }
+      }).catch(() => {});
+      return NextResponse.redirect(redirectUrl, { status: 303 });
+    }
 
     const supabase = getSupabaseAdminClient();
     const createMagicLink = () =>
@@ -98,7 +146,7 @@ export async function POST(request: Request) {
         type: "magiclink",
         email,
         options: {
-          redirectTo: createAppUrl("/praticiens/auth/callback", request).toString()
+          redirectTo: callbackRedirectTo
         }
       });
 
@@ -153,7 +201,8 @@ export async function POST(request: Request) {
     redirectUrl.searchParams.set("auth", "sent");
     await recordProductEvent({
       eventName: "practitioner_login_link_requested",
-      request
+      request,
+      metadata: { delivery_provider: "resend" }
     }).catch(() => {});
     return NextResponse.redirect(redirectUrl, { status: 303 });
   } catch (error) {

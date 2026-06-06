@@ -1,4 +1,5 @@
 import { legalIdentity } from "@/lib/legal";
+import { getServerEnv } from "@/lib/server-env";
 import { getSiteUrl } from "@/lib/site";
 
 type AuthEmailAudience = "user" | "practitioner";
@@ -174,8 +175,8 @@ export async function sendAuthMagicLinkEmail(params: {
   email: string;
   loginUrl: string;
 }): Promise<AuthEmailSendResult> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim() || DEFAULT_FROM_EMAIL;
+  const apiKey = getServerEnv("RESEND_API_KEY");
+  const fromEmail = getServerEnv("CONTACT_FROM_EMAIL") || DEFAULT_FROM_EMAIL;
   const copy = getAuthEmailCopy(params.audience);
 
   if (!apiKey) {

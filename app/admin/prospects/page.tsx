@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import AdminProspectsDashboard, {
   type AdminProspect
 } from "@/components/AdminProspectsDashboard";
+import AdminAuthGate from "@/components/admin/AdminAuthGate";
+import AdminShell from "@/components/admin/AdminShell";
 import {
   hasAdminProspectsAccess,
   isAdminProspectsConfigured
@@ -45,15 +46,13 @@ export default async function AdminProspectsPage({
 
   if (!isConfigured) {
     return (
-      <article className="article-shell admin-page">
-        <section className="admin-gate">
-          <p className="page-eyebrow">Admin prospects</p>
-          <h1>Configuration manquante</h1>
-          <p className="page-lead">
-            Aucun mot de passe admin n’est configuré pour le moment.
-          </p>
-        </section>
-      </article>
+      <AdminAuthGate
+        eyebrow="Admin prospects"
+        title="Configuration manquante"
+        description="Aucun mot de passe admin n’est configuré pour le moment."
+        nextPath="/admin/prospects"
+        errorMessage={null}
+      />
     );
   }
 
@@ -61,36 +60,13 @@ export default async function AdminProspectsPage({
 
   if (!hasAccess) {
     return (
-      <article className="article-shell admin-page">
-        <section className="admin-gate">
-          <p className="page-eyebrow">Admin prospects</p>
-          <h1>Accès protégé</h1>
-          <p className="page-lead">
-            Connectez-vous pour gérer les naturopathes à contacter et les retirer
-            temporairement du site si nécessaire.
-          </p>
-
-          {errorMessage ? <p className="page-alert">{errorMessage}</p> : null}
-
-          <form className="admin-login-form" action="/admin/prospects/login" method="post">
-            <input type="hidden" name="next" value="/admin/prospects" />
-            <label className="admin-prospects-label" htmlFor="admin-password">
-              Mot de passe admin
-            </label>
-            <input
-              id="admin-password"
-              className="admin-prospects-input"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-            />
-            <button className="btn" type="submit">
-              Ouvrir l’admin
-            </button>
-          </form>
-        </section>
-      </article>
+      <AdminAuthGate
+        eyebrow="Admin prospects"
+        title="Accès protégé"
+        description="Connectez-vous pour gérer les naturopathes à contacter et les retirer temporairement du site si nécessaire."
+        nextPath="/admin/prospects"
+        errorMessage={errorMessage}
+      />
     );
   }
 
@@ -113,43 +89,20 @@ export default async function AdminProspectsPage({
   }
 
   return (
-    <article className="article-shell admin-page">
-      <section className="admin-page-header">
-        <div>
-          <p className="page-eyebrow">Admin prospects</p>
-          <h1>Suivi des naturopathes</h1>
-          <p className="page-lead">
-            Cochez <strong>Contacté</strong> quand la prise de contact est faite, et
-            cochez <strong>Retiré du site</strong> pour masquer complètement une fiche
-            pendant le suivi.
-          </p>
-        </div>
-
-        <form action="/admin/prospects/logout" method="post">
-          <div className="admin-links">
-            <Link className="btn btn-secondary" href="/admin">
-              Pilotage
-            </Link>
-            <Link className="btn btn-secondary" href="/admin/clients">
-              Clients
-            </Link>
-            <Link className="btn btn-secondary" href="/admin/campagnes">
-              Campagnes email
-            </Link>
-            <button className="btn btn-secondary" type="submit">
-              Déconnexion
-            </button>
-          </div>
-        </form>
-      </section>
-
-      {hasError ? (
-        <p className="page-alert">
-          Impossible de charger les praticiens pour le moment.
-        </p>
-      ) : (
-        <AdminProspectsDashboard practitioners={practitioners} />
-      )}
-    </article>
+    <AdminShell
+      section="prospects"
+      eyebrow="Admin prospects"
+      title="Suivi des naturopathes"
+      description="Cochez Contacté quand la prise de contact est faite, et Retiré du site pour masquer complètement une fiche pendant le suivi."
+      headerMeta={["Suivi commercial", `${practitioners.length.toLocaleString("fr-FR")} fiches suivies`]}
+    >
+      <div className="admin-page">
+        {hasError ? (
+          <p className="page-alert">Impossible de charger les praticiens pour le moment.</p>
+        ) : (
+          <AdminProspectsDashboard practitioners={practitioners} />
+        )}
+      </div>
+    </AdminShell>
   );
 }

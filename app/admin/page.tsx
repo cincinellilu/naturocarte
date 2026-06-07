@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
+import AdminAuthGate from "@/components/admin/AdminAuthGate";
+import AdminShell from "@/components/admin/AdminShell";
+import AdminSparkline from "@/components/admin/AdminSparkline";
 import {
   hasAdminProspectsAccess,
   isAdminProspectsConfigured
@@ -128,41 +131,6 @@ async function loadMetrics(): Promise<AdminMetrics | { error: true }> {
   };
 }
 
-function AdminGate({ errorMessage }: { errorMessage: string | null }) {
-  return (
-    <article className="article-shell admin-page">
-      <section className="admin-gate">
-        <p className="page-eyebrow">Admin NaturoCarte</p>
-        <h1>Accès protégé</h1>
-        <p className="page-lead">
-          Connectez-vous pour piloter le trafic, les parcours utilisateurs, les prospects
-          et les métriques business.
-        </p>
-
-        {errorMessage ? <p className="page-alert">{errorMessage}</p> : null}
-
-        <form className="admin-login-form" action="/admin/prospects/login" method="post">
-          <input type="hidden" name="next" value="/admin" />
-          <label className="admin-prospects-label" htmlFor="admin-password">
-            Mot de passe admin
-          </label>
-          <input
-            id="admin-password"
-            className="admin-prospects-input"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-          />
-          <button className="btn" type="submit">
-            Ouvrir l’admin
-          </button>
-        </form>
-      </section>
-    </article>
-  );
-}
-
 export default async function AdminPage({
   searchParams
 }: {
@@ -173,31 +141,48 @@ export default async function AdminPage({
   const errorMessage = getErrorMessage(errorCode);
 
   if (!isAdminProspectsConfigured()) {
-    return <AdminGate errorMessage="Aucun mot de passe admin n’est configuré." />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin NaturoCarte"
+        title="Accès protégé"
+        description="Connectez-vous pour piloter le trafic, les parcours utilisateurs, les prospects et les métriques business."
+        nextPath="/admin"
+        errorMessage="Aucun mot de passe admin n’est configuré."
+      />
+    );
   }
 
   const hasAccess = await hasAdminProspectsAccess();
   if (!hasAccess) {
-    return <AdminGate errorMessage={errorMessage} />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin NaturoCarte"
+        title="Accès protégé"
+        description="Connectez-vous pour piloter le trafic, les parcours utilisateurs, les prospects et les métriques business."
+        nextPath="/admin"
+        errorMessage={errorMessage}
+      />
+    );
   }
 
   const metrics = await loadMetrics();
 
   if ("error" in metrics) {
     return (
-      <article className="article-shell admin-page">
-        <section className="admin-page-header">
-          <div>
-            <p className="page-eyebrow">Admin NaturoCarte</p>
-            <h1>Pilotage produit</h1>
-            <p className="page-lead">
-              La table <code>product_events</code> n’est pas encore disponible ou ne peut pas
-              être lue.
-            </p>
-          </div>
-          <AdminLinks />
-        </section>
-      </article>
+      <AdminShell
+        section="overview"
+        eyebrow="Admin NaturoCarte"
+        title="Pilotage produit"
+        description="Vue transversale du trafic, des parcours et des signaux business."
+        headerMeta={["Console produit", "Données indisponibles"]}
+      >
+        <div className="admin-page">
+          <p className="page-alert">
+            La table <code>product_events</code> n’est pas encore disponible ou ne peut pas être
+            lue.
+          </p>
+        </div>
+      </AdminShell>
     );
   }
 
@@ -242,109 +227,84 @@ export default async function AdminPage({
   const lastDays = getLastDaysEvents(events);
 
   return (
-    <article className="article-shell admin-page">
-      <section className="admin-page-header">
-        <div>
-          <p className="page-eyebrow">Admin NaturoCarte</p>
-          <h1>Pilotage produit</h1>
-          <p className="page-lead">
-            Vue des 30 derniers jours. Les chiffres combinent acquisition, carte,
-            fiches praticiens, avis, favoris et abonnement Visibilité+.
-          </p>
-        </div>
-        <AdminLinks />
-      </section>
+    <AdminShell
+      section="overview"
+      eyebrow="Admin NaturoCarte"
+      title="Pilotage produit"
+      description="Vue des 30 derniers jours. Les chiffres combinent acquisition, carte, fiches praticiens, avis, favoris et abonnement Visibilité+."
+      headerMeta={["30 derniers jours", `${events.length.toLocaleString("fr-FR")} événements`]}
+    >
+      <div className="admin-page">
+        <section className="admin-kpi-grid" aria-label="Indicateurs principaux">
+          <AdminKpi label="Événements" value={events.length} />
+          <AdminKpi label="Sessions" value={sessions} />
+          <AdminKpi label="Vues fiches" value={profileViews} />
+          <AdminKpi label="Clics contact" value={contactClicks} />
+          <AdminKpi label="Favoris ajoutés" value={favorites} />
+          <AdminKpi label="Avis déposés" value={reviews} />
+          <AdminKpi label="Checkouts lancés" value={checkouts} />
+          <AdminKpi label="Abonnements confirmés" value={subscriptions} />
+        </section>
 
-      <section className="admin-kpi-grid" aria-label="Indicateurs principaux">
-        <AdminKpi label="Événements" value={events.length} />
-        <AdminKpi label="Sessions" value={sessions} />
-        <AdminKpi label="Vues fiches" value={profileViews} />
-        <AdminKpi label="Clics contact" value={contactClicks} />
-        <AdminKpi label="Favoris ajoutés" value={favorites} />
-        <AdminKpi label="Avis déposés" value={reviews} />
-        <AdminKpi label="Checkouts lancés" value={checkouts} />
-        <AdminKpi label="Abonnements confirmés" value={subscriptions} />
-      </section>
+        <section className="admin-insight-grid">
+          <AdminPanel title="Activité récente" description="Répartition quotidienne sur les derniers jours.">
+            <AdminSparkline items={lastDays} valueLabel="activité récente" />
+          </AdminPanel>
 
-      <section className="admin-insight-grid">
-        <AdminPanel title="Parcours carte" description="Recherches, filtres, marqueurs et popups.">
-          <AdminKpi label="Interactions carte" value={mapEvents} compact />
-          <AdminList
-            items={getTopItems(
-              events.filter((event) => event.event_name.startsWith("map_")),
-              (event) => event.event_name,
-              6
-            )}
-          />
-        </AdminPanel>
+          <AdminPanel title="Parcours carte" description="Recherches, filtres, marqueurs et popups.">
+            <AdminKpi label="Interactions carte" value={mapEvents} compact />
+            <AdminList
+              items={getTopItems(
+                events.filter((event) => event.event_name.startsWith("map_")),
+                (event) => event.event_name,
+                6
+              )}
+            />
+          </AdminPanel>
 
-        <AdminPanel title="Pages d’entrée" description="Pages qui démarrent les sessions suivies.">
-          <AdminList items={topPages} emptyLabel="Aucune page vue trackée." />
-        </AdminPanel>
+          <AdminPanel title="Pages d’entrée" description="Pages qui démarrent les sessions suivies.">
+            <AdminList items={topPages} emptyLabel="Aucune page vue trackée." />
+          </AdminPanel>
 
-        <AdminPanel title="Fiches les plus engagées" description="Vues, contacts, favoris et avis.">
-          <AdminList items={topPractitioners} emptyLabel="Aucune fiche praticien trackée." />
-        </AdminPanel>
+          <AdminPanel title="Fiches les plus engagées" description="Vues, contacts, favoris et avis.">
+            <AdminList items={topPractitioners} emptyLabel="Aucune fiche praticien trackée." />
+          </AdminPanel>
 
-        <AdminPanel title="Événements fréquents" description="Volume brut par type d’événement.">
-          <AdminList items={topEvents} />
-        </AdminPanel>
+          <AdminPanel title="Événements fréquents" description="Volume brut par type d’événement.">
+            <AdminList items={topEvents} />
+          </AdminPanel>
 
-        <AdminPanel title="Activité récente" description="Répartition quotidienne sur les derniers jours.">
-          <AdminList items={lastDays} />
-        </AdminPanel>
-
-        <AdminPanel title="Back-office disponible" description="Accès rapides aux autres vues internes.">
-          <div className="admin-action-list">
-            <Link className="btn" href="/admin/clients">
-              Suivre les clients
-            </Link>
-            <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
-              Praticiens actifs
-            </Link>
-            <Link className="btn btn-secondary" href="/admin/campagnes">
-              Campagnes email
-            </Link>
-            <Link className="btn btn-secondary" href="/admin/clients/visibilite-plus">
-              Clients Visibilité+
-            </Link>
-            <Link className="btn" href="/admin/prospects">
-              Suivre les prospects
-            </Link>
-            <Link className="btn btn-secondary" href="/carte">
-              Vérifier la carte publique
-            </Link>
-            <Link className="btn btn-secondary" href="/praticiens/dashboard">
-              Voir un dashboard praticien
-            </Link>
-          </div>
-        </AdminPanel>
-      </section>
-    </article>
-  );
-}
-
-function AdminLinks() {
-  return (
-    <div className="admin-links">
-      <Link className="btn btn-secondary" href="/admin/clients">
-        Clients
-      </Link>
-      <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
-        Praticiens actifs
-      </Link>
-      <Link className="btn btn-secondary" href="/admin/campagnes">
-        Campagnes email
-      </Link>
-      <Link className="btn btn-secondary" href="/admin/prospects">
-        Prospects
-      </Link>
-      <form action="/admin/prospects/logout" method="post">
-        <button className="btn btn-secondary" type="submit">
-          Déconnexion
-        </button>
-      </form>
-    </div>
+          <AdminPanel title="Back-office disponible" description="Accès rapides aux autres vues internes.">
+            <div className="admin-action-list admin-action-list--grid">
+              <Link className="btn" href="/admin/clients">
+                Suivre les clients
+              </Link>
+              <Link className="btn btn-secondary" href="/admin/emailing">
+                Emailing NaturoCarte
+              </Link>
+              <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
+                Praticiens actifs
+              </Link>
+              <Link className="btn btn-secondary" href="/admin/campagnes">
+                Campagnes email
+              </Link>
+              <Link className="btn btn-secondary" href="/admin/clients/visibilite-plus">
+                Clients Visibilité+
+              </Link>
+              <Link className="btn" href="/admin/prospects">
+                Suivre les prospects
+              </Link>
+              <Link className="btn btn-secondary" href="/carte">
+                Vérifier la carte publique
+              </Link>
+              <Link className="btn btn-secondary" href="/praticiens/dashboard">
+                Voir un dashboard praticien
+              </Link>
+            </div>
+          </AdminPanel>
+        </section>
+      </div>
+    </AdminShell>
   );
 }
 
@@ -396,10 +356,19 @@ function AdminList({
     return <p className="admin-empty">{emptyLabel}</p>;
   }
 
+  const maxCount = Math.max(...items.map(([, count]) => count), 1);
+
   return (
     <ol className="admin-ranked-list">
       {items.map(([label, count]) => (
-        <li key={label}>
+        <li
+          key={label}
+          style={
+            {
+              "--admin-bar-ratio": `${Math.max((count / maxCount) * 100, 8)}%`
+            } as CSSProperties
+          }
+        >
           <span>{label}</span>
           <strong>{count.toLocaleString("fr-FR")}</strong>
         </li>

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import AdminAuthGate from "@/components/admin/AdminAuthGate";
+import AdminShell from "@/components/admin/AdminShell";
 import {
   hasAdminProspectsAccess,
   isAdminProspectsConfigured
@@ -183,40 +185,6 @@ async function loadClients(planFilter: PlanFilter): Promise<ClientRow[] | null> 
   );
 }
 
-function AdminGate({ errorMessage }: { errorMessage: string | null }) {
-  return (
-    <article className="article-shell admin-page">
-      <section className="admin-gate">
-        <p className="page-eyebrow">Admin commercial</p>
-        <h1>Accès protégé</h1>
-        <p className="page-lead">
-          Connectez-vous pour suivre les clients, les forfaits et les abonnements.
-        </p>
-
-        {errorMessage ? <p className="page-alert">{errorMessage}</p> : null}
-
-        <form className="admin-login-form" action="/admin/prospects/login" method="post">
-          <input type="hidden" name="next" value="/admin/clients" />
-          <label className="admin-prospects-label" htmlFor="admin-password">
-            Mot de passe admin
-          </label>
-          <input
-            id="admin-password"
-            className="admin-prospects-input"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-          />
-          <button className="btn" type="submit">
-            Ouvrir l’admin
-          </button>
-        </form>
-      </section>
-    </article>
-  );
-}
-
 export default async function AdminClientsView({
   planFilter,
   errorCode
@@ -227,12 +195,28 @@ export default async function AdminClientsView({
   const errorMessage = getErrorMessage(errorCode);
 
   if (!isAdminProspectsConfigured()) {
-    return <AdminGate errorMessage="Aucun mot de passe admin n’est configuré." />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin commercial"
+        title="Accès protégé"
+        description="Connectez-vous pour suivre les clients, les forfaits et les abonnements."
+        nextPath="/admin/clients"
+        errorMessage="Aucun mot de passe admin n’est configuré."
+      />
+    );
   }
 
   const hasAccess = await hasAdminProspectsAccess();
   if (!hasAccess) {
-    return <AdminGate errorMessage={errorMessage} />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin commercial"
+        title="Accès protégé"
+        description="Connectez-vous pour suivre les clients, les forfaits et les abonnements."
+        nextPath="/admin/clients"
+        errorMessage={errorMessage}
+      />
+    );
   }
 
   let clients: ClientRow[] | null = null;
@@ -248,98 +232,86 @@ export default async function AdminClientsView({
   const unpaidOrUnknown = visibilityClients.filter((client) => client.billing.currentMonthPaid !== true).length;
 
   return (
-    <article className="article-shell admin-page">
-      <section className="admin-page-header">
-        <div>
-          <p className="page-eyebrow">Admin commercial</p>
-          <h1>{getPlanFilterTitle(planFilter)}</h1>
-          <p className="page-lead">{getPlanFilterIntro(planFilter)}</p>
-        </div>
-        <div className="admin-links">
-          <Link className="btn btn-secondary" href="/admin">
-            Pilotage
+    <AdminShell
+      section="clients"
+      eyebrow="Admin commercial"
+      title={getPlanFilterTitle(planFilter)}
+      description={getPlanFilterIntro(planFilter)}
+      headerMeta={[
+        planFilter === "all" ? "Vue commerciale globale" : getPlanFilterTitle(planFilter),
+        `${(clients?.length ?? 0).toLocaleString("fr-FR")} compte(s)`
+      ]}
+    >
+      <div className="admin-page">
+        <nav className="admin-tabs" aria-label="Vues clients">
+          <Link className={planFilter === "all" ? "admin-tab is-active" : "admin-tab"} href="/admin/clients">
+            Tous les clients
           </Link>
-          <Link className="btn btn-secondary" href="/admin/prospects">
-            Prospects
+          <Link
+            className={planFilter === PRACTITIONER_PLAN_PRESENCE ? "admin-tab is-active" : "admin-tab"}
+            href="/admin/clients/presence"
+          >
+            Forfait Présence
           </Link>
-          <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
-            Praticiens actifs
+          <Link
+            className={planFilter === PRACTITIONER_PLAN_VISIBILITY ? "admin-tab is-active" : "admin-tab"}
+            href="/admin/clients/visibilite-plus"
+          >
+            Visibilité+
           </Link>
-          <form action="/admin/prospects/logout" method="post">
-            <button className="btn btn-secondary" type="submit">
-              Déconnexion
-            </button>
-          </form>
-        </div>
-      </section>
+        </nav>
 
-      <nav className="admin-tabs" aria-label="Vues clients">
-        <Link className={planFilter === "all" ? "admin-tab is-active" : "admin-tab"} href="/admin/clients">
-          Tous les clients
-        </Link>
-        <Link
-          className={planFilter === PRACTITIONER_PLAN_PRESENCE ? "admin-tab is-active" : "admin-tab"}
-          href="/admin/clients/presence"
-        >
-          Forfait Présence
-        </Link>
-        <Link
-          className={planFilter === PRACTITIONER_PLAN_VISIBILITY ? "admin-tab is-active" : "admin-tab"}
-          href="/admin/clients/visibilite-plus"
-        >
-          Visibilité+
-        </Link>
-      </nav>
+        {clients ? (
+          <>
+            <section className="admin-kpi-grid" aria-label="Indicateurs clients">
+              <div className="admin-kpi-card">
+                <strong>{clients.length.toLocaleString("fr-FR")}</strong>
+                <span>Clients affichés</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{presenceClients.length.toLocaleString("fr-FR")}</strong>
+                <span>Forfait Présence</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{visibilityClients.length.toLocaleString("fr-FR")}</strong>
+                <span>Visibilité+</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{paidThisMonth.toLocaleString("fr-FR")}</strong>
+                <span>Visibilité+ payé ce mois</span>
+              </div>
+            </section>
 
-      {clients ? (
-        <>
-          <section className="admin-kpi-grid" aria-label="Indicateurs clients">
-            <div className="admin-kpi-card">
-              <strong>{clients.length.toLocaleString("fr-FR")}</strong>
-              <span>Clients affichés</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{presenceClients.length.toLocaleString("fr-FR")}</strong>
-              <span>Forfait Présence</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{visibilityClients.length.toLocaleString("fr-FR")}</strong>
-              <span>Visibilité+</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{paidThisMonth.toLocaleString("fr-FR")}</strong>
-              <span>Visibilité+ payé ce mois</span>
-            </div>
-          </section>
-
-          {unpaidOrUnknown > 0 && planFilter !== PRACTITIONER_PLAN_PRESENCE ? (
-            <p className="admin-warning">
-              {unpaidOrUnknown.toLocaleString("fr-FR")} compte(s) Visibilité+ n’ont pas de
-              facture payée détectée pour le mois courant ou doivent être vérifiés dans Stripe.
-            </p>
-          ) : null}
-
-          <section className="admin-panel admin-clients-panel">
-            <div>
-              <h2>Liste clients</h2>
-              <p>
-                Les factures sont lues depuis Stripe lorsque le compte possède un customer Stripe.
+            {unpaidOrUnknown > 0 && planFilter !== PRACTITIONER_PLAN_PRESENCE ? (
+              <p className="admin-warning">
+                {unpaidOrUnknown.toLocaleString("fr-FR")} compte(s) Visibilité+ n’ont pas de
+                facture payée détectée pour le mois courant ou doivent être vérifiés dans Stripe.
               </p>
-            </div>
+            ) : null}
 
-            <div className="admin-clients-list">
-              {clients.length > 0 ? (
-                clients.map((client) => <ClientCard key={client.id} client={client} />)
-              ) : (
-                <p className="admin-empty">Aucun client dans cette vue.</p>
-              )}
-            </div>
-          </section>
-        </>
-      ) : (
-        <p className="page-alert">Impossible de charger les clients pour le moment.</p>
-      )}
-    </article>
+            <section className="admin-panel admin-clients-panel">
+              <div>
+                <h2>Liste clients</h2>
+                <p>
+                  Les factures sont lues depuis Stripe lorsque le compte possède un customer
+                  Stripe.
+                </p>
+              </div>
+
+              <div className="admin-clients-list">
+                {clients.length > 0 ? (
+                  clients.map((client) => <ClientCard key={client.id} client={client} />)
+                ) : (
+                  <p className="admin-empty">Aucun client dans cette vue.</p>
+                )}
+              </div>
+            </section>
+          </>
+        ) : (
+          <p className="page-alert">Impossible de charger les clients pour le moment.</p>
+        )}
+      </div>
+    </AdminShell>
   );
 }
 

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import AdminAuthGate from "@/components/admin/AdminAuthGate";
+import AdminShell from "@/components/admin/AdminShell";
+import AdminSparkline from "@/components/admin/AdminSparkline";
 import {
   hasAdminProspectsAccess,
   isAdminProspectsConfigured
@@ -49,40 +51,6 @@ function getErrorMessage(error: string | undefined): string | null {
   return null;
 }
 
-function AdminGate({ errorMessage }: { errorMessage: string | null }) {
-  return (
-    <article className="article-shell admin-page">
-      <section className="admin-gate">
-        <p className="page-eyebrow">Admin campagnes</p>
-        <h1>Accès protégé</h1>
-        <p className="page-lead">
-          Connectez-vous pour suivre les campagnes de revendication.
-        </p>
-
-        {errorMessage ? <p className="page-alert">{errorMessage}</p> : null}
-
-        <form className="admin-login-form" action="/admin/prospects/login" method="post">
-          <input type="hidden" name="next" value="/admin/campagnes" />
-          <label className="admin-prospects-label" htmlFor="admin-password">
-            Mot de passe admin
-          </label>
-          <input
-            id="admin-password"
-            className="admin-prospects-input"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-          />
-          <button className="btn" type="submit">
-            Ouvrir l’admin
-          </button>
-        </form>
-      </section>
-    </article>
-  );
-}
-
 async function loadCampaignRows() {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
@@ -108,12 +76,28 @@ export default async function AdminCampaignsPage({
   const errorMessage = getErrorMessage(errorCode);
 
   if (!isAdminProspectsConfigured()) {
-    return <AdminGate errorMessage="Aucun mot de passe admin n’est configuré." />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin campagnes"
+        title="Accès protégé"
+        description="Connectez-vous pour suivre les campagnes de revendication."
+        nextPath="/admin/campagnes"
+        errorMessage="Aucun mot de passe admin n’est configuré."
+      />
+    );
   }
 
   const hasAccess = await hasAdminProspectsAccess();
   if (!hasAccess) {
-    return <AdminGate errorMessage={errorMessage} />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin campagnes"
+        title="Accès protégé"
+        description="Connectez-vous pour suivre les campagnes de revendication."
+        nextPath="/admin/campagnes"
+        errorMessage={errorMessage}
+      />
+    );
   }
 
   let rows: CampaignEmailRow[] = [];
@@ -162,105 +146,110 @@ export default async function AdminCampaignsPage({
   );
 
   return (
-    <article className="article-shell admin-page">
-      <section className="admin-page-header">
-        <div>
-          <p className="page-eyebrow">Admin campagnes</p>
-          <h1>Campagnes email de revendication</h1>
-          <p className="page-lead">
-            Les emails sont envoyés via Resend. NaturoCarte suit ici les envois, les clics
-            uniques et surtout les fiches revendiquées par campagne.
-          </p>
-        </div>
-        <div className="admin-links">
-          <Link className="btn btn-secondary" href="/admin">
-            Pilotage
-          </Link>
-          <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
-            Praticiens actifs
-          </Link>
-          <Link className="btn btn-secondary" href="/admin/prospects">
-            Prospects
-          </Link>
-          <form action="/admin/prospects/logout" method="post">
-            <button className="btn btn-secondary" type="submit">
-              Déconnexion
-            </button>
-          </form>
-        </div>
-      </section>
+    <AdminShell
+      section="campaigns"
+      eyebrow="Admin campagnes"
+      title="Campagnes email de revendication"
+      description="Les emails sont envoyés via Resend. NaturoCarte suit ici les envois, les clics uniques et surtout les fiches revendiquées par campagne."
+      headerMeta={["15 variantes", `${totals.sent.toLocaleString("fr-FR")} envois suivis`]}
+    >
+      <div className="admin-page">
+        {hasError ? (
+          <p className="page-alert">Impossible de charger les campagnes pour le moment.</p>
+        ) : (
+          <>
+            <section className="admin-kpi-grid" aria-label="Indicateurs campagnes">
+              <div className="admin-kpi-card">
+                <strong>{totals.sent.toLocaleString("fr-FR")}</strong>
+                <span>Emails envoyés</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{totals.clicked.toLocaleString("fr-FR")}</strong>
+                <span>Clics uniques</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{totals.claimed.toLocaleString("fr-FR")}</strong>
+                <span>Fiches revendiquées</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{formatRate(totals.sent ? totals.clicked / totals.sent : 0)}</strong>
+                <span>Taux de clic global</span>
+              </div>
+            </section>
 
-      {hasError ? (
-        <p className="page-alert">Impossible de charger les campagnes pour le moment.</p>
-      ) : (
-        <>
-          <section className="admin-kpi-grid" aria-label="Indicateurs campagnes">
-            <div className="admin-kpi-card">
-              <strong>{totals.sent.toLocaleString("fr-FR")}</strong>
-              <span>Emails envoyés</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{totals.clicked.toLocaleString("fr-FR")}</strong>
-              <span>Clics uniques</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{totals.claimed.toLocaleString("fr-FR")}</strong>
-              <span>Fiches revendiquées</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{formatRate(totals.sent ? totals.clicked / totals.sent : 0)}</strong>
-              <span>Taux de clic global</span>
-            </div>
-          </section>
+            <section className="admin-insight-grid">
+              <section className="admin-panel">
+                <div>
+                  <h2>Volume par campagne</h2>
+                  <p>Courbe des envois pour comparer rapidement les variantes.</p>
+                </div>
+                <AdminSparkline
+                  items={campaignStats.map((stat) => [stat.campaignId, stat.sentCount] as const)}
+                  valueLabel="volume par campagne"
+                />
+              </section>
 
-          <section className="admin-panel">
-            <div>
-              <h2>Suivi par campagne</h2>
-              <p>15 variantes, une ligne par combinaison A/B/C × objet 1 à 5.</p>
-            </div>
+              <section className="admin-panel">
+                <div>
+                  <h2>Revendications obtenues</h2>
+                  <p>Nombre de fiches réellement revendiquées par variante.</p>
+                </div>
+                <AdminSparkline
+                  items={campaignStats.map((stat) => [stat.campaignId, stat.claimedCount] as const)}
+                  tone="amber"
+                  valueLabel="revendications par campagne"
+                />
+              </section>
+            </section>
 
-            <div className="admin-table-wrap">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Campagne</th>
-                    <th>Version</th>
-                    <th>Objet</th>
-                    <th>Envoyés</th>
-                    <th>Clics</th>
-                    <th>Revendiqués</th>
-                    <th>Taux clic</th>
-                    <th>Taux revendication</th>
-                    <th>Premier envoi</th>
-                    <th>Premier clic</th>
-                    <th>Première revendication</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {campaignStats.map((stat) => (
-                    <tr key={stat.campaignId}>
-                      <td>
-                        <strong>{stat.campaignId}</strong>
-                      </td>
-                      <td>{stat.version}</td>
-                      <td>{stat.subjectVariant}</td>
-                      <td>{stat.sentCount}</td>
-                      <td>{stat.clickCount}</td>
-                      <td>{stat.claimedCount}</td>
-                      <td>{formatRate(stat.clickRate)}</td>
-                      <td>{formatRate(stat.claimRate)}</td>
-                      <td>{formatDate(stat.firstSentAt)}</td>
-                      <td>{formatDate(stat.firstClickAt)}</td>
-                      <td>{formatDate(stat.firstClaimAt)}</td>
+            <section className="admin-panel">
+              <div>
+                <h2>Suivi par campagne</h2>
+                <p>15 variantes, une ligne par combinaison A/B/C × objet 1 à 5.</p>
+              </div>
+
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Campagne</th>
+                      <th>Version</th>
+                      <th>Objet</th>
+                      <th>Envoyés</th>
+                      <th>Clics</th>
+                      <th>Revendiqués</th>
+                      <th>Taux clic</th>
+                      <th>Taux revendication</th>
+                      <th>Premier envoi</th>
+                      <th>Premier clic</th>
+                      <th>Première revendication</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </>
-      )}
-    </article>
+                  </thead>
+                  <tbody>
+                    {campaignStats.map((stat) => (
+                      <tr key={stat.campaignId}>
+                        <td>
+                          <strong>{stat.campaignId}</strong>
+                        </td>
+                        <td>{stat.version}</td>
+                        <td>{stat.subjectVariant}</td>
+                        <td>{stat.sentCount}</td>
+                        <td>{stat.clickCount}</td>
+                        <td>{stat.claimedCount}</td>
+                        <td>{formatRate(stat.clickRate)}</td>
+                        <td>{formatRate(stat.claimRate)}</td>
+                        <td>{formatDate(stat.firstSentAt)}</td>
+                        <td>{formatDate(stat.firstClickAt)}</td>
+                        <td>{formatDate(stat.firstClaimAt)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </>
+        )}
+      </div>
+    </AdminShell>
   );
 }
-

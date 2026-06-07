@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import AdminAuthGate from "@/components/admin/AdminAuthGate";
+import AdminShell from "@/components/admin/AdminShell";
 import {
   hasAdminProspectsAccess,
   isAdminProspectsConfigured
@@ -146,40 +148,6 @@ async function loadActivePractitioners(planFilter: PlanFilter): Promise<ActivePr
   });
 }
 
-function AdminGate({ errorMessage }: { errorMessage: string | null }) {
-  return (
-    <article className="article-shell admin-page">
-      <section className="admin-gate">
-        <p className="page-eyebrow">Admin NaturoCarte</p>
-        <h1>Accès protégé</h1>
-        <p className="page-lead">
-          Connectez-vous pour suivre l’activité des praticiens et les comptes à relancer.
-        </p>
-
-        {errorMessage ? <p className="page-alert">{errorMessage}</p> : null}
-
-        <form className="admin-login-form" action="/admin/prospects/login" method="post">
-          <input type="hidden" name="next" value="/admin/praticiens-actifs" />
-          <label className="admin-prospects-label" htmlFor="admin-password">
-            Mot de passe admin
-          </label>
-          <input
-            id="admin-password"
-            className="admin-prospects-input"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-          />
-          <button className="btn" type="submit">
-            Ouvrir l’admin
-          </button>
-        </form>
-      </section>
-    </article>
-  );
-}
-
 export default async function ActivePractitionersAdminPage({
   searchParams
 }: {
@@ -191,12 +159,28 @@ export default async function ActivePractitionersAdminPage({
   const planFilter = getPlanFilter(params.plan);
 
   if (!isAdminProspectsConfigured()) {
-    return <AdminGate errorMessage="Aucun mot de passe admin n’est configuré." />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin praticiens"
+        title="Accès protégé"
+        description="Connectez-vous pour suivre l’activité des praticiens et les comptes à relancer."
+        nextPath="/admin/praticiens-actifs"
+        errorMessage="Aucun mot de passe admin n’est configuré."
+      />
+    );
   }
 
   const hasAccess = await hasAdminProspectsAccess();
   if (!hasAccess) {
-    return <AdminGate errorMessage={errorMessage} />;
+    return (
+      <AdminAuthGate
+        eyebrow="Admin praticiens"
+        title="Accès protégé"
+        description="Connectez-vous pour suivre l’activité des praticiens et les comptes à relancer."
+        nextPath="/admin/praticiens-actifs"
+        errorMessage={errorMessage}
+      />
+    );
   }
 
   let practitioners: ActivePractitionerRow[] | null = null;
@@ -216,121 +200,93 @@ export default async function ActivePractitionersAdminPage({
   const completeRows = publishedRows.filter((row) => row.completionPercent === 100);
 
   return (
-    <article className="article-shell admin-page">
-      <section className="admin-page-header">
-        <div>
-          <p className="page-eyebrow">Admin praticiens</p>
-          <h1>Praticiens actifs</h1>
-          <p className="page-lead">
-            Vue des comptes praticiens, de leur activité de connexion et de la complétion
-            de leur fiche.
+    <AdminShell
+      section="practitioners"
+      eyebrow="Admin praticiens"
+      title="Praticiens actifs"
+      description="Vue des comptes praticiens, de leur activité de connexion et de la complétion de leur fiche."
+      headerMeta={["Mobile, tablette, desktop", `${publishedRows.length.toLocaleString("fr-FR")} fiches publiées`]}
+    >
+      <div className="admin-page">
+        <nav className="admin-tabs" aria-label="Filtres praticiens actifs">
+          <Link className={planFilter === "all" ? "admin-tab is-active" : "admin-tab"} href="/admin/praticiens-actifs">
+            Tous
+          </Link>
+          <Link
+            className={planFilter === PRACTITIONER_PLAN_PRESENCE ? "admin-tab is-active" : "admin-tab"}
+            href="/admin/praticiens-actifs?plan=presence"
+          >
+            Forfait gratuit
+          </Link>
+          <Link
+            className={planFilter === PRACTITIONER_PLAN_VISIBILITY ? "admin-tab is-active" : "admin-tab"}
+            href="/admin/praticiens-actifs?plan=visibilite_plus"
+          >
+            Visibilité+
+          </Link>
+        </nav>
+
+        {practitioners ? (
+          <>
+            <section className="admin-kpi-grid" aria-label="Indicateurs praticiens actifs">
+              <div className="admin-kpi-card">
+                <strong>{publishedRows.length.toLocaleString("fr-FR")}</strong>
+                <span>Comptes affichés</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{freeRows.length.toLocaleString("fr-FR")}</strong>
+                <span>Forfait gratuit</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{visibilityRows.length.toLocaleString("fr-FR")}</strong>
+                <span>Visibilité+</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{unpublishedRows.length.toLocaleString("fr-FR")}</strong>
+                <span>Fiches non publiées</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{startedCreationRows.length.toLocaleString("fr-FR")}</strong>
+                <span>Fiches en cours de création</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{neverLoggedRows.length.toLocaleString("fr-FR")}</strong>
+                <span>Jamais reconnectés</span>
+              </div>
+              <div className="admin-kpi-card">
+                <strong>{completeRows.length.toLocaleString("fr-FR")}</strong>
+                <span>Fiches complètes</span>
+              </div>
+            </section>
+
+            <section className="admin-panel admin-active-practitioners-panel">
+              <div>
+                <h2>Comptes praticiens publiés</h2>
+                <p>
+                  Cette liste n’affiche que les fiches publiées. Les fiches non publiées et les
+                  créations commencées sont décomptées séparément ci-dessus.
+                </p>
+              </div>
+
+              <div className="admin-active-practitioners-list">
+                {publishedRows.length > 0 ? (
+                  publishedRows.map((account) => (
+                    <ActivePractitionerCard key={account.id} account={account} />
+                  ))
+                ) : (
+                  <p className="admin-empty">Aucun praticien dans cette vue.</p>
+                )}
+              </div>
+            </section>
+          </>
+        ) : (
+          <p className="page-alert">
+            Impossible de charger les praticiens actifs. Vérifiez que la migration d’activité
+            praticien a bien été exécutée.
           </p>
-        </div>
-        <AdminLinks />
-      </section>
-
-      <nav className="admin-tabs" aria-label="Filtres praticiens actifs">
-        <Link className={planFilter === "all" ? "admin-tab is-active" : "admin-tab"} href="/admin/praticiens-actifs">
-          Tous
-        </Link>
-        <Link
-          className={planFilter === PRACTITIONER_PLAN_PRESENCE ? "admin-tab is-active" : "admin-tab"}
-          href="/admin/praticiens-actifs?plan=presence"
-        >
-          Forfait gratuit
-        </Link>
-        <Link
-          className={planFilter === PRACTITIONER_PLAN_VISIBILITY ? "admin-tab is-active" : "admin-tab"}
-          href="/admin/praticiens-actifs?plan=visibilite_plus"
-        >
-          Visibilité+
-        </Link>
-      </nav>
-
-      {practitioners ? (
-        <>
-          <section className="admin-kpi-grid" aria-label="Indicateurs praticiens actifs">
-            <div className="admin-kpi-card">
-              <strong>{publishedRows.length.toLocaleString("fr-FR")}</strong>
-              <span>Comptes affichés</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{freeRows.length.toLocaleString("fr-FR")}</strong>
-              <span>Forfait gratuit</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{visibilityRows.length.toLocaleString("fr-FR")}</strong>
-              <span>Visibilité+</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{unpublishedRows.length.toLocaleString("fr-FR")}</strong>
-              <span>Fiches non publiées</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{startedCreationRows.length.toLocaleString("fr-FR")}</strong>
-              <span>Fiches en cours de création</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{neverLoggedRows.length.toLocaleString("fr-FR")}</strong>
-              <span>Jamais reconnectés</span>
-            </div>
-            <div className="admin-kpi-card">
-              <strong>{completeRows.length.toLocaleString("fr-FR")}</strong>
-              <span>Fiches complètes</span>
-            </div>
-          </section>
-
-          <section className="admin-panel admin-active-practitioners-panel">
-            <div>
-              <h2>Comptes praticiens publiés</h2>
-              <p>
-                Cette liste n’affiche que les fiches publiées. Les fiches non publiées et les
-                créations commencées sont décomptées séparément ci-dessus.
-              </p>
-            </div>
-
-            <div className="admin-active-practitioners-list">
-              {publishedRows.length > 0 ? (
-                publishedRows.map((account) => (
-                  <ActivePractitionerCard key={account.id} account={account} />
-                ))
-              ) : (
-                <p className="admin-empty">Aucun praticien dans cette vue.</p>
-              )}
-            </div>
-          </section>
-        </>
-      ) : (
-        <p className="page-alert">
-          Impossible de charger les praticiens actifs. Vérifiez que la migration d’activité
-          praticien a bien été exécutée.
-        </p>
-      )}
-    </article>
-  );
-}
-
-function AdminLinks() {
-  return (
-    <div className="admin-links">
-      <Link className="btn btn-secondary" href="/admin">
-        Pilotage
-      </Link>
-      <Link className="btn btn-secondary" href="/admin/clients">
-        Clients
-      </Link>
-      <Link className="btn btn-secondary" href="/admin/campagnes">
-        Campagnes email
-      </Link>
-      <Link className="btn btn-secondary" href="/admin/prospects">
-        Prospects
-      </Link>
-      <form action="/admin/prospects/logout" method="post">
-        <button className="btn btn-secondary" type="submit">
-          Déconnexion
-        </button>
-      </form>
-    </div>
+        )}
+      </div>
+    </AdminShell>
   );
 }
 

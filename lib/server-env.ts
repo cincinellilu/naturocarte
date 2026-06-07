@@ -60,7 +60,14 @@ function getCandidateFiles(): string[] {
   if (cachedEnvCandidateFiles) return cachedEnvCandidateFiles;
 
   const candidateFiles: string[] = [];
-  const fileNames = [".env.production", ".env.local", ".env"];
+  const fileNames = [
+    ".env.production",
+    "env.production",
+    ".env.local",
+    "env.local",
+    ".env",
+    "env"
+  ];
 
   for (const directory of getEnvSearchDirectories()) {
     for (const fileName of fileNames) {

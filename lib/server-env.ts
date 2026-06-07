@@ -22,8 +22,11 @@ function parseEnvFile(content: string): Map<string, string> {
   const entries = new Map<string, string>();
 
   for (const rawLine of content.split(/\r?\n/)) {
-    const line = rawLine.trim();
+    let line = rawLine.trim();
     if (!line || line.startsWith("#")) continue;
+    if (line.startsWith("export ")) {
+      line = line.slice("export ".length).trim();
+    }
 
     const separatorIndex = line.indexOf("=");
     if (separatorIndex <= 0) continue;

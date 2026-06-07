@@ -12,6 +12,7 @@ import {
   type PractitionerPlanId
 } from "@/lib/practitioner-plans";
 import { getPractitionerProfileCompletion } from "@/lib/practitioner-profile-completion";
+import { isPublicPractitionerStatus } from "@/lib/practitioner-status";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export const dynamic = "force-dynamic";
@@ -99,6 +100,16 @@ function formatDate(value: string | null | undefined) {
 function getSubscriptionLabel(account: PractitionerAccountRow) {
   if (account.plan !== PRACTITIONER_PLAN_VISIBILITY) return "Forfait gratuit";
   return "Forfait Visibilité+";
+}
+
+function isPublishedPractitionerAccount(account: PractitionerAccountRow): boolean {
+  const practitioner = getPractitioner(account);
+  return practitioner?.status ? isPublicPractitionerStatus(practitioner.status) : false;
+}
+
+function isPractitionerCreationStarted(account: PractitionerAccountRow): boolean {
+  if (isPublishedPractitionerAccount(account)) return false;
+  return Boolean(account.last_login_at) || Number(account.login_count ?? 0) > 0;
 }
 
 async function loadActivePractitioners(planFilter: PlanFilter): Promise<ActivePractitionerRow[]> {
@@ -196,10 +207,13 @@ export default async function ActivePractitionersAdminPage({
   }
 
   const rows = practitioners ?? [];
-  const visibilityRows = rows.filter((row) => row.plan === PRACTITIONER_PLAN_VISIBILITY);
-  const freeRows = rows.filter((row) => row.plan !== PRACTITIONER_PLAN_VISIBILITY);
-  const neverLoggedRows = rows.filter((row) => !row.last_login_at);
-  const completeRows = rows.filter((row) => row.completionPercent === 100);
+  const publishedRows = rows.filter(isPublishedPractitionerAccount);
+  const unpublishedRows = rows.filter((row) => !isPublishedPractitionerAccount(row));
+  const startedCreationRows = unpublishedRows.filter(isPractitionerCreationStarted);
+  const visibilityRows = publishedRows.filter((row) => row.plan === PRACTITIONER_PLAN_VISIBILITY);
+  const freeRows = publishedRows.filter((row) => row.plan !== PRACTITIONER_PLAN_VISIBILITY);
+  const neverLoggedRows = publishedRows.filter((row) => !row.last_login_at);
+  const completeRows = publishedRows.filter((row) => row.completionPercent === 100);
 
   return (
     <article className="article-shell admin-page">
@@ -237,7 +251,7 @@ export default async function ActivePractitionersAdminPage({
         <>
           <section className="admin-kpi-grid" aria-label="Indicateurs praticiens actifs">
             <div className="admin-kpi-card">
-              <strong>{rows.length.toLocaleString("fr-FR")}</strong>
+              <strong>{publishedRows.length.toLocaleString("fr-FR")}</strong>
               <span>Comptes affichés</span>
             </div>
             <div className="admin-kpi-card">
@@ -247,6 +261,14 @@ export default async function ActivePractitionersAdminPage({
             <div className="admin-kpi-card">
               <strong>{visibilityRows.length.toLocaleString("fr-FR")}</strong>
               <span>Visibilité+</span>
+            </div>
+            <div className="admin-kpi-card">
+              <strong>{unpublishedRows.length.toLocaleString("fr-FR")}</strong>
+              <span>Fiches non publiées</span>
+            </div>
+            <div className="admin-kpi-card">
+              <strong>{startedCreationRows.length.toLocaleString("fr-FR")}</strong>
+              <span>Fiches en cours de création</span>
             </div>
             <div className="admin-kpi-card">
               <strong>{neverLoggedRows.length.toLocaleString("fr-FR")}</strong>
@@ -260,16 +282,18 @@ export default async function ActivePractitionersAdminPage({
 
           <section className="admin-panel admin-active-practitioners-panel">
             <div>
-              <h2>Comptes praticiens</h2>
+              <h2>Comptes praticiens publiés</h2>
               <p>
-                Utilisez cette vue pour repérer les fiches incomplètes, les comptes peu actifs
-                et les prospects Visibilité+.
+                Cette liste n’affiche que les fiches publiées. Les fiches non publiées et les
+                créations commencées sont décomptées séparément ci-dessus.
               </p>
             </div>
 
             <div className="admin-active-practitioners-list">
-              {rows.length > 0 ? (
-                rows.map((account) => <ActivePractitionerCard key={account.id} account={account} />)
+              {publishedRows.length > 0 ? (
+                publishedRows.map((account) => (
+                  <ActivePractitionerCard key={account.id} account={account} />
+                ))
               ) : (
                 <p className="admin-empty">Aucun praticien dans cette vue.</p>
               )}

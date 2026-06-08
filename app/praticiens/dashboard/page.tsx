@@ -465,7 +465,10 @@ export default async function PractitionerDashboardPage({
                   ci-dessous.
                 </p>
               </div>
-              <nav className="dashboard-cabinet-tabs" aria-label="Choisir un cabinet">
+              <nav
+                className="dashboard-cabinet-tabs zone-filter-links zone-filter-links--scroll"
+                aria-label="Choisir un cabinet"
+              >
                 {managedCabinets.map((cabinet) => {
                   const isActiveCabinet = cabinet.account.id === activeAccount?.id;
                   const tabLabel = getCabinetTabLabel(cabinet.practitioner);
@@ -473,7 +476,9 @@ export default async function PractitionerDashboardPage({
                   return (
                     <Link
                       key={cabinet.account.id}
-                      className={`dashboard-cabinet-tab${isActiveCabinet ? " is-active" : ""}`}
+                      className={`dashboard-cabinet-tab zone-filter-link${
+                        isActiveCabinet ? " zone-filter-link--active" : ""
+                      }`}
                       href={buildDashboardHref({ cabinet: cabinet.account.id })}
                       aria-current={isActiveCabinet ? "page" : undefined}
                       title={tabLabel}

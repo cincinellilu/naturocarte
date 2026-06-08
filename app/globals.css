@@ -6554,7 +6554,7 @@ body.site-body::after {
 .dashboard-cabinets-section {
   display: grid;
   gap: 1rem;
-  padding-inline: 0.25rem;
+  padding-inline: clamp(0.35rem, 1vw, 0.75rem);
 }
 .dashboard-cabinets-head {
   display: grid;
@@ -6565,18 +6565,14 @@ body.site-body::after {
   margin: 0;
 }
 .dashboard-cabinet-tabs {
-  gap: 0.55rem;
-  padding: 0 0.35rem 0.2rem;
+  grid-template-columns: repeat(var(--dashboard-cabinet-columns, 2), minmax(0, 1fr));
+  margin: 0;
 }
 .dashboard-cabinet-tab {
-  max-width: min(27rem, 82vw);
   min-width: 0;
 }
 .dashboard-cabinet-tab span {
   display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .dashboard-cabinet-panel {
   display: grid;
@@ -6987,8 +6983,7 @@ body.site-body::after {
     align-items: start;
   }
 .dashboard-cabinet-tabs {
-    margin-inline: 0;
-    padding-inline: 0.35rem;
+    grid-template-columns: 1fr;
   }
 .dashboard-cabinet-panel-actions {
     justify-content: flex-start;

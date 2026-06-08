@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import type { CSSProperties } from "react";
 import PractitionerOnboardingForm from "@/components/PractitionerOnboardingForm";
 import PractitionerWrongAccountNotice from "@/components/PractitionerWrongAccountNotice";
 import {
@@ -466,8 +467,9 @@ export default async function PractitionerDashboardPage({
                 </p>
               </div>
               <nav
-                className="dashboard-cabinet-tabs zone-filter-links zone-filter-links--scroll"
+                className="directory-audience-tabs dashboard-cabinet-tabs"
                 aria-label="Choisir un cabinet"
+                style={{ "--dashboard-cabinet-columns": String(managedCabinets.length) } as CSSProperties}
               >
                 {managedCabinets.map((cabinet) => {
                   const isActiveCabinet = cabinet.account.id === activeAccount?.id;
@@ -476,8 +478,8 @@ export default async function PractitionerDashboardPage({
                   return (
                     <Link
                       key={cabinet.account.id}
-                      className={`dashboard-cabinet-tab zone-filter-link${
-                        isActiveCabinet ? " zone-filter-link--active" : ""
+                      className={`directory-audience-tab dashboard-cabinet-tab${
+                        isActiveCabinet ? " is-active" : ""
                       }`}
                       href={buildDashboardHref({ cabinet: cabinet.account.id })}
                       aria-current={isActiveCabinet ? "page" : undefined}

@@ -1,4 +1,5 @@
 import { PRACTITIONER_PLAN_VISIBILITY } from "@/lib/practitioner-plans";
+import { PRACTITIONER_STATUS_HIDDEN_INTERNAL_TEST } from "@/lib/practitioner-status";
 
 export type PractitionerCompletionInput = {
   first_name?: string | null;
@@ -40,7 +41,8 @@ function isPublishedStatus(status: string | null | undefined): boolean {
     status === "published_contacted" ||
     status === "published_contacted_claimed" ||
     status === "published_contacted_clicked" ||
-    status === "published_contacted_not_claimed"
+    status === "published_contacted_not_claimed" ||
+    status === PRACTITIONER_STATUS_HIDDEN_INTERNAL_TEST
   );
 }
 

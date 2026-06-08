@@ -255,8 +255,7 @@ export async function POST(request: Request) {
       .from("practitioners")
       .update({
         email: account.email,
-        status: "published",
-        updated_at: new Date().toISOString()
+        status: "published"
       })
       .eq("id", practitionerId);
 

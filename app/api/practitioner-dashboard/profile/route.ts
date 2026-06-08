@@ -13,6 +13,7 @@ import {
   PRACTITIONER_PLAN_PRESENCE,
   PRACTITIONER_PLAN_VISIBILITY
 } from "@/lib/practitioner-plans";
+import { buildPractitionerTariffsText } from "@/lib/practitioner-tariffs";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 const CONTACT_SLOTS = ["phone", "email", "booking_url"] as const;
@@ -95,6 +96,8 @@ export async function POST(request: Request) {
   const bookingUrl = normalizeNullable(formData.get("booking_url"));
   const website = normalizeNullable(formData.get("website"));
   const description = normalizeNullable(formData.get("description"));
+  const primaryTariff = normalizeNullable(formData.get("tariff_primary"));
+  const additionalTariffs = normalizeNullable(formData.get("tariff_additional"));
   const adresse = normalizeNullable(formData.get("adresse"));
   const postalCode = normalizeNullable(formData.get("postal_code"));
   const city = normalizeNullable(formData.get("city"));
@@ -194,6 +197,10 @@ export async function POST(request: Request) {
     city,
     ...(coordinates ? { lat: coordinates.lat, lng: coordinates.lng } : {})
   };
+  const tarifs = buildPractitionerTariffsText({
+    primaryTariff,
+    additionalTariffs
+  });
 
   const updatePayload =
     plan === PRACTITIONER_PLAN_PRESENCE
@@ -209,7 +216,8 @@ export async function POST(request: Request) {
           email,
           booking_url: bookingUrl,
           website,
-          description
+          description,
+          tarifs
         };
 
   const { data: practitioner, error: updateError } = await supabase
@@ -244,6 +252,7 @@ export async function POST(request: Request) {
       has_booking_url: Boolean(bookingUrl),
       has_website: Boolean(website),
       has_description: Boolean(description),
+      has_tariffs: Boolean(tarifs),
       address_changed: addressChanged,
       coordinates_were_missing: coordinatesMissing,
       coordinates_updated: Boolean(coordinates)

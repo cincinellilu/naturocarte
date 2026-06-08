@@ -21,7 +21,11 @@ import {
   PRACTITIONER_PLAN_VISIBILITY,
   PRACTITIONER_PLANS
 } from "@/lib/practitioner-plans";
-import { isPublicPractitionerStatus } from "@/lib/practitioner-status";
+import {
+  isInternalTestPractitionerStatus,
+  isPublicPractitionerStatus
+} from "@/lib/practitioner-status";
+import { parsePractitionerTariffs } from "@/lib/practitioner-tariffs";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +65,7 @@ type Practitioner = {
   booking_url: string | null;
   photo_url?: string | null;
   description: string | null;
+  tarifs?: string | null;
   status: string;
 };
 
@@ -104,6 +109,24 @@ function getCabinetTabLabel(practitioner: Practitioner): string {
 
 function isPublicPractitioner(practitioner: Practitioner): boolean {
   return isPublicPractitionerStatus(practitioner.status);
+}
+
+function isInternallyHiddenPractitioner(practitioner: Practitioner): boolean {
+  return isInternalTestPractitionerStatus(practitioner.status);
+}
+
+function getPractitionerVisibilityLabel(practitioner: Practitioner): string {
+  if (isPublicPractitioner(practitioner)) return "Fiche publiée";
+  if (isInternallyHiddenPractitioner(practitioner)) return "Fiche masquée";
+  return "Fiche à compléter";
+}
+
+function getPractitionerEditLabel(practitioner: Practitioner): string {
+  return isInternallyHiddenPractitioner(practitioner) ? "Modifier cette fiche" : "Compléter cette fiche";
+}
+
+function getPractitionerSummaryActionLabel(practitioner: Practitioner): string {
+  return isInternallyHiddenPractitioner(practitioner) ? "Modifier ma fiche" : "Compléter ma fiche";
 }
 
 function getDashboardErrorMessage(error: string | null): string | null {
@@ -287,7 +310,7 @@ export default async function PractitionerDashboardPage({
   if (practitionerIds.length > 0) {
     const { data } = await supabase
       .from("practitioners")
-      .select("id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status")
+      .select("id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status")
       .in("id", practitionerIds);
 
     const practitionersById = new Map(
@@ -311,6 +334,9 @@ export default async function PractitionerDashboardPage({
   const practitioner = activeCabinet?.practitioner ?? null;
   const activeAccount = activeCabinet?.account ?? selectedAccount ?? null;
   const dashboardCabinetId = activeAccount?.id ?? null;
+  const tariffItems = practitioner ? parsePractitionerTariffs(practitioner.tarifs ?? null) : [];
+  const primaryTariff = tariffItems[0] ?? "";
+  const additionalTariffs = tariffItems.slice(1).join("\n");
 
   const buildDashboardHref = (extraParams: Record<string, string | null> = {}, hash = "") => {
     const search = new URLSearchParams();
@@ -427,8 +453,8 @@ export default async function PractitionerDashboardPage({
             </div>
             <p>
               Votre abonnement est bien pris en compte. Profitez maintenant des possibilités
-              offertes par Visibilité+ : photo de profil, description enrichie, contacts
-              complets et statistiques de consultation.
+              offertes par Visibilité+ : photo de profil, description enrichie, tarifs,
+              contacts complets et statistiques de consultation.
             </p>
             <div className="dashboard-modal-actions dashboard-subscription-actions">
               <Link className="btn" href={buildDashboardHref({}, "#edition")}>
@@ -500,7 +526,7 @@ export default async function PractitionerDashboardPage({
                       "Adresse à compléter pour apparaître correctement sur la carte."}
                   </p>
                   <div className="dashboard-profile-badges dashboard-cabinet-badges">
-                    <span>{isPublicPractitioner(practitioner) ? "Fiche publiée" : "Fiche à compléter"}</span>
+                    <span>{getPractitionerVisibilityLabel(practitioner)}</span>
                     <span>Forfait : {plan.name}</span>
                   </div>
                 </div>
@@ -512,7 +538,7 @@ export default async function PractitionerDashboardPage({
                     </Link>
                   ) : (
                     <a className="dashboard-inline-link" href={buildDashboardHref({}, "#edition")}>
-                      Compléter cette fiche
+                      {getPractitionerEditLabel(practitioner)}
                     </a>
                   )}
                 </div>
@@ -567,7 +593,7 @@ export default async function PractitionerDashboardPage({
                   Modifier l’adresse du cabinet
                 </a>
                 <div className="dashboard-profile-badges">
-                  <span>{isPublicPractitioner(practitioner) ? "Fiche publiée" : "Fiche à compléter"}</span>
+                  <span>{getPractitionerVisibilityLabel(practitioner)}</span>
                   {practitioner.siret ? <span>SIRET {practitioner.siret}</span> : null}
                   <span>Forfait : {plan.name}</span>
                 </div>
@@ -578,7 +604,7 @@ export default async function PractitionerDashboardPage({
                 </Link>
               ) : (
                 <a className="btn btn-secondary" href={buildDashboardHref({}, "#edition")}>
-                  Compléter ma fiche
+                  {getPractitionerSummaryActionLabel(practitioner)}
                 </a>
               )}
             </div>
@@ -735,6 +761,55 @@ export default async function PractitionerDashboardPage({
                   />
                 </fieldset>
               )}
+
+              {isPaid ? (
+                <fieldset className="dashboard-fieldset">
+                  <legend>Tarifs et prestations</legend>
+                  <p className="dashboard-help">
+                    Affichez un tarif principal sur votre fiche, puis ajoutez si besoin d’autres
+                    prestations ou formats d’accompagnement.
+                  </p>
+                  <label className="practitioner-form-label">
+                    Tarif principal
+                    <input
+                      className="practitioner-form-input"
+                      name="tariff_primary"
+                      defaultValue={primaryTariff}
+                      placeholder="Première consultation : 80 € / 1 h 15"
+                    />
+                  </label>
+                  <label className="practitioner-form-label">
+                    Autres tarifs ou prestations
+                    <textarea
+                      className="practitioner-form-input dashboard-tariffs-textarea"
+                      name="tariff_additional"
+                      rows={4}
+                      defaultValue={additionalTariffs}
+                      placeholder={"Suivi naturopathique : 65 € / 1 h\nPack 3 séances : 180 €\nAtelier entreprise : sur devis"}
+                    />
+                  </label>
+                  <p className="dashboard-help">
+                    Une ligne par tarif ou prestation. Le premier tarif est affiché en priorité sur
+                    votre fiche publique.
+                  </p>
+                </fieldset>
+              ) : null}
+
+              {!isPaid ? (
+                <section className="dashboard-fieldset dashboard-fieldset--enriched dashboard-fieldset--collapsed is-locked">
+                  <div>
+                    <p className="dashboard-fieldset-title">Tarifs et prestations</p>
+                    <p className="dashboard-help">
+                      Affichez un tarif principal sur votre fiche, puis ajoutez si besoin d’autres
+                      prestations ou formats d’accompagnement avec le forfait Visibilité+.
+                    </p>
+                  </div>
+                  <a className="dashboard-lock-callout dashboard-lock-callout--link" href={buildDashboardHref({ plans: "open" }, "#forfaits")}>
+                    <span className="dashboard-lock-icon" aria-hidden="true" />
+                    <strong>Disponible avec Visibilité+</strong>
+                  </a>
+                </section>
+              ) : null}
 
               <button className="btn dashboard-save-btn" type="submit">
                 Enregistrer ma fiche

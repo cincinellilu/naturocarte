@@ -13,9 +13,9 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
+import { parsePractitionerTariffs } from "@/lib/practitioner-tariffs";
 import {
   getVisiblePublicContacts,
-  isPractitionerClaimed,
   type PractitionerPublicAccountInput
 } from "@/lib/practitioner-public-contact";
 
@@ -37,6 +37,7 @@ type Practitioner = {
   booking_url: string | null;
   photo_url?: string | null;
   description: string | null;
+  tarifs?: string | null;
   status: string;
   practitioner_accounts:
     | PractitionerPublicAccountInput[]
@@ -66,7 +67,7 @@ async function getPublishedPractitioner(slug: string): Promise<Practitioner | nu
   const { data, error } = await supabase
     .from("practitioners")
     .select(
-      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
+      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
     )
     .eq("slug", slug)
     .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
@@ -247,7 +248,6 @@ export default async function PractitionerPage({
     },
     accounts: practitioner.practitioner_accounts
   });
-  const practitionerSpaceUrl = "/praticiens";
   const practitionerInitials = `${practitioner.first_name?.charAt(0) ?? ""}${practitioner.last_name?.charAt(0) ?? ""}`
     .trim()
     .toUpperCase();
@@ -270,7 +270,10 @@ export default async function PractitionerPage({
 
   const practitionerDescription = practitioner.description?.trim() || null;
   const isPartner = Boolean(getPartnerAccount(practitioner.practitioner_accounts));
-  const isClaimed = isPractitionerClaimed(practitioner.practitioner_accounts);
+  const tariffItems = parsePractitionerTariffs(practitioner.tarifs ?? null);
+  const primaryTariff = tariffItems[0] ?? null;
+  const additionalTariffs = tariffItems.slice(1);
+  const shouldShowTariffs = isPartner && tariffItems.length > 0;
   const practitionerDescriptionPreview = practitionerDescription
     ? truncateText(practitionerDescription, 240)
     : null;
@@ -379,6 +382,7 @@ export default async function PractitionerPage({
       latitude: practitioner.lat,
       longitude: practitioner.lng
     },
+    priceRange: primaryTariff || undefined,
     knowsLanguage: "fr",
     telephone: visiblePhone || undefined,
     email: visibleEmail || undefined,
@@ -595,17 +599,32 @@ export default async function PractitionerPage({
               </div>
             </section>
 
-            <section className="practitioner-card practitioner-tariffs-card">
-              <div className="practitioner-reviews-header">
-                <div>
-                  <p className="practitioner-detail-label">Tarifs</p>
-                  <h2>Tarifs et prestations</h2>
+            {shouldShowTariffs ? (
+              <section className="practitioner-card practitioner-tariffs-card" id="tarifs">
+                <div className="practitioner-reviews-header">
+                  <div>
+                    <p className="practitioner-detail-label">Tarifs</p>
+                    <h2>Tarifs et prestations</h2>
+                  </div>
                 </div>
-              </div>
-              <div className="practitioner-tariffs-body">
-                <p className="practitioner-detail-value">Tarifs non renseignés pour le moment.</p>
-              </div>
-            </section>
+                <div className="practitioner-tariffs-body">
+                  {primaryTariff ? (
+                    <div className="practitioner-tariff-highlight">
+                      <p className="practitioner-detail-label">Tarif principal</p>
+                      <strong>{primaryTariff}</strong>
+                    </div>
+                  ) : null}
+
+                  {additionalTariffs.length > 0 ? (
+                    <ul className="practitioner-tariff-list">
+                      {additionalTariffs.map((tariff) => (
+                        <li key={tariff}>{tariff}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              </section>
+            ) : null}
           </section>
         </div>
 
@@ -618,44 +637,6 @@ export default async function PractitionerPage({
             )}
           </div>
         </aside>
-
-        <div className="practitioner-claim-pane">
-          <details className="practitioner-card practitioner-claim-accordion">
-            <summary className="practitioner-claim-summary">Vous êtes ce praticien ?</summary>
-            <div className="practitioner-claim-content">
-              {isClaimed ? (
-                <p>
-                  Cette fiche est déjà rattachée à un espace praticien. Connectez-vous pour la
-                  gérer depuis le dashboard NaturoCarte.
-                </p>
-              ) : (
-                <p>
-                  Cette fiche a été créée à partir d’informations publiques. Vous pouvez la
-                  revendiquer en moins de deux minutes pour la rattacher à votre espace praticien.
-                </p>
-              )}
-              <ul className="practitioner-edit-list">
-                <li>{isClaimed ? "Retrouver votre accès praticien" : "Confirmer qu’il s’agit bien de vous"}</li>
-                <li>Modifier les informations visibles sur votre fiche</li>
-                <li>Choisir entre l’offre gratuite et Visibilité+</li>
-              </ul>
-              <p className="practitioner-form-actions">
-                <Link
-                  className="btn btn-secondary practitioner-form-btn"
-                  href={
-                    isClaimed
-                      ? practitionerSpaceUrl
-                      : `/revendiquer?first_name=${encodeURIComponent(
-                          practitioner.first_name
-                        )}&last_name=${encodeURIComponent(practitioner.last_name)}`
-                  }
-                >
-                  {isClaimed ? "Accéder à l’espace praticien" : "Revendiquer cette fiche"}
-                </Link>
-              </p>
-            </div>
-          </details>
-        </div>
       </div>
 
       <script

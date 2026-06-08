@@ -24,6 +24,7 @@ export const PRACTITIONER_PLANS = [
       "Tous les contacts actifs",
       "Photo de profil",
       "Description enrichie",
+      "Tarifs et prestations",
       "Statistiques de consultation",
       "Avis, notes et commentaires visibles"
     ]

@@ -169,7 +169,7 @@ export default async function PractitionersPage({
           <p className="section-intro">
             Le forfait Présence suffit pour être affiché dans l’annuaire avec un contact public.
             Le forfait Visibilité+ ajoute le badge Partenaire NaturoCarte, les statistiques,
-            les avis et les informations enrichies pour les praticiens qui veulent piloter leur
+            les avis, les tarifs et les informations enrichies pour les praticiens qui veulent piloter leur
             présence plus finement.
           </p>
         </div>

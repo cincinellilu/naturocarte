@@ -420,8 +420,7 @@ export async function POST(request: Request) {
     .from("practitioners")
     .update({
       email: practitioner.email ?? email,
-      status: getPublishedStatus(practitioner.status),
-      updated_at: now
+      status: getPublishedStatus(practitioner.status)
     })
     .eq("id", practitioner.id);
 

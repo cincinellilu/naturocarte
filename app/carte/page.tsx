@@ -50,6 +50,7 @@ type PractitionerRow = {
   city: string | null;
   lat: number | null;
   lng: number | null;
+  tarifs: string | null;
   practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
@@ -81,7 +82,7 @@ export default async function CartePage({
       supabase
         .from("practitioners")
         .select(
-          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, practitioner_accounts(plan, stripe_subscription_status)"
+          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, tarifs, practitioner_accounts(plan, stripe_subscription_status)"
         )
         .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
         .order("last_name", { ascending: true })
@@ -162,6 +163,7 @@ export default async function CartePage({
       postal_code: p.postal_code,
       lat: p.lat as number,
       lng: p.lng as number,
+      tarifs: Boolean(getPartnerAccount(p.practitioner_accounts)) ? p.tarifs : null,
       is_partner: Boolean(getPartnerAccount(p.practitioner_accounts))
     }));
 

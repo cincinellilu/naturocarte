@@ -7,6 +7,7 @@ export const PRACTITIONER_STATUS_PUBLISHED_CONTACTED_NOT_CLAIMED =
 export const PRACTITIONER_STATUS_HIDDEN_PENDING_CONTACT = "hidden_pending_contact";
 export const PRACTITIONER_STATUS_HIDDEN_CONTACTED = "hidden_contacted";
 export const PRACTITIONER_STATUS_BOUNCED = "bounced";
+export const PRACTITIONER_STATUS_HIDDEN_INTERNAL_TEST = "hidden_internal_test";
 
 export const PUBLIC_PRACTITIONER_STATUSES = [
   PRACTITIONER_STATUS_PUBLISHED,
@@ -37,6 +38,10 @@ export function isPublicPractitionerStatus(status: string): boolean {
   return PUBLIC_PRACTITIONER_STATUSES.includes(
     status as (typeof PUBLIC_PRACTITIONER_STATUSES)[number]
   );
+}
+
+export function isInternalTestPractitionerStatus(status: string | null | undefined): boolean {
+  return status === PRACTITIONER_STATUS_HIDDEN_INTERNAL_TEST;
 }
 
 export function getProspectStateFromStatus(status: string) {

@@ -86,8 +86,7 @@ export async function POST(request: Request) {
   const { error: profileUpdateError } = await supabase
     .from("practitioners")
     .update({
-      status: PRACTITIONER_STATUS_HIDDEN_CONTACTED,
-      updated_at: now
+      status: PRACTITIONER_STATUS_HIDDEN_CONTACTED
     })
     .eq("id", practitioner.id);
 

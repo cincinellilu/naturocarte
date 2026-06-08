@@ -19,7 +19,7 @@ const DASHBOARD_PRACTITIONERS = [
     lat: 48.8879,
     lng: 2.3084,
     siret: "10000000000001",
-    status: "published"
+    status: "hidden_internal_test"
   },
   {
     slug: "lucas-cincinelli-dashboard-saint-ouen",
@@ -33,7 +33,7 @@ const DASHBOARD_PRACTITIONERS = [
     lat: 48.9116,
     lng: 2.3345,
     siret: "10000000000002",
-    status: "published"
+    status: "hidden_internal_test"
   }
 ];
 

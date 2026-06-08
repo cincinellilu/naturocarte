@@ -94,6 +94,13 @@ function getAddressLine(practitioner: Practitioner): string {
     .join(", ");
 }
 
+function getCabinetTabLabel(practitioner: Practitioner): string {
+  const addressLine = getAddressLine(practitioner);
+  if (addressLine) return addressLine;
+
+  return practitioner.adresse?.trim() || practitioner.city?.trim() || "Cabinet sans adresse";
+}
+
 function isPublicPractitioner(practitioner: Practitioner): boolean {
   return isPublicPractitionerStatus(practitioner.status);
 }
@@ -451,62 +458,57 @@ export default async function PractitionerDashboardPage({
           {managedCabinets.length > 1 ? (
             <section className="dashboard-cabinets-section" aria-labelledby="dashboard-cabinets-title">
               <div className="dashboard-cabinets-head">
-                <div>
-                  <p className="section-eyebrow">Cabinets rattachés</p>
-                  <h2 id="dashboard-cabinets-title">Choisissez la fiche à gérer</h2>
-                </div>
+                <p className="section-eyebrow">Cabinets rattachés</p>
+                <h2 id="dashboard-cabinets-title">Choisissez la fiche à gérer</h2>
                 <p className="dashboard-help">
-                  Chaque cabinet conserve sa propre fiche publique, ses coordonnées et ses
-                  statistiques. Le forfait, lui, est partagé entre toutes vos fiches.
+                  Vous pouvez accéder aux fiches de vos différents cabinets via les onglets
+                  ci-dessous.
                 </p>
               </div>
-              <div className="dashboard-cabinets-grid">
+              <nav className="dashboard-cabinet-tabs" aria-label="Choisir un cabinet">
                 {managedCabinets.map((cabinet) => {
                   const isActiveCabinet = cabinet.account.id === activeAccount?.id;
+                  const tabLabel = getCabinetTabLabel(cabinet.practitioner);
 
                   return (
-                    <article
+                    <Link
                       key={cabinet.account.id}
-                      className={`dashboard-cabinet-card${isActiveCabinet ? " is-active" : ""}`}
+                      className={`dashboard-cabinet-tab${isActiveCabinet ? " is-active" : ""}`}
+                      href={buildDashboardHref({ cabinet: cabinet.account.id })}
+                      aria-current={isActiveCabinet ? "page" : undefined}
+                      title={tabLabel}
                     >
-                      <div>
-                        <div className="dashboard-cabinet-head">
-                          <strong>
-                            {cabinet.practitioner.first_name} {cabinet.practitioner.last_name}
-                          </strong>
-                          {isActiveCabinet ? <span>Cabinet actif</span> : null}
-                        </div>
-                        <p>
-                          {getAddressLine(cabinet.practitioner) ||
-                            "Adresse à compléter pour apparaître correctement sur la carte."}
-                        </p>
-                      </div>
-                      <div className="dashboard-profile-badges dashboard-cabinet-badges">
-                        <span>
-                          {isPublicPractitioner(cabinet.practitioner)
-                            ? "Fiche publiée"
-                            : "Fiche à compléter"}
-                        </span>
-                        <span>Le forfait {plan.name}</span>
-                      </div>
-                      <div className="dashboard-cabinet-actions">
-                        {isActiveCabinet ? (
-                          <span className="dashboard-cabinet-current">Vous gérez ce cabinet</span>
-                        ) : (
-                          <Link
-                            className="btn btn-secondary"
-                            href={`/praticiens/dashboard?cabinet=${cabinet.account.id}`}
-                          >
-                            Gérer ce cabinet
-                          </Link>
-                        )}
-                        <Link className="dashboard-inline-link" href={`/naturopathe/${cabinet.practitioner.slug}`}>
-                          Voir la fiche publique
-                        </Link>
-                      </div>
-                    </article>
+                      <span>{tabLabel}</span>
+                    </Link>
                   );
                 })}
+              </nav>
+              <div className="dashboard-cabinet-panel">
+                <div className="dashboard-cabinet-panel-copy">
+                  <p className="dashboard-cabinet-panel-title">
+                    {practitioner.first_name} {practitioner.last_name}
+                  </p>
+                  <p className="dashboard-cabinet-panel-address">
+                    {getAddressLine(practitioner) ||
+                      "Adresse à compléter pour apparaître correctement sur la carte."}
+                  </p>
+                  <div className="dashboard-profile-badges dashboard-cabinet-badges">
+                    <span>{isPublicPractitioner(practitioner) ? "Fiche publiée" : "Fiche à compléter"}</span>
+                    <span>Forfait : {plan.name}</span>
+                  </div>
+                </div>
+                <div className="dashboard-cabinet-panel-actions">
+                  <span className="dashboard-cabinet-current">Cabinet actif</span>
+                  {isPublicPractitioner(practitioner) ? (
+                    <Link className="dashboard-inline-link" href={`/naturopathe/${practitioner.slug}`}>
+                      Voir la fiche publique
+                    </Link>
+                  ) : (
+                    <a className="dashboard-inline-link" href={buildDashboardHref({}, "#edition")}>
+                      Compléter cette fiche
+                    </a>
+                  )}
+                </div>
               </div>
             </section>
           ) : null}

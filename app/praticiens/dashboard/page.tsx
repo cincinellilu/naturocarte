@@ -560,7 +560,7 @@ export default async function PractitionerDashboardPage({
                 <div className="dashboard-profile-badges">
                   <span>{isPublicPractitioner(practitioner) ? "Fiche publiée" : "Fiche à compléter"}</span>
                   {practitioner.siret ? <span>SIRET {practitioner.siret}</span> : null}
-                  <span>Le forfait partagé {plan.name}</span>
+                  <span>Forfait : {plan.name}</span>
                 </div>
               </div>
               {isPublicPractitioner(practitioner) ? (

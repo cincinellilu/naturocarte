@@ -15,7 +15,8 @@
     "imports:merge:idf": "node scripts/imports/merge-idf-lots.mjs",
     "imports:enrich:idf": "node scripts/imports/enrich-idf-links.mjs",
     "imports:enrich:prod-emails": "node scripts/imports/enrich-prod-emails.mjs",
-    "imports:prepare:prod-no-contact-cleanup": "node scripts/imports/prepare-prod-no-contact-cleanup.mjs"
+    "imports:prepare:prod-no-contact-cleanup": "node scripts/imports/prepare-prod-no-contact-cleanup.mjs",
+    "practitioners:link-cabinets": "node scripts/link-practitioner-cabinets.mjs"
   },
   "engines": {
     "node": ">=20.11.0 <25"

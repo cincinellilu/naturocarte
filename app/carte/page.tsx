@@ -10,6 +10,7 @@ import {
 } from "@/lib/locations";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { isMissingPractitionerTariffsColumnError } from "@/lib/practitioner-tariffs";
 import {
   getParisArrondissementFromPostalCode,
   parseParisArrondissement,
@@ -50,7 +51,7 @@ type PractitionerRow = {
   city: string | null;
   lat: number | null;
   lng: number | null;
-  tarifs: string | null;
+  tarifs?: string | null;
   practitioner_accounts: PractitionerAccountPlanRow[] | PractitionerAccountPlanRow | null;
 };
 
@@ -58,6 +59,51 @@ type SearchParams = {
   zone?: string | string[];
   subzone?: string | string[];
 };
+
+const PRACTITIONER_SELECT_BASE =
+  "first_name, last_name, slug, adresse, postal_code, city, lat, lng, practitioner_accounts(plan, stripe_subscription_status)";
+const PRACTITIONER_SELECT_WITH_TARIFFS =
+  "first_name, last_name, slug, adresse, postal_code, city, lat, lng, tarifs, practitioner_accounts(plan, stripe_subscription_status)";
+
+async function loadCartePractitioners(): Promise<PractitionerRow[]> {
+  const supabase = getSupabaseServerClient();
+
+  async function run(includeTariffs: boolean) {
+    if (includeTariffs) {
+      return fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+        supabase
+          .from("practitioners")
+          .select(PRACTITIONER_SELECT_WITH_TARIFFS)
+          .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+          .order("last_name", { ascending: true })
+          .range(from, to)
+      );
+    }
+
+    return fetchAllSupabaseRows<PractitionerRow>((from, to) =>
+      supabase
+        .from("practitioners")
+        .select(PRACTITIONER_SELECT_BASE)
+        .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+        .order("last_name", { ascending: true })
+        .range(from, to)
+    );
+  }
+
+  try {
+    return await run(true);
+  } catch (error) {
+    if (!isMissingPractitionerTariffsColumnError(error)) {
+      throw error;
+    }
+
+    const rows = await run(false);
+    return rows.map((row) => ({
+      ...row,
+      tarifs: null
+    }));
+  }
+}
 
 export default async function CartePage({
   searchParams
@@ -77,17 +123,7 @@ export default async function CartePage({
   let hasError = false;
 
   try {
-    const supabase = getSupabaseServerClient();
-    practitioners = await fetchAllSupabaseRows<PractitionerRow>((from, to) =>
-      supabase
-        .from("practitioners")
-        .select(
-          "first_name, last_name, slug, adresse, postal_code, city, lat, lng, tarifs, practitioner_accounts(plan, stripe_subscription_status)"
-        )
-        .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
-        .order("last_name", { ascending: true })
-        .range(from, to)
-    );
+    practitioners = await loadCartePractitioners();
   } catch {
     hasError = true;
   }

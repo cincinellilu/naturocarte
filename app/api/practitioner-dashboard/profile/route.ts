@@ -13,7 +13,10 @@ import {
   PRACTITIONER_PLAN_PRESENCE,
   PRACTITIONER_PLAN_VISIBILITY
 } from "@/lib/practitioner-plans";
-import { buildPractitionerTariffsText } from "@/lib/practitioner-tariffs";
+import {
+  buildPractitionerTariffsText,
+  isMissingPractitionerTariffsColumnError
+} from "@/lib/practitioner-tariffs";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 const CONTACT_SLOTS = ["phone", "email", "booking_url"] as const;
@@ -220,12 +223,26 @@ export async function POST(request: Request) {
           tarifs
         };
 
-  const { data: practitioner, error: updateError } = await supabase
+  let updateResult = await supabase
     .from("practitioners")
     .update(updatePayload)
     .eq("id", account.practitioner_id)
     .select("slug")
     .maybeSingle();
+
+  if (updateResult.error && isMissingPractitionerTariffsColumnError(updateResult.error)) {
+    const updatePayloadWithoutTariffs = { ...updatePayload } as Record<string, unknown>;
+    delete updatePayloadWithoutTariffs.tarifs;
+
+    updateResult = await supabase
+      .from("practitioners")
+      .update(updatePayloadWithoutTariffs)
+      .eq("id", account.practitioner_id)
+      .select("slug")
+      .maybeSingle();
+  }
+
+  const { data: practitioner, error: updateError } = updateResult;
 
   if (updateError || !practitioner) {
     redirectUrl.searchParams.set("error", "save_failed");

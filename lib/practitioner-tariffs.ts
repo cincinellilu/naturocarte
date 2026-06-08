@@ -33,3 +33,22 @@ export function buildPractitionerTariffsText(params: {
 
   return items.length > 0 ? items.join("\n") : null;
 }
+
+export function isMissingPractitionerTariffsColumnError(error: unknown): boolean {
+  const text = [
+    typeof error === "object" && error !== null && "message" in error ? String(error.message) : "",
+    typeof error === "object" && error !== null && "details" in error ? String(error.details) : "",
+    typeof error === "object" && error !== null && "hint" in error ? String(error.hint) : ""
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  if (!text.includes("tarifs")) return false;
+
+  return (
+    text.includes("column") ||
+    text.includes("schema cache") ||
+    text.includes("could not find") ||
+    text.includes("does not exist")
+  );
+}

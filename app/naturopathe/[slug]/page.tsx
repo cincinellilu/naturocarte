@@ -13,7 +13,10 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
-import { parsePractitionerTariffs } from "@/lib/practitioner-tariffs";
+import {
+  isMissingPractitionerTariffsColumnError,
+  parsePractitionerTariffs
+} from "@/lib/practitioner-tariffs";
 import {
   getVisiblePublicContacts,
   type PractitionerPublicAccountInput
@@ -64,17 +67,29 @@ type FavoriteRow = {
 async function getPublishedPractitioner(slug: string): Promise<Practitioner | null> {
   const supabase = getSupabaseServerClient();
 
-  const { data, error } = await supabase
-    .from("practitioners")
-    .select(
-      "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
-    )
-    .eq("slug", slug)
-    .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
-    .maybeSingle();
+  async function run(includeTariffs: boolean) {
+    return supabase
+      .from("practitioners")
+      .select(
+        includeTariffs
+          ? "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
+          : "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
+      )
+      .eq("slug", slug)
+      .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
+      .maybeSingle();
+  }
 
-  if (error || !data) return null;
-  return data as Practitioner;
+  const result = await run(true);
+
+  if (result.error && isMissingPractitionerTariffsColumnError(result.error)) {
+    const fallback = await run(false);
+    if (fallback.error || !fallback.data) return null;
+    return { ...(fallback.data as unknown as Practitioner), tarifs: null };
+  }
+
+  if (result.error || !result.data) return null;
+  return result.data as unknown as Practitioner;
 }
 
 async function getPublishedPractitionerReviews(practitionerId: string): Promise<PractitionerReview[]> {

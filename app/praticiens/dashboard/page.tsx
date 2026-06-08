@@ -25,7 +25,10 @@ import {
   isInternalTestPractitionerStatus,
   isPublicPractitionerStatus
 } from "@/lib/practitioner-status";
-import { parsePractitionerTariffs } from "@/lib/practitioner-tariffs";
+import {
+  isMissingPractitionerTariffsColumnError,
+  parsePractitionerTariffs
+} from "@/lib/practitioner-tariffs";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export const dynamic = "force-dynamic";
@@ -308,13 +311,31 @@ export default async function PractitionerDashboardPage({
   let managedCabinets: ManagedCabinet[] = [];
 
   if (practitionerIds.length > 0) {
-    const { data } = await supabase
-      .from("practitioners")
-      .select("id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status")
-      .in("id", practitionerIds);
+    const loadPractitioners = async (includeTariffs: boolean) =>
+      supabase
+        .from("practitioners")
+        .select(
+          includeTariffs
+            ? "id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status"
+            : "id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status"
+        )
+        .in("id", practitionerIds);
+
+    let practitionersData: Practitioner[] = [];
+    const result = await loadPractitioners(true);
+
+    if (result.error && isMissingPractitionerTariffsColumnError(result.error)) {
+      const fallback = await loadPractitioners(false);
+      practitionersData = ((fallback.data ?? []) as unknown as Practitioner[]).map((practitioner) => ({
+        ...practitioner,
+        tarifs: null
+      }));
+    } else {
+      practitionersData = (result.data ?? []) as unknown as Practitioner[];
+    }
 
     const practitionersById = new Map(
-      ((data ?? []) as Practitioner[]).map((practitioner) => [practitioner.id, practitioner])
+      practitionersData.map((practitioner) => [practitioner.id, practitioner])
     );
 
     managedCabinets = managedAccounts

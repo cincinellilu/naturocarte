@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "type": "practitioner_rgpd_erasure",
+      "source": "manual",
+      "reason": "rgpd_erasure",
+      "requested_at": "2026-06-07T08:32:47.503Z",
+      "deleted_at": "2026-06-07T08:32:47.503Z",
+      "emails": [
+        "isabelle.naturo@gmail.com"
+      ],
+      "phones": [
+        "0781245679"
+      ]
+    }
+  ]
+}

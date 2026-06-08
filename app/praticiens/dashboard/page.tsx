@@ -3,6 +3,16 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import PractitionerOnboardingForm from "@/components/PractitionerOnboardingForm";
 import PractitionerWrongAccountNotice from "@/components/PractitionerWrongAccountNotice";
+import {
+  getManagedPractitionerAccounts,
+  getSelectedPractitionerAccount,
+  listPractitionerAccountsForSession,
+  type PractitionerAccountRecord
+} from "@/lib/practitioner-accounts";
+import {
+  getEffectivePractitionerPlan,
+  getPractitionerBillingLeader
+} from "@/lib/practitioner-billing";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { getPractitionerProfileCompletion } from "@/lib/practitioner-profile-completion";
 import {
@@ -28,18 +38,10 @@ type SearchParams = {
   error?: string | string[];
   plans?: string | string[];
   billing?: string | string[];
+  cabinet?: string | string[];
 };
 
-type PractitionerAccount = {
-  id: string;
-  auth_user_id: string;
-  practitioner_id: string | null;
-  email: string;
-  plan: string;
-  contact_slot: string;
-  stripe_customer_id: string | null;
-  stripe_subscription_status: string | null;
-};
+type PractitionerAccount = PractitionerAccountRecord;
 
 type Practitioner = {
   id: string;
@@ -67,6 +69,11 @@ type ExistingPractitionerByEmail = {
 
 type ExistingPractitionerAccountLink = {
   id: string;
+};
+
+type ManagedCabinet = {
+  account: PractitionerAccount;
+  practitioner: Practitioner;
 };
 
 type StatsRow = {
@@ -200,27 +207,23 @@ export default async function PractitionerDashboardPage({
   const error = getParam(params.error);
   const plans = getParam(params.plans);
   const billing = getParam(params.billing);
+  const requestedCabinetId = getParam(params.cabinet);
   const errorMessage = getDashboardErrorMessage(error);
   const successMessage = getDashboardSuccessMessage(saved);
   const isClaimedSuccess = saved === "claimed";
   const supabase = getSupabaseAdminClient();
-  const { data: account } = await supabase
-    .from("practitioner_accounts")
-    .select("id, auth_user_id, practitioner_id, email, plan, contact_slot, stripe_customer_id, stripe_subscription_status")
-    .eq("auth_user_id", session.userId)
-    .maybeSingle<PractitionerAccount>();
 
-  const plan = getPractitionerPlan(account?.plan);
-  const isPaid = plan.id === PRACTITIONER_PLAN_VISIBILITY;
-  const contactSlot = account?.contact_slot ?? "phone";
+  let accounts = await listPractitionerAccountsForSession(supabase, {
+    authUserId: session.userId,
+    email: session.email
+  });
+  let defaultAccount = getSelectedPractitionerAccount(accounts, requestedCabinetId);
 
-  let practitionerId = account?.practitioner_id ?? null;
-
-  if (account && !practitionerId) {
+  if (defaultAccount && !defaultAccount.practitioner_id && accounts.length === 1) {
     const { data: matchingPractitioners, error: matchingPractitionersError } = await supabase
       .from("practitioners")
       .select("id")
-      .ilike("email", account.email)
+      .ilike("email", defaultAccount.email)
       .limit(2)
       .returns<ExistingPractitionerByEmail[]>();
 
@@ -232,7 +235,7 @@ export default async function PractitionerDashboardPage({
           .from("practitioner_accounts")
           .select("id")
           .eq("practitioner_id", matchingPractitionerId)
-          .neq("id", account.id)
+          .neq("id", defaultAccount.id)
           .maybeSingle<ExistingPractitionerAccountLink>();
 
         if (!existingLinkError && !existingLink) {
@@ -242,26 +245,81 @@ export default async function PractitionerDashboardPage({
               practitioner_id: matchingPractitionerId,
               updated_at: new Date().toISOString()
             })
-            .eq("id", account.id);
+            .eq("id", defaultAccount.id);
 
           if (!linkError) {
-            practitionerId = matchingPractitionerId;
+            accounts = await listPractitionerAccountsForSession(supabase, {
+              authUserId: session.userId,
+              email: session.email
+            });
+            defaultAccount = getSelectedPractitionerAccount(accounts, requestedCabinetId);
           }
         }
       }
     }
   }
 
-  let practitioner: Practitioner | null = null;
-  if (practitionerId) {
+  const managedAccounts = getManagedPractitionerAccounts(accounts);
+  const selectedAccount =
+    getSelectedPractitionerAccount(managedAccounts, requestedCabinetId) ??
+    getSelectedPractitionerAccount(managedAccounts, null) ??
+    getSelectedPractitionerAccount(accounts, requestedCabinetId);
+  const billingAccount = getPractitionerBillingLeader(accounts) ?? selectedAccount;
+  const sharedPlanId = getEffectivePractitionerPlan(accounts);
+  const plan = getPractitionerPlan(sharedPlanId);
+  const isPaid = plan.id === PRACTITIONER_PLAN_VISIBILITY;
+  const contactSlot = selectedAccount?.contact_slot ?? "phone";
+
+  const practitionerIds = managedAccounts
+    .map((account) => account.practitioner_id)
+    .filter((value): value is string => Boolean(value));
+
+  let managedCabinets: ManagedCabinet[] = [];
+
+  if (practitionerIds.length > 0) {
     const { data } = await supabase
       .from("practitioners")
       .select("id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status")
-      .eq("id", practitionerId)
-      .maybeSingle<Practitioner>();
+      .in("id", practitionerIds);
 
-    practitioner = data ?? null;
+    const practitionersById = new Map(
+      ((data ?? []) as Practitioner[]).map((practitioner) => [practitioner.id, practitioner])
+    );
+
+    managedCabinets = managedAccounts
+      .map((account) => {
+        const practitionerId = account.practitioner_id;
+        const practitioner = practitionerId ? practitionersById.get(practitionerId) ?? null : null;
+        return practitioner ? { account, practitioner } : null;
+      })
+      .filter((value): value is ManagedCabinet => Boolean(value));
   }
+
+  const activeCabinet =
+    (selectedAccount
+      ? managedCabinets.find((cabinet) => cabinet.account.id === selectedAccount.id) ?? null
+      : null) ?? managedCabinets[0] ?? null;
+
+  const practitioner = activeCabinet?.practitioner ?? null;
+  const activeAccount = activeCabinet?.account ?? selectedAccount ?? null;
+  const dashboardCabinetId = activeAccount?.id ?? null;
+
+  const buildDashboardHref = (extraParams: Record<string, string | null> = {}, hash = "") => {
+    const search = new URLSearchParams();
+
+    if (dashboardCabinetId) {
+      search.set("cabinet", dashboardCabinetId);
+    }
+
+    for (const [key, value] of Object.entries(extraParams)) {
+      if (value) {
+        search.set(key, value);
+      }
+    }
+
+    const query = search.toString();
+    return `/praticiens/dashboard${query ? `?${query}` : ""}${hash}`;
+  };
 
   const stats = practitioner
     ? await getProfileStats(practitioner.id)
@@ -280,7 +338,9 @@ export default async function PractitionerDashboardPage({
           <h1>Votre fiche NaturoCarte</h1>
           <p className="page-lead">
             Connecté avec {session.email}. Gérez les informations visibles par les visiteurs
-            et choisissez l’offre adaptée à votre usage.
+            {managedCabinets.length > 1
+              ? ` sur vos ${managedCabinets.length} cabinets. Votre forfait s’applique à l’ensemble de vos fiches.`
+              : " et choisissez l’offre adaptée à votre usage."}
           </p>
         </div>
         <form action="/praticiens/logout" method="post">
@@ -312,7 +372,7 @@ export default async function PractitionerDashboardPage({
           >
             <Link
               className="dashboard-modal-close"
-              href="/praticiens/dashboard"
+              href={buildDashboardHref()}
               aria-label="Fermer la confirmation"
             >
               ×
@@ -327,10 +387,10 @@ export default async function PractitionerDashboardPage({
               et suivre les statistiques, vous pouvez aussi passer au forfait Visibilité+.
             </p>
             <div className="dashboard-modal-actions dashboard-subscription-actions">
-              <Link className="btn" href="/praticiens/dashboard#edition">
+              <Link className="btn" href={buildDashboardHref({}, "#edition")}>
                 Compléter ma fiche
               </Link>
-              <Link className="btn btn-secondary" href="/praticiens/dashboard?plans=open#forfaits">
+              <Link className="btn btn-secondary" href={buildDashboardHref({ plans: "open" }, "#forfaits")}>
                 Découvrir Visibilité+
               </Link>
             </div>
@@ -348,7 +408,7 @@ export default async function PractitionerDashboardPage({
           >
             <Link
               className="dashboard-modal-close"
-              href="/praticiens/dashboard"
+              href={buildDashboardHref()}
               aria-label="Fermer la confirmation"
             >
               ×
@@ -363,10 +423,10 @@ export default async function PractitionerDashboardPage({
               complets et statistiques de consultation.
             </p>
             <div className="dashboard-modal-actions dashboard-subscription-actions">
-              <Link className="btn" href="/praticiens/dashboard#edition">
+              <Link className="btn" href={buildDashboardHref({}, "#edition")}>
                 Enrichir ma fiche
               </Link>
-              <Link className="btn btn-secondary" href="/praticiens/dashboard">
+              <Link className="btn btn-secondary" href={buildDashboardHref()}>
                 Revenir au dashboard
               </Link>
             </div>
@@ -384,10 +444,73 @@ export default async function PractitionerDashboardPage({
             Votre compte existe. Il manque seulement les informations professionnelles nécessaires
             pour créer et rattacher votre fiche NaturoCarte.
           </p>
-          <PractitionerOnboardingForm />
+          <PractitionerOnboardingForm accountId={activeAccount?.id ?? null} />
         </section>
       ) : (
         <>
+          {managedCabinets.length > 1 ? (
+            <section className="dashboard-cabinets-section" aria-labelledby="dashboard-cabinets-title">
+              <div className="dashboard-cabinets-head">
+                <div>
+                  <p className="section-eyebrow">Cabinets rattachés</p>
+                  <h2 id="dashboard-cabinets-title">Choisissez la fiche à gérer</h2>
+                </div>
+                <p className="dashboard-help">
+                  Chaque cabinet conserve sa propre fiche publique, ses coordonnées et ses
+                  statistiques. Le forfait, lui, est partagé entre toutes vos fiches.
+                </p>
+              </div>
+              <div className="dashboard-cabinets-grid">
+                {managedCabinets.map((cabinet) => {
+                  const isActiveCabinet = cabinet.account.id === activeAccount?.id;
+
+                  return (
+                    <article
+                      key={cabinet.account.id}
+                      className={`dashboard-cabinet-card${isActiveCabinet ? " is-active" : ""}`}
+                    >
+                      <div>
+                        <div className="dashboard-cabinet-head">
+                          <strong>
+                            {cabinet.practitioner.first_name} {cabinet.practitioner.last_name}
+                          </strong>
+                          {isActiveCabinet ? <span>Cabinet actif</span> : null}
+                        </div>
+                        <p>
+                          {getAddressLine(cabinet.practitioner) ||
+                            "Adresse à compléter pour apparaître correctement sur la carte."}
+                        </p>
+                      </div>
+                      <div className="dashboard-profile-badges dashboard-cabinet-badges">
+                        <span>
+                          {isPublicPractitioner(cabinet.practitioner)
+                            ? "Fiche publiée"
+                            : "Fiche à compléter"}
+                        </span>
+                        <span>Le forfait {plan.name}</span>
+                      </div>
+                      <div className="dashboard-cabinet-actions">
+                        {isActiveCabinet ? (
+                          <span className="dashboard-cabinet-current">Vous gérez ce cabinet</span>
+                        ) : (
+                          <Link
+                            className="btn btn-secondary"
+                            href={`/praticiens/dashboard?cabinet=${cabinet.account.id}`}
+                          >
+                            Gérer ce cabinet
+                          </Link>
+                        )}
+                        <Link className="dashboard-inline-link" href={`/naturopathe/${cabinet.practitioner.slug}`}>
+                          Voir la fiche publique
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          ) : null}
+
           <section className="dashboard-profile-summary">
             <div className="dashboard-profile-photo-card">
               <div className="dashboard-profile-avatar" aria-hidden="true">
@@ -408,6 +531,7 @@ export default async function PractitionerDashboardPage({
                   method="post"
                   encType="multipart/form-data"
                 >
+                  {activeAccount?.id ? <input type="hidden" name="account_id" value={activeAccount.id} /> : null}
                   <label className="dashboard-photo-file">
                     <span>Changer la photo</span>
                     <input name="photo" type="file" accept="image/png,image/jpeg,image/webp" />
@@ -417,7 +541,7 @@ export default async function PractitionerDashboardPage({
                   </button>
                 </form>
               ) : (
-                <a className="dashboard-avatar-upgrade" href="/praticiens/dashboard?plans=open#forfaits">
+                <a className="dashboard-avatar-upgrade" href={buildDashboardHref({ plans: "open" }, "#forfaits")}>
                   <span className="dashboard-lock-icon" aria-hidden="true" />
                   Photo avec Visibilité+
                 </a>
@@ -436,7 +560,7 @@ export default async function PractitionerDashboardPage({
                 <div className="dashboard-profile-badges">
                   <span>{isPublicPractitioner(practitioner) ? "Fiche publiée" : "Fiche à compléter"}</span>
                   {practitioner.siret ? <span>SIRET {practitioner.siret}</span> : null}
-                  <span>Le forfait {plan.name}</span>
+                  <span>Le forfait partagé {plan.name}</span>
                 </div>
               </div>
               {isPublicPractitioner(practitioner) ? (
@@ -444,7 +568,7 @@ export default async function PractitionerDashboardPage({
                   Voir la fiche publique
                 </Link>
               ) : (
-                <a className="btn btn-secondary" href="#edition">
+                <a className="btn btn-secondary" href={buildDashboardHref({}, "#edition")}>
                   Compléter ma fiche
                 </a>
               )}
@@ -485,6 +609,7 @@ export default async function PractitionerDashboardPage({
 
           <section className="dashboard-edit-section" id="edition">
             <form className="dashboard-profile-form" action="/api/practitioner-dashboard/profile" method="post">
+              {activeAccount?.id ? <input type="hidden" name="account_id" value={activeAccount.id} /> : null}
               <fieldset className="dashboard-fieldset" id="adresse">
                 <legend>Adresse du cabinet</legend>
                 <p className="dashboard-help">
@@ -574,7 +699,7 @@ export default async function PractitionerDashboardPage({
                       approche lorsque vous activez le forfait Visibilité+.
                     </p>
                   </div>
-                  <a className="dashboard-lock-callout dashboard-lock-callout--link" href="/praticiens/dashboard?plans=open#forfaits">
+                  <a className="dashboard-lock-callout dashboard-lock-callout--link" href={buildDashboardHref({ plans: "open" }, "#forfaits")}>
                     <span className="dashboard-lock-icon" aria-hidden="true" />
                     <strong>Disponible avec Visibilité+</strong>
                   </a>
@@ -615,7 +740,7 @@ export default async function PractitionerDashboardPage({
                 <h2>Consultation de votre fiche</h2>
               </div>
               {!isPaid ? (
-                <a className="btn" href="/praticiens/dashboard?plans=open#forfaits">
+                <a className="btn" href={buildDashboardHref({ plans: "open" }, "#forfaits")}>
                   Passer à Visibilité+
                 </a>
               ) : null}
@@ -646,6 +771,11 @@ export default async function PractitionerDashboardPage({
 
       <details className="dashboard-plans-section" id="forfaits" open={plans === "open"}>
         <summary>Comparer les forfaits disponibles</summary>
+        {activeAccount ? (
+          <p className="dashboard-help">
+            Le forfait s’applique à toutes les fiches rattachées à ce praticien.
+          </p>
+        ) : null}
         <div className="practitioner-plan-grid dashboard-plan-grid">
           {PRACTITIONER_PLANS.map((availablePlan) => (
             <article key={availablePlan.id} className="practitioner-plan-card">
@@ -661,6 +791,7 @@ export default async function PractitionerDashboardPage({
               </ul>
               <form action="/api/practitioner-dashboard/plan" method="post">
                 <input type="hidden" name="plan" value={availablePlan.id} />
+                {activeAccount?.id ? <input type="hidden" name="account_id" value={activeAccount.id} /> : null}
                 <button
                   className={availablePlan.id === plan.id ? "btn btn-secondary" : "btn"}
                   type="submit"
@@ -670,7 +801,7 @@ export default async function PractitionerDashboardPage({
                     ? "Forfait actuel"
                     : availablePlan.id === PRACTITIONER_PLAN_VISIBILITY
                       ? "Souscrire à Visibilité+"
-                      : account?.stripe_customer_id
+                      : billingAccount?.stripe_customer_id
                         ? "Gérer mon abonnement"
                         : "Choisir ce forfait"}
                 </button>
@@ -699,6 +830,7 @@ export default async function PractitionerDashboardPage({
             ) : null}
           </div>
           <form className="dashboard-delete-profile-form" action="/api/practitioner-dashboard/delete-profile" method="post">
+            {activeAccount?.id ? <input type="hidden" name="account_id" value={activeAccount.id} /> : null}
             <label className="practitioner-form-label">
               Saisissez SUPPRIMER pour confirmer
               <input

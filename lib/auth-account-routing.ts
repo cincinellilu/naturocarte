@@ -76,6 +76,8 @@ export async function ensurePractitionerAccount(
     .from("practitioner_accounts")
     .select("id")
     .eq("auth_user_id", params.authUserId)
+    .order("updated_at", { ascending: false, nullsFirst: false })
+    .limit(1)
     .maybeSingle<{ id: string }>();
 
   if (authLookupError) return { ok: false, error: authLookupError };
@@ -117,6 +119,8 @@ export async function resolvePractitionerAccount(
     .from("practitioner_accounts")
     .select("id, practitioner_id")
     .eq("auth_user_id", params.authUserId)
+    .order("updated_at", { ascending: false, nullsFirst: false })
+    .limit(1)
     .maybeSingle<PractitionerAccountRow>();
 
   if (authLookupError) return { isPractitioner: false, error: authLookupError };
@@ -135,6 +139,7 @@ export async function resolvePractitionerAccount(
     .from("practitioner_accounts")
     .select("id, practitioner_id")
     .ilike("email", normalizedEmail)
+    .order("updated_at", { ascending: false, nullsFirst: false })
     .limit(1)
     .maybeSingle<PractitionerAccountRow>();
 
@@ -164,6 +169,7 @@ export async function resolvePractitionerAccount(
     .from("practitioner_accounts")
     .select("id, practitioner_id")
     .eq("practitioner_id", practitioner.id)
+    .order("updated_at", { ascending: false, nullsFirst: false })
     .limit(1)
     .maybeSingle<PractitionerAccountRow>();
 

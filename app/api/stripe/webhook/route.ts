@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { syncPractitionerBillingGroup } from "@/lib/practitioner-billing";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { PRACTITIONER_PLAN_PRESENCE, PRACTITIONER_PLAN_VISIBILITY } from "@/lib/practitioner-plans";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
@@ -76,6 +77,45 @@ function isVisibilitySubscriptionStatus(status: string | null): boolean {
   return status === "active" || status === "trialing";
 }
 
+async function getBillingGroupEmail(params: {
+  accountId?: string | null;
+  subscriptionId?: string | null;
+}): Promise<string | null> {
+  const supabase = getSupabaseAdminClient();
+
+  if (params.accountId) {
+    const { data, error } = await supabase
+      .from("practitioner_accounts")
+      .select("email")
+      .eq("id", params.accountId)
+      .maybeSingle<{ email: string | null }>();
+
+    if (error) {
+      throw error;
+    }
+
+    return data?.email?.trim().toLowerCase() ?? null;
+  }
+
+  if (params.subscriptionId) {
+    const { data, error } = await supabase
+      .from("practitioner_accounts")
+      .select("email")
+      .eq("stripe_subscription_id", params.subscriptionId)
+      .order("updated_at", { ascending: false, nullsFirst: false })
+      .limit(1)
+      .maybeSingle<{ email: string | null }>();
+
+    if (error) {
+      throw error;
+    }
+
+    return data?.email?.trim().toLowerCase() ?? null;
+  }
+
+  return null;
+}
+
 async function updateAccountFromSubscription(subscription: Record<string, unknown>) {
   const subscriptionId = asString(subscription.id);
   const customerId = asString(subscription.customer);
@@ -92,27 +132,42 @@ async function updateAccountFromSubscription(subscription: Record<string, unknow
   if (!subscriptionId && !accountId) return;
 
   const supabase = getSupabaseAdminClient();
-  const updatePayload = {
+  const billingPayload = {
     plan,
     stripe_customer_id: customerId,
     stripe_subscription_id: subscriptionId,
     stripe_subscription_status: status,
     stripe_price_id: priceId,
-    stripe_current_period_end: periodEnd,
-    updated_at: new Date().toISOString()
+    stripe_current_period_end: periodEnd
   };
 
-  let query = supabase.from("practitioner_accounts").update(updatePayload);
+  const groupEmail = await getBillingGroupEmail({
+    accountId,
+    subscriptionId
+  });
 
-  if (accountId) {
-    query = query.eq("id", accountId);
-  } else {
-    query = query.eq("stripe_subscription_id", subscriptionId);
-  }
+  if (groupEmail) {
+    await syncPractitionerBillingGroup(supabase, {
+      email: groupEmail,
+      billing: billingPayload
+    });
+  } else if (accountId) {
+    await syncPractitionerBillingGroup(supabase, {
+      accountId,
+      billing: billingPayload
+    });
+  } else if (subscriptionId) {
+    const { error } = await supabase
+      .from("practitioner_accounts")
+      .update({
+        ...billingPayload,
+        updated_at: new Date().toISOString()
+      })
+      .eq("stripe_subscription_id", subscriptionId);
 
-  const { error } = await query;
-  if (error) {
-    throw error;
+    if (error) {
+      throw error;
+    }
   }
 
   await recordProductEvent({
@@ -141,21 +196,33 @@ async function updateAccountFromInvoice(invoice: Record<string, unknown>, paymen
 
   const plan = paymentStatus === "paid" ? PRACTITIONER_PLAN_VISIBILITY : PRACTITIONER_PLAN_PRESENCE;
   const supabase = getSupabaseAdminClient();
-  const { error } = await supabase
-    .from("practitioner_accounts")
-    .update({
-      plan,
-      stripe_customer_id: customerId,
-      stripe_subscription_id: subscriptionId,
-      stripe_subscription_status: paymentStatus === "paid" ? "active" : "past_due",
-      stripe_price_id: priceId,
-      stripe_current_period_end: periodEnd,
-      updated_at: new Date().toISOString()
-    })
-    .eq("stripe_subscription_id", subscriptionId);
+  const billingPayload = {
+    plan,
+    stripe_customer_id: customerId,
+    stripe_subscription_id: subscriptionId,
+    stripe_subscription_status: paymentStatus === "paid" ? "active" : "past_due",
+    stripe_price_id: priceId,
+    stripe_current_period_end: periodEnd
+  };
+  const groupEmail = await getBillingGroupEmail({ subscriptionId });
 
-  if (error) {
-    throw error;
+  if (groupEmail) {
+    await syncPractitionerBillingGroup(supabase, {
+      email: groupEmail,
+      billing: billingPayload
+    });
+  } else {
+    const { error } = await supabase
+      .from("practitioner_accounts")
+      .update({
+        ...billingPayload,
+        updated_at: new Date().toISOString()
+      })
+      .eq("stripe_subscription_id", subscriptionId);
+
+    if (error) {
+      throw error;
+    }
   }
 
   await recordProductEvent({
@@ -177,21 +244,16 @@ async function updateAccountFromCheckoutSession(session: Record<string, unknown>
   if (!accountId) return;
 
   const supabase = getSupabaseAdminClient();
-  const { error } = await supabase
-    .from("practitioner_accounts")
-    .update({
+  await syncPractitionerBillingGroup(supabase, {
+    accountId,
+    billing: {
       plan: PRACTITIONER_PLAN_VISIBILITY,
       stripe_customer_id: customerId,
       stripe_subscription_id: subscriptionId,
       stripe_subscription_status: "active",
-      stripe_price_id: getStripeVisibilityPriceId(),
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", accountId);
-
-  if (error) {
-    throw error;
-  }
+      stripe_price_id: getStripeVisibilityPriceId()
+    }
+  });
 
   await recordProductEvent({
     eventName: "checkout_completed",

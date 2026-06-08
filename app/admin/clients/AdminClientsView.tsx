@@ -7,6 +7,11 @@ import {
 } from "@/lib/admin-prospects-auth";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import {
+  getEffectivePractitionerPlan,
+  getPractitionerBillingLeader,
+  normalizePractitionerBillingEmail
+} from "@/lib/practitioner-billing";
+import {
   getPractitionerPlan,
   PRACTITIONER_PLAN_PRESENCE,
   PRACTITIONER_PLAN_VISIBILITY,
@@ -58,7 +63,25 @@ type ClientBillingSummary = {
   error: boolean;
 };
 
-type ClientRow = PractitionerAccountRow & {
+type ClientRow = {
+  id: string;
+  email: string;
+  plan: string;
+  created_at: string | null;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  stripe_subscription_status: string | null;
+  stripe_current_period_end: string | null;
+  practitioners: Array<{
+    id: string;
+    first_name: string;
+    last_name: string;
+    slug: string;
+    status: string | null;
+    city: string | null;
+    postal_code: string | null;
+  }>;
+  cabinetCount: number;
   billing: ClientBillingSummary;
 };
 
@@ -72,6 +95,14 @@ function getPractitioner(account: PractitionerAccountRow) {
   return Array.isArray(account.practitioners)
     ? account.practitioners[0] ?? null
     : account.practitioners;
+}
+
+function getPractitioners(account: PractitionerAccountRow) {
+  return Array.isArray(account.practitioners)
+    ? account.practitioners.filter(Boolean)
+    : account.practitioners
+      ? [account.practitioners]
+      : [];
 }
 
 function getPlanFilterTitle(planFilter: PlanFilter) {
@@ -124,7 +155,12 @@ function formatAmount(amount: number, currency: string | null) {
   }).format(amount / 100);
 }
 
-async function loadBilling(account: PractitionerAccountRow): Promise<ClientBillingSummary> {
+async function loadBilling(account: {
+  id: string;
+  plan: string;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+}): Promise<ClientBillingSummary> {
   if (
     account.plan !== PRACTITIONER_PLAN_VISIBILITY ||
     !account.stripe_customer_id ||
@@ -170,15 +206,46 @@ async function loadClients(planFilter: PlanFilter): Promise<ClientRow[] | null> 
       .order("created_at", { ascending: false })
       .range(from, to);
 
-    if (planFilter !== "all") {
-      query = query.eq("plan", planFilter);
-    }
-
     return query;
   });
 
+  const groups = new Map<string, PractitionerAccountRow[]>();
+
+  for (const row of rows) {
+    const key = normalizePractitionerBillingEmail(row.email) ?? `account:${row.id}`;
+    const currentGroup = groups.get(key) ?? [];
+    currentGroup.push(row);
+    groups.set(key, currentGroup);
+  }
+
+  const groupedRows = [...groups.values()]
+    .map((accounts) => {
+      const leader = getPractitionerBillingLeader(accounts) ?? accounts[0];
+      const practitioners = new Map<string, NonNullable<ReturnType<typeof getPractitioners>[number]>>();
+
+      for (const account of accounts) {
+        for (const practitioner of getPractitioners(account)) {
+          practitioners.set(practitioner.id, practitioner);
+        }
+      }
+
+      return {
+        id: leader.id,
+        email: leader.email,
+        plan: getEffectivePractitionerPlan(accounts),
+        created_at: leader.created_at ?? null,
+        stripe_customer_id: leader.stripe_customer_id ?? null,
+        stripe_subscription_id: leader.stripe_subscription_id ?? null,
+        stripe_subscription_status: leader.stripe_subscription_status ?? null,
+        stripe_current_period_end: leader.stripe_current_period_end ?? null,
+        practitioners: [...practitioners.values()],
+        cabinetCount: practitioners.size
+      };
+    })
+    .filter((client) => planFilter === "all" || client.plan === planFilter);
+
   return Promise.all(
-    rows.map(async (account) => ({
+    groupedRows.map(async (account) => ({
       ...account,
       billing: await loadBilling(account)
     }))
@@ -239,7 +306,7 @@ export default async function AdminClientsView({
       description={getPlanFilterIntro(planFilter)}
       headerMeta={[
         planFilter === "all" ? "Vue commerciale globale" : getPlanFilterTitle(planFilter),
-        `${(clients?.length ?? 0).toLocaleString("fr-FR")} compte(s)`
+        `${(clients?.length ?? 0).toLocaleString("fr-FR")} client(s)`
       ]}
     >
       <div className="admin-page">
@@ -316,7 +383,7 @@ export default async function AdminClientsView({
 }
 
 function ClientCard({ client }: { client: ClientRow }) {
-  const practitioner = getPractitioner(client);
+  const practitioner = client.practitioners[0] ?? null;
   const plan = getPractitionerPlan(client.plan);
   const billingLabel =
     client.plan === PRACTITIONER_PLAN_PRESENCE
@@ -340,8 +407,12 @@ function ClientCard({ client }: { client: ClientRow }) {
           <p>{client.email}</p>
           {practitioner ? (
             <p>
-              {practitioner.city ?? "Ville non renseignée"} · fiche{" "}
-              <Link href={`/naturopathe/${practitioner.slug}`}>/{practitioner.slug}</Link>
+              {client.cabinetCount > 1
+                ? `${client.cabinetCount.toLocaleString("fr-FR")} cabinets rattachés`
+                : `${practitioner.city ?? "Ville non renseignée"} · fiche `}
+              {client.cabinetCount > 1 ? null : (
+                <Link href={`/naturopathe/${practitioner.slug}`}>/{practitioner.slug}</Link>
+              )}
             </p>
           ) : null}
         </div>
@@ -362,6 +433,15 @@ function ClientCard({ client }: { client: ClientRow }) {
         <span>Customer: {client.stripe_customer_id ?? "Non créé"}</span>
         <span>Subscription: {client.stripe_subscription_id ?? "Non créée"}</span>
       </div>
+
+      {client.practitioners.length > 1 ? (
+        <div className="admin-client-meta">
+          <span>
+            Cabinets:{" "}
+            {client.practitioners.map((practitioner) => practitioner.slug).join(", ")}
+          </span>
+        </div>
+      ) : null}
 
       {client.billing.error ? (
         <p className="admin-warning">Les factures Stripe n’ont pas pu être chargées.</p>

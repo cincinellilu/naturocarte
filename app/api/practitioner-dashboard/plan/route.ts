@@ -1,5 +1,15 @@
 import { NextResponse } from "next/server";
 import { createAppUrl } from "@/lib/app-url";
+import {
+  getDefaultPractitionerAccount,
+  getPractitionerAccountById,
+  listPractitionerAccountsForSession
+} from "@/lib/practitioner-accounts";
+import {
+  getEffectivePractitionerPlan,
+  getPractitionerBillingLeader,
+  syncPractitionerBillingGroup
+} from "@/lib/practitioner-billing";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import {
@@ -20,7 +30,15 @@ type PractitionerAccountBilling = {
   email: string;
   plan: string;
   stripe_customer_id: string | null;
+  stripe_subscription_id?: string | null;
+  stripe_subscription_status?: string | null;
+  stripe_price_id?: string | null;
+  stripe_current_period_end?: string | null;
 };
+
+function normalizeAccountId(value: FormDataEntryValue | null): string | null {
+  return typeof value === "string" ? value.trim() || null : null;
+}
 
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
@@ -32,8 +50,13 @@ export async function POST(request: Request) {
 
   const formData = await request.formData();
   const rawPlan = formData.get("plan");
+  const requestedAccountId = normalizeAccountId(formData.get("account_id"));
   const plan = typeof rawPlan === "string" ? rawPlan.trim() : "";
   const redirectUrl = createAppUrl("/praticiens/dashboard", request);
+
+  if (requestedAccountId) {
+    redirectUrl.searchParams.set("cabinet", requestedAccountId);
+  }
 
   if (!isPractitionerPlanId(plan)) {
     redirectUrl.searchParams.set("error", "invalid_plan");
@@ -41,28 +64,42 @@ export async function POST(request: Request) {
   }
 
   const supabase = getSupabaseAdminClient();
-  const { data: account, error: accountError } = await supabase
-    .from("practitioner_accounts")
-    .select("id, email, plan, stripe_customer_id")
-    .eq("auth_user_id", session.userId)
-    .maybeSingle<PractitionerAccountBilling>();
+  let accounts;
 
-  if (accountError || !account) {
+  try {
+    accounts = await listPractitionerAccountsForSession(supabase, {
+      authUserId: session.userId,
+      email: session.email
+    });
+  } catch {
+    redirectUrl.searchParams.set("error", "missing_account");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  const account = requestedAccountId
+    ? getPractitionerAccountById(accounts, requestedAccountId)
+    : getDefaultPractitionerAccount(accounts);
+  const billingAccount = getPractitionerBillingLeader(accounts) ?? account;
+  const currentPlan = getEffectivePractitionerPlan(accounts);
+
+  if ((requestedAccountId && !account) || !account) {
     redirectUrl.searchParams.set("error", "missing_account");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
 
   if (plan === PRACTITIONER_PLAN_PRESENCE) {
-    if (account.stripe_customer_id) {
+    if (billingAccount?.stripe_customer_id) {
       try {
         await recordProductEvent({
           eventName: "billing_portal_opened",
           request,
+          practitionerAccountId: billingAccount.id,
+          practitionerId: account.practitioner_id,
           metadata: { target_plan: plan }
         }).catch(() => {});
         const portal = await createBillingPortalSession({
-          customerId: account.stripe_customer_id,
-          returnUrl: createAppUrl("/praticiens/dashboard", request).toString()
+          customerId: billingAccount.stripe_customer_id,
+          returnUrl: redirectUrl.toString()
         });
 
         if (portal.url) {
@@ -90,7 +127,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    let customerId = account.stripe_customer_id;
+    let customerId = billingAccount?.stripe_customer_id ?? account.stripe_customer_id;
 
     if (!customerId) {
       const customer = await createStripeCustomer({
@@ -100,24 +137,44 @@ export async function POST(request: Request) {
 
       customerId = customer.id;
 
-      const { error: customerUpdateError } = await supabase
-        .from("practitioner_accounts")
-        .update({
+      await syncPractitionerBillingGroup(supabase, {
+        email: account.email,
+        billing: {
+          plan: currentPlan,
           stripe_customer_id: customerId,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", account.id);
-
-      if (customerUpdateError) {
-        throw customerUpdateError;
-      }
+          stripe_subscription_id: billingAccount?.stripe_subscription_id ?? null,
+          stripe_subscription_status: billingAccount?.stripe_subscription_status ?? null,
+          stripe_price_id: billingAccount?.stripe_price_id ?? null,
+          stripe_current_period_end: billingAccount?.stripe_current_period_end ?? null
+        }
+      });
     }
 
     const checkout = await createVisibilityCheckoutSession({
       customerId,
       practitionerAccountId: account.id,
-      successUrl: createAppUrl("/praticiens/dashboard?billing=success", request).toString(),
-      cancelUrl: createAppUrl("/praticiens/dashboard?plans=open", request).toString()
+      successUrl: createAppUrl(
+        `/praticiens/dashboard?${new URLSearchParams(
+          Object.fromEntries(
+            Object.entries({
+              cabinet: requestedAccountId,
+              billing: "success"
+            }).filter(([, value]) => Boolean(value))
+          ) as Record<string, string>
+        ).toString()}`,
+        request
+      ).toString(),
+      cancelUrl: createAppUrl(
+        `/praticiens/dashboard?${new URLSearchParams(
+          Object.fromEntries(
+            Object.entries({
+              cabinet: requestedAccountId,
+              plans: "open"
+            }).filter(([, value]) => Boolean(value))
+          ) as Record<string, string>
+        ).toString()}`,
+        request
+      ).toString()
     });
 
     if (!checkout.url) {
@@ -127,6 +184,8 @@ export async function POST(request: Request) {
     await recordProductEvent({
       eventName: "checkout_started",
       request,
+      practitionerAccountId: account.id,
+      practitionerId: account.practitioner_id,
       metadata: {
         target_plan: plan
       }

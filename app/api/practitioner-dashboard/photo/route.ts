@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createAppUrl } from "@/lib/app-url";
+import {
+  getDefaultPractitionerAccount,
+  getPractitionerAccountById,
+  listPractitionerAccountsForSession
+} from "@/lib/practitioner-accounts";
+import { getEffectivePractitionerPlan } from "@/lib/practitioner-billing";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { PRACTITIONER_PLAN_VISIBILITY } from "@/lib/practitioner-plans";
@@ -26,6 +32,10 @@ function getFileExtension(file: File): string {
   return "jpg";
 }
 
+function normalizeAccountId(value: FormDataEntryValue | null): string | null {
+  return typeof value === "string" ? value.trim() || null : null;
+}
+
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
   if (!session) {
@@ -37,6 +47,11 @@ export async function POST(request: Request) {
   const redirectUrl = createAppUrl("/praticiens/dashboard", request);
   const formData = await request.formData();
   const photo = formData.get("photo");
+  const requestedAccountId = normalizeAccountId(formData.get("account_id"));
+
+  if (requestedAccountId) {
+    redirectUrl.searchParams.set("cabinet", requestedAccountId);
+  }
 
   if (!(photo instanceof File) || photo.size === 0) {
     redirectUrl.searchParams.set("error", "missing_photo");
@@ -49,18 +64,28 @@ export async function POST(request: Request) {
   }
 
   const supabase = getSupabaseAdminClient();
-  const { data: account, error: accountError } = await supabase
-    .from("practitioner_accounts")
-    .select("id, practitioner_id, plan")
-    .eq("auth_user_id", session.userId)
-    .maybeSingle<PractitionerAccountRow>();
+  let accounts;
 
-  if (accountError || !account?.practitioner_id) {
+  try {
+    accounts = await listPractitionerAccountsForSession(supabase, {
+      authUserId: session.userId,
+      email: session.email
+    });
+  } catch {
     redirectUrl.searchParams.set("error", "missing_practitioner");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
 
-  if (account.plan !== PRACTITIONER_PLAN_VISIBILITY) {
+  const account = requestedAccountId
+    ? getPractitionerAccountById(accounts, requestedAccountId)
+    : getDefaultPractitionerAccount(accounts);
+
+  if ((requestedAccountId && !account) || !account?.practitioner_id) {
+    redirectUrl.searchParams.set("error", "missing_practitioner");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  if (getEffectivePractitionerPlan(accounts) !== PRACTITIONER_PLAN_VISIBILITY) {
     await recordProductEvent({
       eventName: "photo_upload_failed",
       request,

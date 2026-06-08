@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAppUrl } from "@/lib/app-url";
 import { ensureUserAccount } from "@/lib/auth-account-routing";
+import { listPractitionerAccountsForSession } from "@/lib/practitioner-accounts";
 import {
   getCurrentPractitionerSession,
   PRACTITIONER_SESSION_COOKIE_NAME
@@ -34,13 +35,29 @@ export async function POST(request: Request) {
     );
   }
 
-  const { error } = await supabase
-    .from("practitioner_accounts")
-    .delete()
-    .eq("auth_user_id", session.userId);
+  let practitionerAccountIds: string[] = [];
 
-  if (error) {
-    console.error("practitioner space delete failed", error);
+  try {
+    const accounts = await listPractitionerAccountsForSession(supabase, {
+      authUserId: session.userId,
+      email: session.email
+    });
+
+    practitionerAccountIds = [...new Set(accounts.map((account) => account.id).filter(Boolean))];
+  } catch (error) {
+    console.warn("practitioner space delete account discovery failed", error);
+  }
+
+  const deleteResult =
+    practitionerAccountIds.length > 0
+      ? await supabase.from("practitioner_accounts").delete().in("id", practitionerAccountIds)
+      : await supabase
+          .from("practitioner_accounts")
+          .delete()
+          .or(`auth_user_id.eq.${session.userId},email.eq.${session.email.toLowerCase()}`);
+
+  if (deleteResult.error) {
+    console.error("practitioner space delete failed", deleteResult.error);
     return NextResponse.redirect(
       createAppUrl("/praticiens/dashboard?error=account_update_failed", request),
       { status: 303 }

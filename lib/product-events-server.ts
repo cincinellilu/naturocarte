@@ -67,6 +67,8 @@ async function resolveSessionAccounts() {
           .from("practitioner_accounts")
           .select("id")
           .eq("auth_user_id", practitionerSession.userId)
+          .order("updated_at", { ascending: false, nullsFirst: false })
+          .limit(1)
           .maybeSingle<{ id: string }>()
       : Promise.resolve({ data: null })
   ]);

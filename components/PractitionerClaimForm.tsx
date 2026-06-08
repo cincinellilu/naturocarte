@@ -6,6 +6,7 @@ import {
   PRACTITIONER_CLAIM_CAMPAIGN_STORAGE_KEY,
   normalizePractitionerClaimCampaignId
 } from "@/lib/practitioner-claim-campaigns";
+import { legalIdentity } from "@/lib/legal";
 
 type ClaimCandidate = {
   id: string;
@@ -71,11 +72,31 @@ export default function PractitionerClaimForm({
   const [error, setError] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
+  const [isMultiCabinetHelpOpen, setIsMultiCabinetHelpOpen] = useState(false);
   const clickRegistrationTokenRef = useRef<string | null>(null);
   const selectedCandidate = useMemo(
     () => candidates.find((candidate) => candidate.id === selectedCandidateId) ?? null,
     [candidates, selectedCandidateId]
   );
+  const multipleCabinetsMailto = useMemo(() => {
+    const subject = "Seconde fiche a revendiquer sur NaturoCarte";
+    const body = [
+      "Bonjour,",
+      "",
+      "Je souhaite rattacher une seconde fiche a mon espace praticien.",
+      "",
+      selectedCandidate
+        ? `Premiere fiche selectionnee : ${selectedCandidate.first_name ?? ""} ${selectedCandidate.last_name ?? ""} - ${selectedCandidate.address || selectedCandidate.slug}`.trim()
+        : "Premiere fiche selectionnee :",
+      `Email de connexion : ${email.trim() || "a renseigner"}`,
+      "",
+      "Adresse ou URL de la seconde fiche :",
+      "",
+      "Merci."
+    ].join("\n");
+
+    return `mailto:${legalIdentity.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }, [email, selectedCandidate]);
 
   function readCampaignContext(): StoredCampaignContext | null {
     try {
@@ -263,6 +284,47 @@ export default function PractitionerClaimForm({
 
   return (
     <div className="claim-flow">
+      {isMultiCabinetHelpOpen ? (
+        <div className="claim-modal-backdrop" role="presentation">
+          <section
+            className="claim-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="claim-multi-cabinet-title"
+          >
+            <button
+              className="claim-modal-close"
+              type="button"
+              aria-label="Fermer la fenêtre"
+              onClick={() => setIsMultiCabinetHelpOpen(false)}
+            >
+              ×
+            </button>
+            <div>
+              <p className="section-eyebrow">Plusieurs cabinets</p>
+              <h2 id="claim-multi-cabinet-title">Vous avez une seconde fiche à rattacher ?</h2>
+            </div>
+            <p>
+              Revendiquez d’abord la fiche sélectionnée, puis envoyez-nous un email avec
+              l’adresse ou l’URL de la seconde fiche. Nous préparerons le rattachement du
+              second cabinet à votre espace praticien.
+            </p>
+            <div className="claim-modal-actions">
+              <a className="btn" href={multipleCabinetsMailto}>
+                Envoyer un email
+              </a>
+              <button
+                className="btn btn-secondary"
+                type="button"
+                onClick={() => setIsMultiCabinetHelpOpen(false)}
+              >
+                Continuer ma revendication
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+
       <form className="claim-search-form" onSubmit={handleSearch}>
         <div className="claim-search-grid">
           <label className="claim-field">
@@ -355,6 +417,15 @@ export default function PractitionerClaimForm({
             >
               {isClaiming ? "Revendiquer..." : "Revendiquer ma fiche"}
             </button>
+            {candidates.length > 1 && selectedCandidate ? (
+              <button
+                className="btn btn-secondary"
+                type="button"
+                onClick={() => setIsMultiCabinetHelpOpen(true)}
+              >
+                Vous possédez plusieurs cabinets ?
+              </button>
+            ) : null}
             <Link className="btn btn-secondary" href="/praticiens">
               Je ne suis pas dans la liste
             </Link>

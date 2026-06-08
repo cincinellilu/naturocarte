@@ -60,7 +60,11 @@ function featureToSuggestion(feature: MapboxFeature, fallback: string): AddressS
   };
 }
 
-export default function PractitionerOnboardingForm() {
+export default function PractitionerOnboardingForm({
+  accountId = null
+}: {
+  accountId?: string | null;
+}) {
   const [addressLine, setAddressLine] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [city, setCity] = useState("");
@@ -152,6 +156,7 @@ export default function PractitionerOnboardingForm() {
       action="/api/practitioner-dashboard/onboarding"
       method="post"
     >
+      {accountId ? <input type="hidden" name="account_id" value={accountId} /> : null}
       <div className="practitioner-identity-row">
         <input
           name="first_name"

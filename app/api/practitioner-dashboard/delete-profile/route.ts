@@ -1,6 +1,11 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { createAppUrl } from "@/lib/app-url";
+import {
+  getDefaultPractitionerAccount,
+  getPractitionerAccountById,
+  listPractitionerAccountsForSession
+} from "@/lib/practitioner-accounts";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { PRACTITIONER_STATUS_HIDDEN_CONTACTED } from "@/lib/practitioner-status";
@@ -16,6 +21,10 @@ type PractitionerRow = {
   slug: string;
 };
 
+function normalizeAccountId(value: FormDataEntryValue | null): string | null {
+  return typeof value === "string" ? value.trim() || null : null;
+}
+
 export async function POST(request: Request) {
   const session = await getCurrentPractitionerSession();
   if (!session) {
@@ -26,9 +35,14 @@ export async function POST(request: Request) {
 
   const formData = await request.formData();
   const rawConfirmation = formData.get("confirmation");
+  const requestedAccountId = normalizeAccountId(formData.get("account_id"));
   const confirmation =
     typeof rawConfirmation === "string" ? rawConfirmation.trim().toUpperCase() : "";
   const redirectUrl = createAppUrl("/praticiens/dashboard", request);
+
+  if (requestedAccountId) {
+    redirectUrl.searchParams.set("cabinet", requestedAccountId);
+  }
 
   if (confirmation !== "SUPPRIMER") {
     redirectUrl.searchParams.set("error", "delete_confirmation_required");
@@ -36,13 +50,23 @@ export async function POST(request: Request) {
   }
 
   const supabase = getSupabaseAdminClient();
-  const { data: account, error: accountError } = await supabase
-    .from("practitioner_accounts")
-    .select("id, practitioner_id")
-    .eq("auth_user_id", session.userId)
-    .maybeSingle<PractitionerAccountRow>();
+  let accounts;
 
-  if (accountError || !account?.practitioner_id) {
+  try {
+    accounts = await listPractitionerAccountsForSession(supabase, {
+      authUserId: session.userId,
+      email: session.email
+    });
+  } catch {
+    redirectUrl.searchParams.set("error", "missing_practitioner");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  const account = requestedAccountId
+    ? getPractitionerAccountById(accounts, requestedAccountId)
+    : getDefaultPractitionerAccount(accounts);
+
+  if ((requestedAccountId && !account) || !account?.practitioner_id) {
     redirectUrl.searchParams.set("error", "missing_practitioner");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
@@ -100,6 +124,16 @@ export async function POST(request: Request) {
       delete_mode: "hidden_and_detached"
     }
   }).catch(() => {});
+
+  const fallbackAccount = accounts.find(
+    (item) => item.id !== account.id && item.practitioner_id
+  );
+
+  if (fallbackAccount?.id) {
+    redirectUrl.searchParams.set("cabinet", fallbackAccount.id);
+  } else {
+    redirectUrl.searchParams.delete("cabinet");
+  }
 
   redirectUrl.searchParams.set("saved", "profile_deleted");
   return NextResponse.redirect(redirectUrl, { status: 303 });

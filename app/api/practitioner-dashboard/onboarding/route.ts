@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { createAppUrl } from "@/lib/app-url";
+import {
+  getDefaultPractitionerAccount,
+  getPractitionerAccountById,
+  listPractitionerAccountsForSession
+} from "@/lib/practitioner-accounts";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
@@ -116,7 +121,12 @@ export async function POST(request: Request) {
   const addressLine = normalizeText(formData.get("address_line"));
   const postalCode = normalizeText(formData.get("postal_code"));
   const city = normalizeText(formData.get("city"));
+  const requestedAccountId = normalizeText(formData.get("account_id")) || null;
   const redirectUrl = createAppUrl("/praticiens/dashboard", request);
+
+  if (requestedAccountId) {
+    redirectUrl.searchParams.set("cabinet", requestedAccountId);
+  }
 
   if (!firstName || !lastName || siret.length !== 14 || !addressLine || !/^\d{5}$/.test(postalCode) || !city) {
     redirectUrl.searchParams.set("error", "invalid_profile");
@@ -140,13 +150,23 @@ export async function POST(request: Request) {
   }
 
   const supabase = getSupabaseAdminClient();
-  const { data: account, error: accountError } = await supabase
-    .from("practitioner_accounts")
-    .select("id, practitioner_id, email")
-    .eq("auth_user_id", session.userId)
-    .maybeSingle<PractitionerAccountRow>();
+  let accounts;
 
-  if (accountError || !account) {
+  try {
+    accounts = await listPractitionerAccountsForSession(supabase, {
+      authUserId: session.userId,
+      email: session.email
+    });
+  } catch {
+    redirectUrl.searchParams.set("error", "missing_account");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  const account = requestedAccountId
+    ? getPractitionerAccountById(accounts, requestedAccountId)
+    : getDefaultPractitionerAccount(accounts);
+
+  if ((requestedAccountId && !account) || !account) {
     redirectUrl.searchParams.set("error", "missing_account");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }

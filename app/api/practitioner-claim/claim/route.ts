@@ -345,6 +345,8 @@ export async function POST(request: Request) {
     .from("practitioner_accounts")
     .select("id, practitioner_id, login_count")
     .eq("auth_user_id", authUserId)
+    .order("updated_at", { ascending: false, nullsFirst: false })
+    .limit(1)
     .maybeSingle<PractitionerAccountRow>();
 
   if (accountByAuthError) {
@@ -359,6 +361,8 @@ export async function POST(request: Request) {
     .from("practitioner_accounts")
     .select("id, practitioner_id, login_count")
     .ilike("email", email)
+    .order("updated_at", { ascending: false, nullsFirst: false })
+    .limit(1)
     .maybeSingle<PractitionerAccountRow>();
 
   if (accountByEmailError) {

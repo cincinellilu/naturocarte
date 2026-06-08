@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { listPractitionerAccountsForSession } from "@/lib/practitioner-accounts";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 type PractitionerAccountSummary = {
+  id: string;
   practitioner_id: string | null;
 };
 
@@ -32,11 +34,21 @@ export async function GET() {
   const supabase = getSupabaseAdminClient();
 
   if (practitionerSession) {
-    const { data: account } = await supabase
-      .from("practitioner_accounts")
-      .select("practitioner_id")
-      .eq("auth_user_id", practitionerSession.userId)
-      .maybeSingle<PractitionerAccountSummary>();
+    let account: PractitionerAccountSummary | null = null;
+
+    try {
+      const accounts = await listPractitionerAccountsForSession(supabase, {
+        authUserId: practitionerSession.userId,
+        email: practitionerSession.email
+      });
+
+      account =
+        (accounts as PractitionerAccountSummary[]).find((item) => item.practitioner_id) ??
+        (accounts as PractitionerAccountSummary[])[0] ??
+        null;
+    } catch {
+      account = null;
+    }
 
     if (account?.practitioner_id) {
       const { data: practitioner } = await supabase

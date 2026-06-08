@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createAppUrl } from "@/lib/app-url";
+import {
+  getDefaultPractitionerAccount,
+  getPractitionerAccountById,
+  listPractitionerAccountsForSession
+} from "@/lib/practitioner-accounts";
+import { getEffectivePractitionerPlan } from "@/lib/practitioner-billing";
 import { recordProductEvent } from "@/lib/product-events-server";
 import { getCurrentPractitionerSession } from "@/lib/practitioner-auth";
 import {
@@ -92,7 +98,12 @@ export async function POST(request: Request) {
   const adresse = normalizeNullable(formData.get("adresse"));
   const postalCode = normalizeNullable(formData.get("postal_code"));
   const city = normalizeNullable(formData.get("city"));
+  const requestedAccountId = normalizeNullable(formData.get("account_id"));
   const redirectUrl = createAppUrl("/praticiens/dashboard", request);
+
+  if (requestedAccountId) {
+    redirectUrl.searchParams.set("cabinet", requestedAccountId);
+  }
 
   if (!isContactSlot(contactSlot)) {
     redirectUrl.searchParams.set("error", "invalid_contact_slot");
@@ -105,13 +116,23 @@ export async function POST(request: Request) {
   }
 
   const supabase = getSupabaseAdminClient();
-  const { data: account, error: accountError } = await supabase
-    .from("practitioner_accounts")
-    .select("id, practitioner_id, plan")
-    .eq("auth_user_id", session.userId)
-    .maybeSingle();
+  let accounts;
 
-  if (accountError || !account?.practitioner_id) {
+  try {
+    accounts = await listPractitionerAccountsForSession(supabase, {
+      authUserId: session.userId,
+      email: session.email
+    });
+  } catch {
+    redirectUrl.searchParams.set("error", "missing_practitioner");
+    return NextResponse.redirect(redirectUrl, { status: 303 });
+  }
+
+  const account = requestedAccountId
+    ? getPractitionerAccountById(accounts, requestedAccountId)
+    : getDefaultPractitionerAccount(accounts);
+
+  if ((requestedAccountId && !account) || !account?.practitioner_id) {
     redirectUrl.searchParams.set("error", "missing_practitioner");
     return NextResponse.redirect(redirectUrl, { status: 303 });
   }
@@ -163,7 +184,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const plan = account.plan === PRACTITIONER_PLAN_VISIBILITY
+  const plan = getEffectivePractitionerPlan(accounts) === PRACTITIONER_PLAN_VISIBILITY
     ? PRACTITIONER_PLAN_VISIBILITY
     : PRACTITIONER_PLAN_PRESENCE;
 

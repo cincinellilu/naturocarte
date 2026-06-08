@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import AdminPractitionerCabinetLinker from "@/components/admin/AdminPractitionerCabinetLinker";
 import AdminAuthGate from "@/components/admin/AdminAuthGate";
 import AdminShell from "@/components/admin/AdminShell";
 import {
@@ -228,6 +229,8 @@ export default async function ActivePractitionersAdminPage({
 
         {practitioners ? (
           <>
+            <AdminPractitionerCabinetLinker />
+
             <section className="admin-kpi-grid" aria-label="Indicateurs praticiens actifs">
               <div className="admin-kpi-card">
                 <strong>{publishedRows.length.toLocaleString("fr-FR")}</strong>

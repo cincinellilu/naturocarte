@@ -6570,9 +6570,14 @@ body.site-body::after {
 }
 .dashboard-cabinet-tab {
   min-width: 0;
+  width: 100%;
 }
 .dashboard-cabinet-tab span {
   display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .dashboard-cabinet-panel {
   display: grid;
@@ -6984,6 +6989,12 @@ body.site-body::after {
   }
 .dashboard-cabinet-tabs {
     grid-template-columns: 1fr;
+  }
+.dashboard-cabinet-tab:not(.is-active) {
+    border-color: rgba(15, 118, 110, 0.14);
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--text-strong);
+    box-shadow: 0 0.45rem 1rem rgba(20, 61, 51, 0.06);
   }
 .dashboard-cabinet-panel-actions {
     justify-content: flex-start;

@@ -7,9 +7,11 @@ import {
 } from "@/lib/admin-prospects-auth";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import {
+  PRACTITIONER_BILLING_STATUS_MANUAL_PRESENCE,
   getEffectivePractitionerPlan,
   getPractitionerBillingLeader,
-  normalizePractitionerBillingEmail
+  normalizePractitionerBillingEmail,
+  PRACTITIONER_BILLING_STATUS_MANUAL_VISIBILITY
 } from "@/lib/practitioner-billing";
 import {
   getPractitionerPlan,
@@ -88,6 +90,26 @@ type ClientRow = {
 function getErrorMessage(error: string | undefined): string | null {
   if (error === "invalid_password") return "Mot de passe incorrect.";
   if (error === "missing_config") return "Aucun mot de passe admin n’est configuré.";
+  if (error === "unauthorized") return "Session admin expirée.";
+  if (error === "missing_account") return "Compte praticien introuvable.";
+  if (error === "invalid_plan") return "Forfait cible invalide.";
+  if (error === "manual_visibility_failed") {
+    return "Impossible d’appliquer Visibilité+ manuellement pour le moment.";
+  }
+  if (error === "manual_presence_failed") {
+    return "Impossible de repasser ce client en forfait gratuit pour le moment.";
+  }
+  return null;
+}
+
+function getSavedMessage(saved: string | undefined): string | null {
+  if (saved === "manual_visibility_applied") {
+    return "Le forfait Visibilité+ a bien été appliqué manuellement au client.";
+  }
+  if (saved === "manual_presence_applied") {
+    return "Le client a bien été repassé en forfait Présence.";
+  }
+
   return null;
 }
 
@@ -254,12 +276,21 @@ async function loadClients(planFilter: PlanFilter): Promise<ClientRow[] | null> 
 
 export default async function AdminClientsView({
   planFilter,
-  errorCode
+  errorCode,
+  savedCode
 }: {
   planFilter: PlanFilter;
   errorCode?: string;
+  savedCode?: string;
 }) {
   const errorMessage = getErrorMessage(errorCode);
+  const savedMessage = getSavedMessage(savedCode);
+  const returnPath =
+    planFilter === PRACTITIONER_PLAN_PRESENCE
+      ? "/admin/clients/presence"
+      : planFilter === PRACTITIONER_PLAN_VISIBILITY
+        ? "/admin/clients/visibilite-plus"
+        : "/admin/clients";
 
   if (!isAdminProspectsConfigured()) {
     return (
@@ -330,6 +361,7 @@ export default async function AdminClientsView({
 
         {clients ? (
           <>
+            {savedMessage ? <p className="admin-success">{savedMessage}</p> : null}
             <section className="admin-kpi-grid" aria-label="Indicateurs clients">
               <div className="admin-kpi-card">
                 <strong>{clients.length.toLocaleString("fr-FR")}</strong>
@@ -367,7 +399,9 @@ export default async function AdminClientsView({
 
               <div className="admin-clients-list">
                 {clients.length > 0 ? (
-                  clients.map((client) => <ClientCard key={client.id} client={client} />)
+                  clients.map((client) => (
+                    <ClientCard key={client.id} client={client} returnPath={returnPath} />
+                  ))
                 ) : (
                   <p className="admin-empty">Aucun client dans cette vue.</p>
                 )}
@@ -382,17 +416,27 @@ export default async function AdminClientsView({
   );
 }
 
-function ClientCard({ client }: { client: ClientRow }) {
+function ClientCard({
+  client,
+  returnPath
+}: {
+  client: ClientRow;
+  returnPath: string;
+}) {
   const practitioner = client.practitioners[0] ?? null;
   const plan = getPractitionerPlan(client.plan);
   const billingLabel =
-    client.plan === PRACTITIONER_PLAN_PRESENCE
-      ? "Sans facturation"
-      : client.billing.currentMonthPaid === true
-        ? "Payé ce mois"
-        : client.billing.currentMonthPaid === false
-          ? "Non payé ce mois"
-          : "À vérifier";
+    client.stripe_subscription_status === PRACTITIONER_BILLING_STATUS_MANUAL_VISIBILITY
+      ? "Activation manuelle"
+      : client.stripe_subscription_status === PRACTITIONER_BILLING_STATUS_MANUAL_PRESENCE
+        ? "Retour manuel au gratuit"
+      : client.plan === PRACTITIONER_PLAN_PRESENCE
+        ? "Sans facturation"
+        : client.billing.currentMonthPaid === true
+          ? "Payé ce mois"
+          : client.billing.currentMonthPaid === false
+            ? "Non payé ce mois"
+            : "À vérifier";
 
   return (
     <article className="admin-client-card">
@@ -420,7 +464,10 @@ function ClientCard({ client }: { client: ClientRow }) {
         <div className="admin-client-statuses">
           <span className="admin-status-pill">{billingLabel}</span>
           <span className="admin-status-pill">
-            Stripe: {client.stripe_subscription_status ?? "non relié"}
+            Stripe:{" "}
+            {client.stripe_subscription_status === PRACTITIONER_BILLING_STATUS_MANUAL_VISIBILITY
+              ? "override manuel"
+              : client.stripe_subscription_status ?? "non relié"}
           </span>
           <span className="admin-status-pill">
             Renouvellement: {formatDate(client.stripe_current_period_end)}
@@ -445,6 +492,29 @@ function ClientCard({ client }: { client: ClientRow }) {
 
       {client.billing.error ? (
         <p className="admin-warning">Les factures Stripe n’ont pas pu être chargées.</p>
+      ) : null}
+
+      {client.plan !== PRACTITIONER_PLAN_VISIBILITY ? (
+        <form className="admin-client-actions" action="/api/admin/clients/plan" method="post">
+          <input type="hidden" name="account_id" value={client.id} />
+          <input type="hidden" name="plan" value={PRACTITIONER_PLAN_VISIBILITY} />
+          <input type="hidden" name="next" value={returnPath} />
+          <button className="btn" type="submit">
+            Appliquer Visibilité+ manuellement
+          </button>
+        </form>
+      ) : null}
+
+      {client.plan === PRACTITIONER_PLAN_VISIBILITY &&
+      client.stripe_subscription_status === PRACTITIONER_BILLING_STATUS_MANUAL_VISIBILITY ? (
+        <form className="admin-client-actions" action="/api/admin/clients/plan" method="post">
+          <input type="hidden" name="account_id" value={client.id} />
+          <input type="hidden" name="plan" value={PRACTITIONER_PLAN_PRESENCE} />
+          <input type="hidden" name="next" value={returnPath} />
+          <button className="btn btn-secondary" type="submit">
+            Repasser en forfait gratuit
+          </button>
+        </form>
       ) : null}
 
       {client.billing.invoices.length > 0 ? (

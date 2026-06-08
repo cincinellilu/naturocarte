@@ -6,6 +6,9 @@ import {
 
 type AdminClient = SupabaseClient;
 
+export const PRACTITIONER_BILLING_STATUS_MANUAL_VISIBILITY = "manual_visibility";
+export const PRACTITIONER_BILLING_STATUS_MANUAL_PRESENCE = "manual_presence";
+
 export type PractitionerBillingAccount = {
   id: string;
   email: string;
@@ -119,6 +122,58 @@ export async function syncPractitionerBillingGroup(
       stripe_subscription_status: params.billing.stripe_subscription_status ?? null,
       stripe_price_id: params.billing.stripe_price_id ?? null,
       stripe_current_period_end: params.billing.stripe_current_period_end ?? null,
+      updated_at: now
+    })
+    .eq("email", normalizedEmail);
+
+  if (error) {
+    throw error;
+  }
+
+  return normalizedEmail;
+}
+
+export async function overridePractitionerBillingPlan(
+  admin: AdminClient,
+  params: {
+    plan: string;
+    email?: string | null;
+    accountId?: string | null;
+  }
+): Promise<string | null> {
+  let normalizedEmail = normalizePractitionerBillingEmail(params.email);
+
+  if (!normalizedEmail && params.accountId) {
+    const { data, error } = await admin
+      .from("practitioner_accounts")
+      .select("email")
+      .eq("id", params.accountId)
+      .maybeSingle<{ email: string | null }>();
+
+    if (error) {
+      throw error;
+    }
+
+    normalizedEmail = normalizePractitionerBillingEmail(data?.email);
+  }
+
+  if (!normalizedEmail) {
+    return null;
+  }
+
+  const now = new Date().toISOString();
+  const stripeSubscriptionStatus =
+    params.plan === PRACTITIONER_PLAN_VISIBILITY
+      ? PRACTITIONER_BILLING_STATUS_MANUAL_VISIBILITY
+      : PRACTITIONER_BILLING_STATUS_MANUAL_PRESENCE;
+
+  const { error } = await admin
+    .from("practitioner_accounts")
+    .update({
+      plan: params.plan === PRACTITIONER_PLAN_VISIBILITY
+        ? PRACTITIONER_PLAN_VISIBILITY
+        : PRACTITIONER_PLAN_PRESENCE,
+      stripe_subscription_status: stripeSubscriptionStatus,
       updated_at: now
     })
     .eq("email", normalizedEmail);

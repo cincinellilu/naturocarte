@@ -15,10 +15,17 @@ export const metadata: Metadata = {
 export default async function AdminPresenceClientsPage({
   searchParams
 }: {
-  searchParams: Promise<{ error?: string | string[] }>;
+  searchParams: Promise<{ error?: string | string[]; saved?: string | string[] }>;
 }) {
   const params = await searchParams;
   const errorCode = Array.isArray(params.error) ? params.error[0] : params.error;
+  const savedCode = Array.isArray(params.saved) ? params.saved[0] : params.saved;
 
-  return <AdminClientsView planFilter={PRACTITIONER_PLAN_PRESENCE} errorCode={errorCode} />;
+  return (
+    <AdminClientsView
+      planFilter={PRACTITIONER_PLAN_PRESENCE}
+      errorCode={errorCode}
+      savedCode={savedCode}
+    />
+  );
 }

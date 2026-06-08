@@ -475,10 +475,19 @@ export default async function PractitionerPage({
               </div>
 
               <div className="practitioner-summary-copy">
-                <p className="practitioner-eyebrow">Fiche praticien</p>
-                <h1>{title}</h1>
-                {isPartner ? <PartnerBadge href={PARTNER_DIRECTORY_HREF} /> : null}
-                <p className="practitioner-hero-subtitle">{locationLabel}</p>
+                <div className="practitioner-summary-copy-main">
+                  <p className="practitioner-eyebrow">Fiche praticien</p>
+                  <h1>{title}</h1>
+                  <div className="practitioner-summary-meta">
+                    <p className="practitioner-hero-subtitle">{locationLabel}</p>
+                    {isPartner ? (
+                      <PartnerBadge
+                        className="practitioner-summary-partner-badge"
+                        href={PARTNER_DIRECTORY_HREF}
+                      />
+                    ) : null}
+                  </div>
+                </div>
                 <form className="practitioner-favorite-form" action="/api/user-favorites" method="post">
                   <input type="hidden" name="practitioner_slug" value={practitioner.slug} />
                   <input type="hidden" name="intent" value={isFavorite ? "remove" : "add"} />
@@ -488,7 +497,6 @@ export default async function PractitionerPage({
                     type="submit"
                     aria-pressed={isFavorite}
                   >
-                    <span aria-hidden="true">♡</span>
                     {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
                   </button>
                 </form>

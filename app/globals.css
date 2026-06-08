@@ -694,11 +694,60 @@ h2 {
 }
 .practitioner-summary-copy {
   display: grid;
-  gap: 0.25rem;
+  gap: 1rem;
   min-width: 0;
+  align-self: stretch;
+  align-content: center;
+  padding-block: 0.2rem;
+}
+.practitioner-summary-copy-main {
+  display: grid;
+  gap: 0.7rem;
 }
 .practitioner-summary-copy h1 {
   margin: 0;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.practitioner-summary-meta {
+  display: grid;
+  gap: 0.65rem;
+  justify-items: start;
+}
+.practitioner-summary-partner-badge {
+  margin-top: 0;
+}
+.practitioner-summary-copy .practitioner-hero-subtitle {
+  margin: 0;
+  color: #526071;
+  font-size: 1.04rem;
+}
+.practitioner-summary-copy .practitioner-favorite-form {
+  display: flex;
+  margin-top: auto;
+}
+.practitioner-summary-copy .practitioner-favorite-btn {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 3rem;
+  padding: 0.72rem 1.25rem;
+  border-color: rgba(15, 118, 110, 0.22);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 253, 0.94));
+  box-shadow:
+    0 14px 32px rgba(15, 23, 42, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  font-size: 0.98rem;
+}
+.practitioner-summary-copy .practitioner-favorite-btn:hover {
+  border-color: rgba(15, 118, 110, 0.34);
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.98), rgba(232, 250, 244, 0.96));
+  color: #0f5f57;
+}
+.practitioner-summary-copy .practitioner-favorite-btn.is-active {
+  background: linear-gradient(180deg, rgba(225, 245, 238, 0.98), rgba(214, 243, 233, 0.94));
+  color: var(--accent);
 }
 .practitioner-summary-description {
   margin: 0.4rem 0 0;
@@ -1305,7 +1354,26 @@ h2 {
     grid-template-columns: 1fr;
     gap: 0.85rem;
   }
-.practitioner-info-pane,
+  .practitioner-summary-copy {
+    gap: 0.85rem;
+    align-self: auto;
+    align-content: start;
+    padding-block: 0;
+  }
+  .practitioner-summary-copy-main {
+    gap: 0.55rem;
+  }
+  .practitioner-summary-meta {
+    gap: 0.55rem;
+  }
+  .practitioner-summary-copy .practitioner-favorite-form {
+    width: 100%;
+    margin-top: 0;
+  }
+  .practitioner-summary-copy .practitioner-favorite-btn {
+    width: 100%;
+  }
+  .practitioner-info-pane,
 .practitioner-claim-pane {
     height: auto;
     overflow: visible;
@@ -4461,6 +4529,15 @@ body.site-body {
   color: #92400e;
   font-weight: 700;
 }
+.admin-success {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  border-radius: 0.9rem;
+  background: rgba(236, 253, 245, 0.82);
+  color: #0f766e;
+  font-weight: 700;
+}
 .admin-clients-panel {
   gap: 1.2rem;
 }
@@ -4527,6 +4604,11 @@ body.site-body {
   padding-top: 0.2rem;
   border-top: 1px solid rgba(15, 118, 110, 0.1);
   font-size: 0.9rem;
+}
+.admin-client-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 .admin-active-practitioners-panel {
   gap: 1.2rem;

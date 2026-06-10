@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import PartnerBadge from "@/components/PartnerBadge";
+import PractitionerEntryLink from "@/components/PractitionerEntryLink";
 import { trackProductEvent } from "@/lib/product-events";
 import {
   getDepartmentByCode,
@@ -752,7 +753,12 @@ export default function CarteInteractive({
                     {distanceLabel ? (
                       <span className="practitioner-item-distance">{distanceLabel}</span>
                     ) : null}
-                    <Link href={`/naturopathe/${p.slug}`} className="practitioner-item-link">
+                    <PractitionerEntryLink
+                      href={`/naturopathe/${p.slug}`}
+                      className="practitioner-item-link"
+                      practitionerSlug={p.slug}
+                      source="map_list"
+                    >
                       <span>Voir la fiche</span>
                       <span className="practitioner-item-link-icon" aria-hidden="true">
                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -760,7 +766,7 @@ export default function CarteInteractive({
                           <path d="M6 5h5v5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </span>
-                    </Link>
+                    </PractitionerEntryLink>
                   </li>
                 );
               })}

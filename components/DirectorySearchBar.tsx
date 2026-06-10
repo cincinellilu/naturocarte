@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import PartnerBadge from "@/components/PartnerBadge";
+import { rememberPractitionerEntrySource } from "@/lib/practitioner-entry-source";
 import { trackProductEvent } from "@/lib/product-events";
 
 type SearchResult = {
@@ -22,6 +23,11 @@ function normalizeSearchValue(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
+}
+
+function getPractitionerSlugFromHref(href: string): string | null {
+  const match = href.match(/^\/naturopathe\/([^/?#]+)/);
+  return match?.[1] ?? null;
 }
 
 export default function DirectorySearchBar({
@@ -66,15 +72,20 @@ export default function DirectorySearchBar({
   }, [normalizedQuery, query]);
 
   function openBestResult() {
+    const practitionerSlug = results[0]?.href ? getPractitionerSlugFromHref(results[0].href) : null;
     trackProductEvent(
       results.length === 0 ? "directory_search_no_result" : "directory_search_submitted",
       {
         query_length: query.trim().length,
         results_count: results.length,
-        top_result: results[0]?.href ?? null
+        top_result: results[0]?.href ?? null,
+        practitioner_slug: practitionerSlug
       }
     );
     if (results.length === 0) return;
+    if (practitionerSlug) {
+      rememberPractitionerEntrySource(practitionerSlug, "directory_search");
+    }
     router.push(results[0].href);
   }
 
@@ -122,9 +133,14 @@ export default function DirectorySearchBar({
                 type="button"
                 className="directory-search-result"
                 onClick={() => {
+                  const practitionerSlug = getPractitionerSlugFromHref(result.href);
+                  if (practitionerSlug) {
+                    rememberPractitionerEntrySource(practitionerSlug, "directory_search");
+                  }
                   trackProductEvent("directory_search_result_clicked", {
                     query_length: query.trim().length,
-                    result_href: result.href
+                    result_href: result.href,
+                    practitioner_slug: practitionerSlug
                   });
                   router.push(result.href);
                 }}

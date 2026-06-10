@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { getPractitionerProfileViewSource } from "@/lib/practitioner-entry-source";
 import type { ProductEventMetadata } from "@/lib/product-events";
 
 export type PractitionerStatEvent = "profile_view" | "contact_click" | "booking_click";
@@ -45,8 +46,9 @@ export default function PractitionerStatsTracker({
   useEffect(() => {
     if (hasTracked.current) return;
     hasTracked.current = true;
+    const source = getPractitionerProfileViewSource(practitionerSlug);
     trackPractitionerStat(practitionerSlug, "profile_view", {
-      source: "profile_page"
+      source
     });
   }, [practitionerSlug]);
 

@@ -3,8 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import PartnerBadge from "@/components/PartnerBadge";
+import PractitionerEntryLink from "@/components/PractitionerEntryLink";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
-import { IDF_DEPARTMENTS, getDepartmentAreaLabel, getDepartmentByCode } from "@/lib/locations";
+import {
+  IDF_DEPARTMENTS,
+  getDepartmentAreaLabel,
+  getDepartmentByCode,
+  normalizeLocationToken
+} from "@/lib/locations";
 import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
@@ -30,6 +36,12 @@ type SearchParams = {
   audience?: string | string[];
 };
 
+type CityLink = {
+  name: string;
+  slug: string;
+  count: number;
+};
+
 export function generateStaticParams() {
   return IDF_DEPARTMENTS.filter((department) => department.code !== "75").map((department) => ({
     departement: department.code
@@ -50,6 +62,29 @@ function getAudienceParam(value: string | string[] | undefined): "all" | "partne
 
 function withAudience(href: string, audience: "all" | "partners"): string {
   return audience === "partners" ? `${href}?audience=partenaires` : href;
+}
+
+function getCityLinks(practitioners: PractitionerRow[]): CityLink[] {
+  const cities = new Map<string, CityLink>();
+
+  for (const practitioner of practitioners) {
+    const cityName = practitioner.city?.trim();
+    const citySlug = normalizeLocationToken(cityName);
+    if (!cityName || !citySlug) continue;
+
+    const existing = cities.get(citySlug);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      cities.set(citySlug, {
+        name: cityName,
+        slug: citySlug,
+        count: 1
+      });
+    }
+  }
+
+  return [...cities.values()].sort((a, b) => a.name.localeCompare(b.name, "fr"));
 }
 
 async function getDepartmentPractitioners(
@@ -147,6 +182,7 @@ export default async function DepartmentAnnuairePage({
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/annuaire-naturopathes/${departmentCode}`;
   const areaLabel = getDepartmentAreaLabel(department);
+  const cityLinks = getCityLinks(practitioners);
 
   const collectionJsonLd = {
     "@context": "https://schema.org",
@@ -274,14 +310,46 @@ export default async function DepartmentAnnuairePage({
                       .join(", ")}
                   </div>
                 </div>
-                <Link className="practitioner-item-link" href={`/naturopathe/${practitioner.slug}`}>
+                <PractitionerEntryLink
+                  className="practitioner-item-link"
+                  href={`/naturopathe/${practitioner.slug}`}
+                  practitionerSlug={practitioner.slug}
+                  source="directory_department"
+                >
                   Voir la fiche
-                </Link>
+                </PractitionerEntryLink>
               </li>
             ))}
           </ul>
         )}
       </section>
+
+      {cityLinks.length > 0 ? (
+        <section className="section-shell">
+          <div className="section-heading section-heading--stacked">
+            <div>
+              <p className="section-eyebrow">Recherche par ville</p>
+              <h2>Explorer les villes du département</h2>
+            </div>
+            <p className="section-intro">
+              Accédez aux pages locales pour comparer les naturopathes ville par ville
+              et ouvrir directement les fiches utiles.
+            </p>
+          </div>
+          <ul className="local-link-grid">
+            {cityLinks.map((city) => (
+              <li key={city.slug}>
+                <Link href={withAudience(`/naturopathe-${city.slug}`, audience)}>
+                  <span>Naturopathe {city.name}</span>
+                  <small>
+                    {city.count} fiche{city.count > 1 ? "s" : ""}
+                  </small>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <script
         type="application/ld+json"

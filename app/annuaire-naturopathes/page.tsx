@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import DirectorySearchBar from "@/components/DirectorySearchBar";
 import PartnerBadge from "@/components/PartnerBadge";
+import PractitionerEntryLink from "@/components/PractitionerEntryLink";
 import {
   type DepartmentInfo,
   IDF_DEPARTMENTS,
@@ -334,9 +335,14 @@ export default async function AnnuaireNaturopathesPage({
                         .join(", ") || "Zone non renseignée"}
                     </div>
                   </div>
-                  <Link className="practitioner-item-link" href={`/naturopathe/${practitioner.slug}`}>
+                  <PractitionerEntryLink
+                    className="practitioner-item-link"
+                    href={`/naturopathe/${practitioner.slug}`}
+                    practitionerSlug={practitioner.slug}
+                    source="directory"
+                  >
                     Voir la fiche
-                  </Link>
+                  </PractitionerEntryLink>
                 </li>
               ))}
             </ul>

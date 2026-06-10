@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-06-03T21:31:42.463Z",
+  "output_dir": "/Users/lucas/Sites/naturocarte/exports/prospects/2026-06-03",
+  "batch_size": 50,
+  "total_selected": 150,
+  "unique_emails": 150,
+  "removed_duplicate_rows": 6,
+  "replacement_rows": 6,
+  "files": [
+    "/Users/lucas/Sites/naturocarte/exports/prospects/2026-06-03/naturocarte-prospects-batch-01-A1.csv",
+    "/Users/lucas/Sites/naturocarte/exports/prospects/2026-06-03/naturocarte-prospects-batch-02-B1.csv",
+    "/Users/lucas/Sites/naturocarte/exports/prospects/2026-06-03/naturocarte-prospects-batch-03-C1.csv"
+  ],
+  "campaigns": [
+    "A1",
+    "B1",
+    "C1"
+  ],
+  "tracking_inserted": true,
+  "status_updates": {
+    "published": "published_contacted",
+    "hidden_pending_contact": "hidden_contacted"
+  }
+}

@@ -161,20 +161,147 @@ function getPractitionerLocationLabel(practitioner: Practitioner): string {
   return city ?? department?.name ?? "Île-de-France";
 }
 
-function buildTitle(practitioner: Practitioner): string {
-  const locationLabel = getPractitionerLocationLabel(practitioner);
-  return `${practitioner.first_name} ${practitioner.last_name} - Naturopathe à ${locationLabel}`;
+function getPractitionerDisplayName(practitioner: Practitioner): string {
+  return `${practitioner.first_name} ${practitioner.last_name}`.trim();
+}
+
+function getPractitionerTitleLocation(practitioner: Practitioner): string {
+  return normalizeLocationSegment(practitioner.city) ?? getPractitionerLocationLabel(practitioner);
+}
+
+function getPractitionerAreaLabel(params: {
+  city: string | null;
+  department: ReturnType<typeof getDepartmentFromPostalCode>;
+}): string {
+  const { city, department } = params;
+
+  if (city && department && !areSameLocationLabel(city, department.name)) {
+    return `${city} (${department.name})`;
+  }
+
+  return city ?? department?.name ?? "Île-de-France";
+}
+
+function buildAddressLine(params: {
+  practitioner: Practitioner;
+  city: string | null;
+  department: ReturnType<typeof getDepartmentFromPostalCode>;
+}): string {
+  const { practitioner, city, department } = params;
+
+  return [
+    practitioner.adresse?.trim(),
+    practitioner.postal_code?.trim(),
+    city ?? department?.name ?? null
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
+
+function buildPageHeading(practitioner: Practitioner): string {
+  return `${getPractitionerDisplayName(practitioner)}, naturopathe à ${getPractitionerTitleLocation(
+    practitioner
+  )}`;
+}
+
+function buildSeoTitle(practitioner: Practitioner): string {
+  return `${getPractitionerDisplayName(practitioner)} - Naturopathe à ${getPractitionerTitleLocation(
+    practitioner
+  )} | NaturoCarte`;
+}
+
+function buildReadableList(values: string[]): string {
+  if (values.length === 0) return "";
+  if (values.length === 1) return values[0];
+  if (values.length === 2) return `${values[0]} et ${values[1]}`;
+
+  return `${values.slice(0, -1).join(", ")} et ${values[values.length - 1]}`;
+}
+
+function buildDepartmentLabel(
+  department: ReturnType<typeof getDepartmentFromPostalCode>
+): string | null {
+  return department ? `${department.name} (${department.code})` : null;
+}
+
+function normalizePhoneForSchema(value: string | null | undefined): string | null {
+  const raw = (value ?? "").trim();
+  if (!raw) return null;
+
+  const compact = raw.replace(/[.\s()-]+/g, "");
+
+  if (compact.startsWith("+")) {
+    return compact;
+  }
+
+  if (compact.startsWith("00")) {
+    return `+${compact.slice(2)}`;
+  }
+
+  const digits = compact.replace(/\D+/g, "");
+
+  if (digits.startsWith("33")) {
+    return `+${digits}`;
+  }
+
+  if (digits.startsWith("0") && digits.length === 10) {
+    return `+33${digits.slice(1)}`;
+  }
+
+  return null;
+}
+
+function normalizeTextContent(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function splitTextIntoParagraphs(value: string): string[] {
+  return value
+    .split(/\n+/)
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+}
+
+function buildMetaDescription(params: {
+  practitioner: Practitioner;
+  city: string | null;
+  department: ReturnType<typeof getDepartmentFromPostalCode>;
+  visiblePhone: string | null;
+  visibleEmail: string | null;
+  visibleWebsiteUrl: string | null;
+  visibleBookingUrl: string | null;
+  canShowDescription: boolean;
+}): string {
+  const { practitioner, city, department, visiblePhone, visibleEmail, visibleWebsiteUrl } = params;
+  const addressLine = buildAddressLine({ practitioner, city, department });
+  const areaLabel = getPractitionerAreaLabel({ city, department });
+  const detailLabels = [
+    visiblePhone ? "téléphone" : null,
+    visibleEmail ? "email" : null,
+    params.visibleBookingUrl ? "lien de rendez-vous" : null,
+    visibleWebsiteUrl ? "site web" : null,
+    params.canShowDescription ? "descriptif" : null
+  ].filter((value): value is string => Boolean(value));
+
+  let description = `Découvrez la fiche de ${getPractitionerDisplayName(
+    practitioner
+  )}, naturopathe à ${areaLabel}.`;
+
+  if (addressLine) {
+    description += ` Cabinet situé ${addressLine}.`;
+  }
+
+  if (detailLabels.length > 0) {
+    description += ` Retrouvez ${buildReadableList(detailLabels)} sur NaturoCarte.`;
+  } else {
+    description += " Retrouvez les informations pratiques sur NaturoCarte.";
+  }
+
+  return truncateText(description, 165);
 }
 
 function getAbsoluteSiteUrl(): string {
   return getSiteUrl().replace(/\/$/, "");
-}
-
-function buildStaticMapUrl(lat: number, lng: number, accessToken: string): string {
-  const marker = encodeURIComponent(`pin-s+16a34a(${lng},${lat})`);
-  return `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/${marker}/${lng},${lat},13.5/720x360?access_token=${encodeURIComponent(
-    accessToken
-  )}&logo=false&attribution=false`;
 }
 
 function truncateText(value: string, limit: number): string {
@@ -202,19 +329,46 @@ export async function generateMetadata({
 
   const city = normalizeLocationSegment(practitioner.city);
   const department = getDepartmentFromPostalCode(practitioner.postal_code);
-  const locationLabel = getPractitionerLocationLabel(practitioner);
-  const title = buildTitle(practitioner);
-  const metadataAddress = [
-    practitioner.adresse?.trim(),
-    practitioner.postal_code?.trim(),
-    city ?? department?.name ?? null
-  ]
-    .filter(Boolean)
-    .join(", ");
-  const description = `Découvrez la fiche de ${practitioner.first_name} ${practitioner.last_name}, naturopathe à ${locationLabel}${metadataAddress ? ` (${metadataAddress})` : ""} : adresse, contact et prise de rendez-vous.`;
+  const bookingUrl = isValidExternalUrl(practitioner.booking_url)
+    ? practitioner.booking_url.trim()
+    : null;
+  const websiteUrl = normalizeWebsiteUrl(practitioner.website);
+  const visibleContacts = getVisiblePublicContacts({
+    practitioner: {
+      phone: practitioner.phone,
+      email: practitioner.email,
+      booking_url: bookingUrl,
+      website: websiteUrl
+    },
+    accounts: practitioner.practitioner_accounts
+  });
+  const visibleBookingUrl =
+    visibleContacts.find((contact) => contact.type === "booking_url")?.value ?? null;
+  const visibleWebsiteUrl =
+    visibleContacts.find((contact) => contact.type === "website")?.value ?? null;
+  const visiblePhone = visibleContacts.find((contact) => contact.type === "phone")?.value ?? null;
+  const visibleEmail = visibleContacts.find((contact) => contact.type === "email")?.value ?? null;
+  const isPartner = Boolean(getPartnerAccount(practitioner.practitioner_accounts));
+  const practitionerDescription = isPartner ? practitioner.description?.trim() || null : null;
+  const visiblePhotoUrl = isPartner ? practitioner.photo_url?.trim() || null : null;
+  const title = buildSeoTitle(practitioner);
+  const description = buildMetaDescription({
+    practitioner,
+    city,
+    department,
+    visiblePhone,
+    visibleEmail,
+    visibleWebsiteUrl,
+    visibleBookingUrl,
+    canShowDescription: Boolean(practitionerDescription)
+  });
 
   const siteUrl = getAbsoluteSiteUrl();
   const canonical = `${siteUrl}/naturopathe/${practitioner.slug}`;
+  const displayName = getPractitionerDisplayName(practitioner);
+  const images = visiblePhotoUrl
+    ? [{ url: visiblePhotoUrl, alt: `Photo de ${displayName}` }]
+    : undefined;
 
   return {
     title,
@@ -224,12 +378,15 @@ export async function generateMetadata({
       title,
       description,
       url: canonical,
-      type: "article"
+      type: "website",
+      siteName: "NaturoCarte",
+      images
     },
     twitter: {
-      card: "summary",
+      card: visiblePhotoUrl ? "summary_large_image" : "summary",
       title,
-      description
+      description,
+      images: visiblePhotoUrl ? [visiblePhotoUrl] : undefined
     }
   };
 }
@@ -246,8 +403,9 @@ export default async function PractitionerPage({
   const userSession = await getCurrentUserSession();
   const city = normalizeLocationSegment(practitioner.city);
   const department = getDepartmentFromPostalCode(practitioner.postal_code);
-  const title = buildTitle(practitioner);
+  const pageHeading = buildPageHeading(practitioner);
   const locationLabel = getPractitionerLocationLabel(practitioner);
+  const displayName = getPractitionerDisplayName(practitioner);
 
   const bookingUrl = isValidExternalUrl(practitioner.booking_url)
     ? practitioner.booking_url.trim()
@@ -267,30 +425,25 @@ export default async function PractitionerPage({
     .trim()
     .toUpperCase();
 
-  const addressLine = [
-    practitioner.adresse?.trim(),
-    practitioner.postal_code?.trim(),
-    city ?? department?.name ?? null
-  ]
-    .filter(Boolean)
-    .join(", ");
+  const addressLine = buildAddressLine({ practitioner, city, department });
 
   const siteUrl = getAbsoluteSiteUrl();
   const canonicalUrl = `${siteUrl}/naturopathe/${practitioner.slug}`;
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-  const staticMapUrl =
-    mapboxToken && Number.isFinite(practitioner.lat) && Number.isFinite(practitioner.lng)
-      ? buildStaticMapUrl(practitioner.lat, practitioner.lng, mapboxToken)
-      : null;
-
-  const practitionerDescription = practitioner.description?.trim() || null;
   const isPartner = Boolean(getPartnerAccount(practitioner.practitioner_accounts));
+  const practitionerDescription = isPartner ? practitioner.description?.trim() || null : null;
+  const practitionerDescriptionSummary = practitionerDescription
+    ? normalizeTextContent(practitionerDescription)
+    : null;
+  const practitionerDescriptionParagraphs = practitionerDescription
+    ? splitTextIntoParagraphs(practitionerDescription)
+    : [];
+  const visiblePhotoUrl = isPartner ? practitioner.photo_url?.trim() || null : null;
   const tariffItems = parsePractitionerTariffs(practitioner.tarifs ?? null);
   const primaryTariff = tariffItems[0] ?? null;
   const additionalTariffs = tariffItems.slice(1);
   const shouldShowTariffs = isPartner && tariffItems.length > 0;
-  const practitionerDescriptionPreview = practitionerDescription
-    ? truncateText(practitionerDescription, 240)
+  const practitionerDescriptionPreview = practitionerDescriptionSummary
+    ? truncateText(practitionerDescriptionSummary, 240)
     : null;
   const practitionerReviews = await getPublishedPractitionerReviews(practitioner.id);
   let isFavorite = false;
@@ -319,89 +472,78 @@ export default async function PractitionerPage({
   const ratingAverage = reviewsCount
     ? practitionerReviews.reduce((sum, review) => sum + review.rating, 0) / reviewsCount
     : null;
-  const directContactActions = visibleContacts.map((contact, index) => {
-    if (contact.type === "booking_url") {
-      return {
-        href: contact.value,
-        label: "Prendre rendez-vous",
-        variant: index === 0 ? ("primary" as const) : ("secondary" as const),
-        external: true,
-        statEvent: "booking_click" as const
-      };
-    }
-
-    if (contact.type === "phone") {
-      return {
-        href: `tel:${contact.value}`,
-        label: "Appeler",
-        variant: index === 0 ? ("primary" as const) : ("secondary" as const),
-        statEvent: "contact_click" as const
-      };
-    }
-
-    if (contact.type === "email") {
-      return {
-        href: `mailto:${contact.value}`,
-        label: "Envoyer un email",
-        variant: index === 0 ? ("primary" as const) : ("secondary" as const),
-        statEvent: "contact_click" as const
-      };
-    }
-
-    return {
-      href: contact.value,
-      label: "Voir le site",
-      variant: index === 0 ? ("primary" as const) : ("secondary" as const),
-      external: true,
-      statEvent: "contact_click" as const
-    };
-  }) as Array<{
-    href: string;
-    label: string;
-    variant: "primary" | "secondary";
-    external?: boolean;
-    statEvent: "contact_click" | "booking_click";
-  }>;
-
   const visibleBookingUrl =
     visibleContacts.find((contact) => contact.type === "booking_url")?.value ?? null;
   const visibleWebsiteUrl =
     visibleContacts.find((contact) => contact.type === "website")?.value ?? null;
   const visiblePhone = visibleContacts.find((contact) => contact.type === "phone")?.value ?? null;
   const visibleEmail = visibleContacts.find((contact) => contact.type === "email")?.value ?? null;
-  const sameAs = [visibleBookingUrl, visibleWebsiteUrl].filter((v): v is string => Boolean(v));
+  const sameAs = Array.from(
+    new Set([visibleBookingUrl, visibleWebsiteUrl].filter((v): v is string => Boolean(v)))
+  );
   const practitionerPath = `/naturopathe/${practitioner.slug}`;
   const reviewLoginUrl = `/compte?next=${encodeURIComponent(`${practitionerPath}#avis`)}`;
+  const departmentLabel = buildDepartmentLabel(department);
+  const hasGeoCoordinates =
+    Number.isFinite(practitioner.lat) && Number.isFinite(practitioner.lng);
+  const schemaPhone = normalizePhoneForSchema(visiblePhone);
+  const metaDescription = buildMetaDescription({
+    practitioner,
+    city,
+    department,
+    visiblePhone,
+    visibleEmail,
+    visibleWebsiteUrl,
+    visibleBookingUrl,
+    canShowDescription: Boolean(practitionerDescriptionSummary)
+  });
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "@id": `${canonicalUrl}#localbusiness`,
-    name: `${practitioner.first_name} ${practitioner.last_name}`,
-    description: practitionerDescription,
+    name: displayName,
+    description: practitionerDescriptionSummary ?? metaDescription,
     url: canonicalUrl,
-    image: staticMapUrl || undefined,
+    mainEntityOfPage: canonicalUrl,
+    image: visiblePhotoUrl ? [visiblePhotoUrl] : undefined,
     address: {
       "@type": "PostalAddress",
       streetAddress: practitioner.adresse || undefined,
       postalCode: practitioner.postal_code || undefined,
       addressLocality: city || undefined,
+      addressRegion: department?.name || undefined,
       addressCountry: "FR"
     },
     areaServed: {
       "@type": "AdministrativeArea",
-      name: department?.name ?? city ?? "Île-de-France"
+      name: getPractitionerAreaLabel({ city, department })
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: practitioner.lat,
-      longitude: practitioner.lng
-    },
-    priceRange: primaryTariff || undefined,
+    geo: hasGeoCoordinates
+      ? {
+          "@type": "GeoCoordinates",
+          latitude: practitioner.lat,
+          longitude: practitioner.lng
+        }
+      : undefined,
+    priceRange:
+      shouldShowTariffs && primaryTariff && primaryTariff.length < 100
+        ? primaryTariff
+        : undefined,
     knowsLanguage: "fr",
-    telephone: visiblePhone || undefined,
+    telephone: schemaPhone || undefined,
     email: visibleEmail || undefined,
-    sameAs: sameAs.length > 0 ? sameAs : undefined
+    sameAs: sameAs.length > 0 ? sameAs : undefined,
+    aggregateRating:
+      reviewsCount > 0 && ratingAverage !== null
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: Number(ratingAverage.toFixed(1)),
+            reviewCount: reviewsCount,
+            bestRating: 5,
+            worstRating: 1
+          }
+        : undefined
   };
 
   const breadcrumbJsonLd = {
@@ -460,11 +602,11 @@ export default async function PractitionerPage({
           <section className="practitioner-card practitioner-summary-card">
             <div className="practitioner-summary-top">
               <div className="practitioner-summary-photo" aria-hidden="true">
-                {practitioner.photo_url?.trim() ? (
+                {visiblePhotoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     className="practitioner-summary-photo-image"
-                    src={practitioner.photo_url.trim()}
+                    src={visiblePhotoUrl}
                     alt=""
                   />
                 ) : (
@@ -477,7 +619,7 @@ export default async function PractitionerPage({
               <div className="practitioner-summary-copy">
                 <div className="practitioner-summary-copy-main">
                   <p className="practitioner-eyebrow">Fiche praticien</p>
-                  <h1>{title}</h1>
+                  <h1>{pageHeading}</h1>
                   <div className="practitioner-summary-meta">
                     <p className="practitioner-hero-subtitle">{locationLabel}</p>
                     {isPartner ? (
@@ -517,29 +659,106 @@ export default async function PractitionerPage({
             </div>
 
             <div className="practitioner-detail-grid">
+              <section className="practitioner-detail-tile">
+                <p className="practitioner-detail-label">Localisation</p>
+                <p className="practitioner-detail-value">
+                  <strong>Ville :</strong> {city ?? "Ville non renseignée"}
+                </p>
+                <p className="practitioner-detail-value">
+                  <strong>Département :</strong> {departmentLabel ?? "Département non renseigné"}
+                </p>
+              </section>
+
               <section className="practitioner-detail-tile practitioner-detail-tile--contact">
-                <p className="practitioner-detail-label">Contact direct</p>
-                {directContactActions.length > 0 ? (
-                  <div className="practitioner-contact-actions">
-                    {directContactActions.map((action) => (
+                <p className="practitioner-detail-label">Coordonnées</p>
+                {visiblePhone ? (
+                  <p className="practitioner-detail-value">
+                    <strong>Téléphone :</strong>{" "}
+                    <PractitionerTrackedLink
+                      href={`tel:${visiblePhone}`}
+                      practitionerSlug={practitioner.slug}
+                      event="contact_click"
+                    >
+                      {visiblePhone}
+                    </PractitionerTrackedLink>
+                  </p>
+                ) : null}
+                {visibleEmail ? (
+                  <p className="practitioner-detail-value">
+                    <strong>Email :</strong>{" "}
+                    <PractitionerTrackedLink
+                      href={`mailto:${visibleEmail}`}
+                      practitionerSlug={practitioner.slug}
+                      event="contact_click"
+                    >
+                      {visibleEmail}
+                    </PractitionerTrackedLink>
+                  </p>
+                ) : null}
+                {visibleWebsiteUrl ? (
+                  <p className="practitioner-detail-value">
+                    <strong>Site web :</strong>{" "}
+                    <PractitionerTrackedLink
+                      href={visibleWebsiteUrl}
+                      practitionerSlug={practitioner.slug}
+                      event="contact_click"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Visiter le site
+                    </PractitionerTrackedLink>
+                  </p>
+                ) : null}
+                {!visiblePhone && !visibleEmail && !visibleWebsiteUrl ? (
+                  <p className="practitioner-detail-value">
+                    Aucune coordonnée directe publique sur cette fiche.
+                  </p>
+                ) : null}
+              </section>
+
+              <section className="practitioner-detail-tile">
+                <p className="practitioner-detail-label">Rendez-vous</p>
+                {visibleBookingUrl ? (
+                  <>
+                    <p className="practitioner-detail-value">
+                      Prise de rendez-vous en ligne disponible.
+                    </p>
+                    <div className="practitioner-contact-actions">
                       <PractitionerTrackedLink
-                        key={action.href}
-                        className={action.variant === "primary" ? "btn" : "btn btn-secondary"}
-                        href={action.href}
+                        className="btn btn-secondary"
+                        href={visibleBookingUrl}
                         practitionerSlug={practitioner.slug}
-                        event={action.statEvent}
-                        target={action.external ? "_blank" : undefined}
-                        rel={action.external ? "noopener noreferrer" : undefined}
+                        event="booking_click"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        {action.label}
+                        Prendre rendez-vous
                       </PractitionerTrackedLink>
-                    ))}
-                  </div>
+                    </div>
+                  </>
                 ) : (
-                  <p className="practitioner-detail-value">Contact non renseigné.</p>
+                  <p className="practitioner-detail-value">Lien de réservation non renseigné.</p>
                 )}
               </section>
             </div>
+
+            {practitionerDescriptionParagraphs.length > 0 ? (
+              <section className="practitioner-card practitioner-tariffs-card" id="descriptif">
+                <div className="practitioner-reviews-header">
+                  <div>
+                    <p className="practitioner-detail-label">Descriptif</p>
+                    <h2>Approche et accompagnement</h2>
+                  </div>
+                </div>
+                <div>
+                  {practitionerDescriptionParagraphs.map((paragraph, index) => (
+                    <p key={`description-${index}`} className="practitioner-detail-value">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             <section className="practitioner-card practitioner-reviews-card" id="avis">
               <div className="practitioner-reviews-header">

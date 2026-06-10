@@ -1,0 +1,149 @@
+id,nom,prenom,email,statut_avant,ville,code_postal,slug,resend_events,campaign_status
+f9f0f2f2-28a4-440f-938b-928d8ad32101,ADICO,Mylène,myleneadico.naturopathe@gmail.com,published_contacted,Asnières-sur-Seine,92600,mylene-adico-asnieres-sur-seine,bounced|opened,sent
+f4492d2f-7fd3-4db9-bcce-abe168d32034,AIT KHEDDACHE,Farida,farida94@gmail.com,published_contacted,Joinville-le-Pont,94340,farida-ait-kheddache-joinville-le-pont,bounced|opened,sent
+eae42a72-5271-44d8-998c-5aa844c0e91d,ALEXANDRE,Nathalie,nalexandrite@yahoo.fr,published_contacted,Boulogne-Billancourt,92100,nathalie-alexandre-boulogne-billancourt,bounced|delivered,sent
+642f1538-589c-4250-9e1f-e61addc87f62,ANCIAÈS,Inès,contact@inesnaturopathe.com,published_contacted,Asnières-sur-Seine,92600,ines-anciaes-asnieres-sur-seine,opened,sent
+0a96fe3d-698d-4c56-85ea-8763ee8398d3,ANCIAÈS,Inès,contact@inesnaturopathe.com,published,Colombes,92700,ines-anciaes-colombes,opened,sent
+ba5868d4-e6d3-4e23-a3e8-7b6c722416ce,ANNICK BORIE,Marie,contact@bienetreetnaturo.fr,published_contacted,Antony,92160,marie-annick-borie-antony,delivered,sent
+77a692f0-8924-4417-9049-5f7d48639bdb,AU NATUREL,Remodeltoi,aliciafuentes@infonaturo.com,published_contacted,Le Perreux-sur-Marne,94170,remodeltoi-au-naturel-le-perreux-sur-marne,delivered,sent
+218eac1e-80c0-40c4-9b22-eae2f94b6ab3,AUVRAY FRANCONVILLE,Alexandra,alexandra.auvray.naturopathe@gmail.com,published_contacted,Franconville,95130,alexandra-auvray-franconville-franconville,bounced|opened,sent
+e05ec0b8-0d6b-448f-a8eb-c5c99ab38eaa,AUVRAY MON RÉFLEX' NATURE,Alexandra,alexandra.auvray.naturopathe@gmail.com,published,Jouy-le-Moutier,95280,alexandra-auvray-mon-reflex-nature-jouy-le-moutier,bounced|opened,sent
+f008e6cf-0ed2-4b82-adf9-bcdf7ec0328d,BAFDILE,Layina,layina.bafdile@gmail.com,published_contacted,Courbevoie,92400,layina-bafdile-courbevoie,bounced|opened,sent
+5ad02735-5f60-41fb-957d-b929cc60ef8c,BAGOT,Magali,magali.bagot@yahoo.fr,published_contacted,Cormeilles-en-Parisis,95240,magali-bagot-cormeilles-en-parisis,bounced|delivered,sent
+62dbac42-1429-498d-9d4a-a1ddbf33c9d9,BAIN,Marie-Amandine,marieamandine.bain@gmail.com,published,Versailles,78000,marie-amandine-bain-versailles,bounced|opened,sent
+87deb9b5-5125-422d-a6d8-fe28a213bada,BAIN,Marie-Amandine,marieamandine.bain@gmail.com,published_contacted,Jouy-en-Josas,78350,marie-amandine-bain-jouy-en-josas,bounced|opened,sent
+bbab702c-fde8-48d4-b8c2-2825cabd2b4d,BAUDIN,Amandine,contact@amandinebaudin.com,published_contacted,Boulogne-Billancourt,92100,amandine-baudin-boulogne-billancourt,delivered,sent
+5e74adde-d270-4415-931f-cfacb254db00,BAYENE,Foufa,contact@bayeneosteopathe.fr,published_contacted,Corbeil-Essonnes,91100,foufa-bayene-corbeil-essonnes,bounced|delivered,sent
+216a2b86-b096-4796-940e-3195653793e6,BENGLIA,Haja,puerinaturo@gmail.com,published_contacted,Athis-Mons,91200,haja-benglia-athis-mons,bounced|opened,sent
+780fe6e9-3f6e-4cc1-aa47-26d83e84e4d6,BENSIMON,Karine,contact@karineb-naturopathie.com,published_contacted,Clamart,92140,karine-bensimon-clamart,delivered,sent
+253ce3c7-d0c6-43d0-b799-4fd79264d78b,BERGER,Chrystelle,cberger@presensnaturel.com,published_contacted,Éragny,95610,chrystelle-berger-eragny,bounced|opened,sent
+9186e054-42b4-42e6-a722-8db5dcac8ec2,BOIDRON,Héloïse,heloise.boidron@gmail.com,published_contacted,Bailly,78870,heloise-boidron-bailly,bounced|opened,sent
+625e3a3a-916a-403a-9821-dcb7c042ad0f,BONNAUD PSYCHANALYSTE,Fabienne,fbonnaud-naturo@orange.fr,published_contacted,Cachan,94230,fabienne-bonnaud-psychanalyste-cachan,bounced|opened,sent
+5601dd0d-5f17-4633-aaf7-4c3b4936bf1b,BOULAY,Sabine,naturosabine@gmail.com,published_contacted,Le Pecq,78230,sabine-boulay-le-pecq,bounced|opened,sent
+d7f3e835-e13d-4233-bd53-b4fafe56353f,BOURGEOIS,Célia,sonaturoandco@gmail.com,published_contacted,Gagny,93220,celia-bourgeois-gagny,bounced|opened,sent
+0950087e-6d80-4989-9da6-22ed79915167,BOUTIN,Emilie,emilie@ollin-equilibre.com,published_contacted,Alfortville,94140,emilie-boutin-alfortville,opened,sent
+a6e3a37c-d0ff-48ef-a28a-722ba7a24771,BOUTIN,Émilie,emilie@ollin-equilibre.com,published,Neuilly-Plaisance,93360,emilie-boutin-neuilly-plaisance,opened,sent
+722ee284-c8fb-4b85-bc55-0cad2c8a2317,BOUTOILLE,Mathilde,mbb.naturopathe@gmail.com,published_contacted,Achères,78260,mathilde-boutoille-acheres,bounced|opened,sent
+69667d5d-c496-43fd-9a7a-a2408cd6f72b,BRILLET,Marie,marie.brillet.naturo@gmail.com,published_contacted,Carrières-sous-Poissy,78955,marie-brillet-carrieres-sous-poissy,bounced|opened,sent
+6dca2bdf-295d-416a-b655-40de1a556ecb,CAGNON,Coralie,coralie.cagnon@gmail.com,published_contacted,Colombes,92700,coralie-cagnon-colombes,bounced|opened,sent
+0bd0e562-3360-4fcd-a9e3-d380c395630a,CAILLON,Lorette,contact@lorette-caillon.fr,published_contacted,Asnières-sur-Seine,92600,lorette-caillon-asnieres-sur-seine,opened,sent
+e5014186-1a63-42e1-a601-f57c5e7b7bd3,CAMURAT,Anne-Sophie,ansonaturo@gmail.com,published_contacted,Bois-le-Roi,77590,anne-sophie-camurat-bois-le-roi,bounced|opened,sent
+13db663c-4bbc-4c97-ab8b-5c4c1f65b1a6,CAPBLANCQ-LABORDE,Nathalie,nathalie@naturospirit.fr,published_contacted,Le Tremblay-sur-Mauldre,78490,nathalie-capblancq-laborde-le-tremblay-sur-mauldre,delivered,sent
+d822fb64-6bf7-4485-9623-59b5cea42850,CATEL,Estelle,ecatel.naturopathe@gmail.com,published_contacted,Corbeil-Essonnes,91100,estelle-catel-corbeil-essonnes,bounced|opened,sent
+5e89d3aa-cd29-482e-aed2-5f60e54bc222,CAUDAL,Marjorie,marjoriecaudal.naturo@gmail.com,published_contacted,Le Chesnay-Rocquencourt,78150,marjorie-caudal-le-chesnay-rocquencourt,bounced|opened,sent
+3a474a2a-52a0-418d-a7e3-edcb85cec72c,CAZOR-SPAARGAREN,Eugénie,eugeniespaargaren@gmail.com,published,Saint-Germain-en-Laye,78100,eugenie-cazor-spaargaren-saint-germain-en-laye,bounced|opened,sent
+a471a073-31a6-4f97-ae58-6f5023774930,CAZOR-SPAARGAREN,Eugénie,eugeniespaargaren@gmail.com,published_contacted,Chambourcy,78240,eugenie-cazor-spaargaren-chambourcy,bounced|opened,sent
+7fe4dcfc-1592-4a61-a444-acdbdfab3304,CHAMAGNE,Chloé,contact@crenolibre.fr,published,Paris,75020,chloe-chamagne-paris-20,opened,sent
+e4602e6c-699d-445a-ad5e-f521472bf709,CHANCEAU,Amandine,contact@lesnourriciers.fr,published_contacted,Enghien-les-Bains,95880,amandine-chanceau-dieteticienne-nutritionniste-drainage-lymphatique-renata-franca-enghien-les-bains,opened,sent
+01d26649-786e-44ce-8fdf-1342b84f23c0,CHARLET,Olivia,nutritherapie@olivia-charlet.fr,published_contacted,Boulogne-Billancourt,92100,olivia-charlet-boulogne-billancourt,opened,sent
+a767e829-8f89-4e51-ab14-45cd994f69b9,CHRISTINE,Boukhalil,christine.boukhalil@gmail.com,published_contacted,La Courneuve,93120,boukhalil-christine-la-courneuve,bounced|opened,sent
+3d19a1be-3c12-4eb1-ad68-48abc2c2520d,CLAVILIER,Julie,clavilier.julie@gmail.com,published_contacted,Buchelay,78200,julie-clavilier-buchelay,bounced|opened,sent
+217ffeb1-70fd-42ef-a343-2d182506cba6,CLEFERD,Sabrina,naturopaatti@gmail.com,published_contacted,Arpajon,91290,sabrina-cleferd-arpajon,bounced|opened,sent
+5ab1296f-d98c-47f5-b814-36c501770ea1,COLLIGNON,Marie,mariecollignon.naturo@gmail.com,published_contacted,Le Mesnil-le-Roi,78600,marie-collignon-le-mesnil-le-roi,bounced|delivered,sent
+a9ec6eff-e693-4b97-94a0-f718a5b3c05a,COURTHÉOUX CHANEL,Eulalie,eulalie.courtheouxchanel@gmail.com,published_contacted,Boulogne-Billancourt,92100,eulalie-courtheoux-chanel-boulogne-billancourt,bounced|opened,sent
+add11721-ef18-43b5-b7ca-ca73ac3d20a3,DAURES EI,Camille,cdaures.naturopathe@gmail.com,published_contacted,Gentilly,94250,camille-daures-ei-gentilly,bounced|delivered,sent
+2a57ac76-8cf2-4fc2-8c6f-08ed1caee76a,DEFOORT,Marie,mariedefoort.naturo@gmail.com,published_contacted,Boulogne-Billancourt,92100,marie-defoort-boulogne-billancourt,bounced|delivered,sent
+1e2fb9b9-51dc-4509-a91b-77b89a149ceb,DELISLE,Cindy,cindyd.natsophro@gmail.com,published_contacted,Frépillon,95740,cindy-delisle-frepillon,bounced|delivered,sent
+5c365fdf-770f-417c-8236-8d65881ed152,DELPLANCQ,Julie,juliedelplancq.naturo@gmail.com,published_contacted,Croissy-sur-Seine,78290,julie-delplancq-croissy-sur-seine,bounced|opened,sent
+7f2cfa26-f9e5-457e-95dc-6a49b999a901,DES COURTILS,Marie-Alix,malix.naturopathe@gmail.com,published,Paris,75015,marie-alix-des-courtils-paris-15,bounced|opened,sent
+5d5517c9-5616-4cab-94dc-2161d53334b5,DES COURTILS,Marie-Alix,malix.naturopathe@gmail.com,published_contacted,Boulogne-Billancourt,92100,marie-alix-des-courtils-boulogne-billancourt,bounced|opened,sent
+0138b09b-ddf1-4367-9971-1595710f6b0c,DESCAMPS,Agathe,contact@agathenaturopathe.fr,published_contacted,Boulogne-Billancourt,92100,agathe-descamps-boulogne-billancourt,delivered,sent
+ad71a2f9-a0d2-498b-8c23-6f6ef8320a86,DÉSIDE,Florence,florence.deside@natureetflo.fr,published_contacted,Brie-Comte-Robert,77170,florence-deside-brie-comte-robert,delivered,sent
+c8bec67f-230b-4c07-a7ae-c7ffde4f0496,DOMINGUEZ,Helena,helena.naturopathe@gmail.com,published_contacted,Corbeil-Essonnes,91100,helena-dominguez-corbeil-essonnes,bounced|opened,sent
+5388a019-e5f4-41fa-a4d2-3a8613c3da64,DOMINICI,Emmanuelle,naturocreative92@gmail.com,published_contacted,Colombes,92700,emmanuelle-dominici-colombes,bounced|opened,sent
+9f2ea58b-881f-4580-8785-c82cd7a0848e,DUHAMMEL,Marie,marie.duhammel@free.fr,published_contacted,Juvisy-sur-Orge,91260,marie-duhammel-juvisy-sur-orge,delivered,sent
+bde52f3f-600f-4ffc-a35a-42f4f0ef4cd0,DUVAL,Lidwina,contact@crenolibre.fr,published,Asnières-sur-Seine,92600,lidwina-duval-asnieres-sur-seine,opened,sent
+d88afdc6-ddf4-484f-a747-df0e5330e1e9,EZ-ZAHRA BEN YESSEF,Fatima,natureholiste@gmail.com,published_contacted,Aulnay-sous-Bois,93600,fatima-ez-zahra-ben-yessef-aulnay-sous-bois,bounced|delivered,sent
+2924290b-cf52-4bd4-86dc-58bccb34cc1d,FARCIGNY,Camille,camille.naturodiet@yahoo.com,published_contacted,Eaubonne,95600,camille-farcigny-eaubonne,bounced|delivered,sent
+fc565020-4b00-4ae6-9726-942959ec5aba,FAVIER,Frédérique,naturopathe.favier@gmail.com,published_contacted,Faremoutiers,77515,frederique-favier-faremoutiers,bounced|opened,sent
+fd254756-2176-4a3b-b564-e0f4c0a6a1d3,FELISAZ,Isabelle,isabelle.naturo@gmail.com,published_contacted,Jouars-Pontchartrain,78760,isabelle-felisaz-jouars-pontchartrain,bounced|opened,sent
+d2b2fe3a-ca30-4136-9813-e586971359e1,FILIOL,Johanna,johanna.filiol.naturopathe@gmail.com,published_contacted,Garches,92380,johanna-filiol-garches,bounced|opened,sent
+65fd364c-b114-47f9-986b-1f55970e260a,FREIRE,Marie-Christine,mariechristinefreire@gmail.com,published_contacted,L'Isle-Adam,95290,marie-christine-freire-l-isle-adam,bounced|opened,sent
+f84e90e5-3ea5-42c8-b0cb-6ab55f5b2524,FRILEUX,Philippine,hello@philippinefrileux.com,published_contacted,Enghien-les-Bains,95880,philippine-frileux-enghien-les-bains,bounced|delivered,sent
+a1526672-b969-46e7-9d5a-36c228d160c3,GAYET,Isabelle,igayet77@gmail.com,published_contacted,Ferrières-en-Brie,77164,isabelle-gayet-ferrieres-en-brie,bounced|opened,sent
+b8b2e5ec-20d9-4bfa-9178-4e99b8eeb73b,GROUM,Leila,contact@leilagroum.com,published_contacted,Le Pecq,78230,leila-groum-le-pecq,delivered,sent
+a1519b9b-920b-4218-be15-6b0d844e45cd,GUINHUT,Isabelle,association.santearts@gmail.com,published_contacted,Fontainebleau,77300,isabelle-guinhut-fontainebleau,bounced|opened,sent
+b3a172a1-1289-4449-a315-15ccc6bb1023,HANNON,Camille,goliath.naturo@gmail.com,published,Plaisir,78370,camille-hannon-plaisir,bounced|opened,sent
+f243671f-3f18-4a71-9e72-96684c90c0e3,HANNON,Camille,goliath.naturo@gmail.com,published_contacted,Élancourt,78990,camille-hannon-elancourt,bounced|opened,sent
+03643b59-1b4d-42c5-9a8a-8820bb24a20c,HANTAT,Caroline,caroline.hantat.naturopathe@gmail.com,published_contacted,Bougival,78380,caroline-hantat-bougival,bounced|opened,sent
+2e2c6ab2-d70f-440a-94c4-ab9a54ab51c8,HELAINE,Manon,manonhelaine.reflexologie@gmail.com,published_contacted,Les Essarts-le-Roi,78690,manon-helaine-les-essarts-le-roi,bounced|delivered,sent
+6dab7722-aec3-426b-a863-0cd2251ba58a,HELD,Aurelie,aurelieheld.naturopathe@gmail.com,published_contacted,Clamart,92140,aurelie-held-clamart,bounced|opened,sent
+e120ab0c-f0d8-4ac3-89c0-811edb30532f,HERATCHIAN,Astrid,contact@mincir91.fr,published_contacted,Dourdan,91410,astrid-heratchian-dourdan,bounced|delivered,sent
+86f2e80a-5a22-41bb-b78b-a19ffbb16849,HIMMELBAUER,Hélène,helena@helena-manaturo.fr,published_contacted,Guermantes,77600,helene-himmelbauer-guermantes,bounced|delivered,sent
+89d8cb2e-c37e-465d-8e2a-103563a376e3,HODY,Marie,mariehody.naturopathe@gmail.com,published_contacted,Fresnes,94260,marie-hody-fresnes,bounced|opened,sent
+22e40306-89d5-4abe-b6c9-386e51ef3cfb,HOUDEMENT,Eugénie,eugenie.houdement@gmail.com,published_contacted,Boulogne-Billancourt,92100,eugenie-houdement-boulogne-billancourt,bounced|opened,sent
+8ce65d4c-7f5b-4be8-8fbb-988c77aa86f3,JAMET,Catherine,jametcat@neuf.fr,published_contacted,Chatou,78400,catherine-jamet-chatou,bounced|delivered,sent
+ea195643-2d61-40ba-a38d-ee49322fe13a,JASAR,Nazira,contact@coachnutritioniste.com,published_contacted,Chelles,77500,nazira-jasar-chelles,bounced|suppressed,sent
+4af4c140-b351-4f88-bd6f-3361ba832aae,JEROLON,Julie,maboussolenaturo@gmail.com,published_contacted,Champigny-sur-Marne,94500,julie-jerolon-champigny-sur-marne,bounced|opened,sent
+a1921e22-fa05-4886-85ce-427cc2ee1984,JOUANNET,Juliette,contact@juliettejouannet.fr,published_contacted,Issy-les-Moulineaux,92130,juliette-jouannet-issy-les-moulineaux,delivered,sent
+6fc9ec60-7108-4be5-8e60-e64132380652,KERN,Léa,lknaturopathie@outlook.fr,published_contacted,Châtenay-Malabry,92290,lea-kern-chatenay-malabry,bounced|delivered,sent
+bee49316-1c32-41ec-93b7-17b816698647,KIRSCHNER SOPHROLOGUE,Doris,doris.kirschner@gmx.fr,published_contacted,Fontainebleau,77300,doris-kirschner-sophrologue-fontainebleau,delivered,sent
+9ab23692-9350-4fcc-8a1a-6380a3b430e1,KOUKLEVSKY,Alexandra,alexandra.naturolistique@gmail.com,published_contacted,Boulogne-Billancourt,92100,alexandra-kouklevsky-boulogne-billancourt,bounced|opened,sent
+a0754ab2-787b-4fa4-bcaa-21935b89c900,KOWAL,Catherine,contact@ckowal-naturopathe.com,published_contacted,Le Plessis-Robinson,92350,catherine-kowal-le-plessis-robinson,bounced|opened,sent
+74ea5465-28c7-4288-828d-2e06ad2e2b66,LA BEAUTÉ SIMPLE,Arom-Anel,sandrine@arom-anel.fr,published_contacted,Bourg-la-Reine,92340,arom-anel-la-beaute-simple-bourg-la-reine,bounced|opened,sent
+3129e77e-9ff8-4d80-a32a-02024f7bbdc9,LAINE,Celine,contact@omnes.fr,published_contacted,Colombes,92700,celine-laine-colombes,opened,sent
+5a47248f-e4c4-44c9-b60b-38bb195ff9e6,LEFEBVRE ACCOMPAGNEMENT,Dominique,dominiqueaccompagnement@gmail.com,published_contacted,L'Étang-la-Ville,78620,dominique-lefebvre-accompagnement-l-etang-la-ville,bounced|opened,sent
+852859b3-547b-46fa-a3aa-ee559f3dfb46,LEGEARD,Coline,coline.legeard@gmail.com,published,Montévrain,77144,coline-legeard-montevrain,bounced|opened,sent
+fb3f1915-7033-42ba-83fc-0f1a2971377b,LEGEARD,Coline,coline.legeard@gmail.com,published_contacted,Bussy-Saint-Georges,77600,coline-legeard-bussy-saint-georges,bounced|opened,sent
+0dc1f77f-61f3-44fe-b0ea-ebf66d0caed5,LEPREUX SANDREZ,Caroline,contact@caroline-naturopathie.com,published_contacted,Herblay-sur-Seine,95220,caroline-lepreux-sandrez-herblay-sur-seine,bounced|delivered,sent
+e4b9c7b9-2a24-4ca0-9b68-0d3785f4b48f,LOISON,Agnès,agnesloison.naturo@gmail.com,published_contacted,Igny,91430,agnes-loison-igny,bounced|opened,sent
+5e08c17a-94bc-4aa8-b80e-f2dbd96e35b9,LOISON,Agnès,agnesloison.naturo@gmail.com,published,Sceaux,92330,agnes-loison-sceaux,bounced|opened,sent
+5e858edb-3a03-4c88-b23c-3e9b8b3d58f2,LOUVET,Anaïs,contact@harmonie-au-naturel.com,published_contacted,Houilles,78800,anais-louvet-houilles,bounced|opened,sent
+c8030176-2b95-4f3e-bce1-2d5c4f57ecaa,MAIRET,Bruno,info@gorendezvous.com,published_contacted,Avon,77210,bruno-mairet-avon,bounced|delivered,sent
+76374b1c-fea3-48c5-b5c8-a2b19585722f,MANE-BILLIET,Magali,magali@manebilliet.com,published_contacted,Chatou,78400,magali-mane-billiet-chatou,opened,sent
+64c390ed-f52a-404c-9a32-d89e2e4e3bd7,MANOLACHE,Nicoleta,contact@nicoleta-manolache.com,published_contacted,Brunoy,91800,nicoleta-manolache-brunoy,delivered,sent
+b31aa961-400e-4424-86be-55961301f7c4,MARIA GORETI,Pires,contact@natur-envol.fr,published_contacted,Achères,78260,pires-maria-goreti-acheres,delivered,sent
+f676b640-2761-4d9e-bba7-f0b222415f15,MARTINEZ,Jessica,acteurdevotresante@gmail.com,published_contacted,Draveil,91210,jessica-martinez-draveil,bounced|delivered,sent
+78f8016b-a06b-4e5a-a3e9-03ee07b266be,MERZOUKI,Laila,n.endobio@gmail.com,published_contacted,Coupvray,77700,laila-merzouki-coupvray,bounced|opened,sent
+166648b0-2922-4f32-957c-1fe97da22933,MESSAGER,Philippe,philippemessager29@gmail.com,published_contacted,Boulogne-Billancourt,92100,philippe-messager-boulogne-billancourt,bounced|opened,sent
+d3077f2f-d90e-40e7-ae8c-72696cb47692,MICHAUX,Catherine,c.michaux@cabinet-naturopathe.fr,published_contacted,Garches,92380,catherine-michaux-garches,bounced|suppressed,sent
+8507123d-7064-4c31-b470-edbd26b659dd,MICHELLE,Lemaire,mlemaire2016@free.fr,published_contacted,Fontenay-sous-Bois,94120,lemaire-michelle-fontenay-sous-bois,delivered,sent
+58dcee23-00a6-42bd-85db-9baea6eadabb,MOMENT BULLE,Mon,contact@crenolibre.fr,published,Puteaux,92800,mon-moment-bulle-puteaux,opened,sent
+3c1421e6-9172-435d-8925-73a86935ffb2,MONNERAIS,Lise,lisemonnerais.naturopathe@gmail.com,published_contacted,Éragny,95610,lise-monnerais-eragny,bounced|delivered,sent
+0d11c8cd-d736-4ba3-a513-53d68837d70e,MONTFORT,Patricia,montfortnaturo@gmail.com,published_contacted,L'Isle-Adam,95290,patricia-montfort-l-isle-adam,bounced|delivered,sent
+f3e7b85e-744b-4d85-ba9c-b6b8c9626b40,MONTREDON,Gwladys,contact@gwladysmontredon.com,published_contacted,Antony,92160,gwladys-montredon-antony,bounced|opened,sent
+7cc57207-9d38-4b43-949d-4feb35888e29,MORIN,Isabelle,contact@isabellemorin-therapeute.com,published_contacted,Asnières-sur-Seine,92600,isabelle-morin-asnieres-sur-seine,delivered,sent
+8a879d05-6e87-4566-ae17-1ec85f1064f4,MROZEC,Natalia,contact@oligovie.fr,published_contacted,Deuil-la-Barre,95170,natalia-mrozec-deuil-la-barre,bounced|opened,sent
+f6faaa89-1cc4-4646-9639-a2fd3eba2ea7,NATARIANNI,Christophe,christophe.natarianni@gmail.com,published_contacted,Charny,77410,christophe-natarianni-charny,bounced|opened,sent
+53503cfc-37ea-4160-9ac1-6713a860d271,NAVARRETE,David,davidnaturopathe@outlook.fr,published_contacted,Brunoy,91800,david-navarrete-brunoy,bounced|delivered,sent
+92a4f572-744d-44e5-acea-4ce0496057f1,NUTRITION,Restored,contact@crenolibre.fr,published,Choisy-le-Roi,94600,restored-nutrition-choisy-le-roi,opened,sent
+1d0bf93d-72ad-4f97-bf80-c7fdb167f65d,OLIAEI,Anahita,votresophrologue@yahoo.fr,published_contacted,Évry-Courcouronnes,91000,dr-anahita-oliaei-psychologue-psychotherapeute-evry-courcouronnes,bounced|delivered,sent
+04459da9-b80c-4200-8d60-d3ec8b3524ca,PAPLORAY,Blandine,blandinaturopathe@beholi.fr,published_contacted,Aubervilliers,93300,blandine-paploray-aubervilliers,opened,sent
+1ff28270-eacf-4fc7-ac69-da14026c3cfd,PAYET,Laetitia,laetitiapayet.naturo@gmail.com,published_contacted,Herblay-sur-Seine,95220,laetitia-payet-herblay-sur-seine,bounced|opened,sent
+9aa7de3c-e435-4fe1-b860-72109b3e8e05,PERCEAU,Delphine,contact@delphineperceau.com,published_contacted,Courbevoie,92400,delphine-perceau-courbevoie,bounced|delivered,sent
+d07b0749-f09f-4332-a600-6aba02a3d3c2,PETIT,Sabine,loumeasante@yahoo.fr,published_contacted,Cergy,95000,sabine-petit-cergy,bounced|delivered,sent
+f1b66305-050a-41e1-8c1e-46187dd3429a,POULLAIN,Elsa,poullainelsa@gmail.com,published_contacted,Buchelay,78200,elsa-poullain-buchelay,bounced|opened,sent
+75a5f8b1-ef00-4f51-8419-e28fcdce1a36,PRUD'HON,Justine,justineprudhon-naturopathe@outlook.fr,published_contacted,Le Perreux-sur-Marne,94170,justine-prud-hon-le-perreux-sur-marne,bounced|delivered,sent
+d9846e76-f452-464c-a716-a6698d5c2c1b,RABIA,Guemmouri,contact@crenolibre.fr,published_contacted,Argenteuil,95100,guemmouri-rabia-argenteuil,opened,sent
+d09bce2b-bb90-410b-9498-51baea45f546,RAYNAUD DELAVAL,Florence,contact@pharmacien-naturopathe.fr,published_contacted,Croissy-sur-Seine,78290,florence-raynaud-delaval-croissy-sur-seine,delivered,sent
+14033095-cd9d-4521-aca1-c133d5cc718d,REGNAULT,Corinne,naturo@corinne-regnault.com,published_contacted,Bagneux,92220,corinne-regnault-bagneux,delivered,sent
+b85e7d20-fc58-416a-b58c-0e0b38470e78,RÉMY,Nadine,contact@nadine-naturopathe.fr,published_contacted,Carrières-sous-Poissy,78955,nadine-remy-carrieres-sous-poissy,bounced|opened,sent
+ff558701-6633-4077-ac84-ee02039c2852,REYNE,Floryan,floryanreyne@fr-naturopathe.fr,published_contacted,Fontenay-aux-Roses,92260,floryan-reyne-fontenay-aux-roses,bounced|delivered,sent
+f9659cc2-9ff9-4fb9-95c8-d2866df22aca,RIBEIRO,Alizée,alizee.naturopathe@gmail.com,published_contacted,Athis-Mons,91200,alizee-ribeiro-athis-mons,bounced|delivered,sent
+0d3fd89b-038b-4915-bede-c89a97cbd80a,Rinderknech,Mathilde,bodysolara78@gmail.com,published_contacted,Carrières-sous-Poissy,78955,body-solara-carrieres-sous-poissy,bounced|delivered,sent
+6a43d8b4-68ae-4c6d-9b45-ea98b0e0eada,ROBERT-VERITE,Marion,naturo.verite@gmail.com,published_contacted,Châtillon,92320,marion-robert-verite-chatillon,bounced|opened,sent
+3fb81080-23fd-4b59-bd7b-b43ec2135763,RODRIGUES FÉLICIE,Gomes,contact@crenolibre.fr,published,Versailles,78000,gomes-rodrigues-felicie-versailles,opened,sent
+e0c03a4b-0e86-45d4-8039-6b1155bb3c85,ROFFI,Camille,camilleroffi.naturo@gmail.com,published_contacted,Issy-les-Moulineaux,92130,camille-roffi-issy-les-moulineaux,bounced|delivered,sent
+d72e7cba-0a3f-429e-9e57-bac25eab2411,ROSE,Cécile,cecilerose.accompagnement@gmail.com,published_contacted,Boulogne-Billancourt,92100,cecile-rose-boulogne-billancourt,bounced|opened,sent
+32d27d40-fe13-4364-a635-b27b86641ffd,ROUSSEAUX,Coralie,contact@crenolibre.fr,published,Boutigny,77470,coralie-rousseaux-boutigny,opened,sent
+e39d5ed5-0d8d-40bf-a1aa-b97a0f73f853,ROUTHIER,Emilie,contact@lesclesdelanature.com,published_contacted,Bussy-Saint-Georges,77600,emilie-routhier-bussy-saint-georges,opened,sent
+9385f825-fd08-4bed-b92d-3a4cdf9a3f25,ROUTHIER,Emilie,contact@lesclesdelanature.com,published,Crécy-la-Chapelle,77580,emilie-routhier-crecy-la-chapelle,opened,sent
+5e0bc95f-c9cc-416d-83de-4c80fa91fdbd,SABARIA,Marjorie,contact@naturofeel.fr,published_contacted,Chavenay,78450,marjorie-sabaria-chavenay,opened,sent
+1dbef5db-3faa-4836-b2d0-1dcba03c9d3a,SANCHEZ,Mark,contact@markshealthclub.fr,published_contacted,L'Isle-Adam,95290,mark-sanchez-l-isle-adam,opened,sent
+010f2cb4-e0c3-42e7-aa4a-2e3b78b285ac,SCHNEIDER,Émilie,emilieschneider55@gmail.com,published_contacted,Le Plessis-Bouchard,95130,emilie-schneider-le-plessis-bouchard,bounced|opened,sent
+82714fe5-821f-4b4f-a59c-edd666d6fad8,SENS CIEL DE MEG,Megane,meganne.naturo@gmail.com,published_contacted,Antony,92160,les-sens-ciel-de-meg-antony,bounced|opened,sent
+ca301f87-07a0-411c-9bdc-69633b966077,SERTILLANGE,Aurore,contact@aurore-sertillange.com,published_contacted,Bailly-Romainvilliers,77700,aurore-sertillange-bailly-romainvilliers,opened,sent
+efe9b4f0-9620-47a0-8a87-9f1ffd2f33ab,SIMIAN,Ophélie,ophelie.naturopathie.bienetre@gmail.com,published_contacted,Ermont,95120,ophelie-simian-ermont,bounced|opened,sent
+8089148a-4bff-416d-a4e3-65fea586a25c,SOULIÉ,Line,contact@etsionrenaissait.com,published_contacted,Champcueil,91750,line-soulie-champcueil,delivered,sent
+ef0406d5-5054-4052-b7a5-2640b1fab8bc,SOYEZ-MARTIN,Odile,odilesoyezmartin@gmail.com,published_contacted,Athis-Mons,91200,odile-soyez-martin-athis-mons,bounced|opened,sent
+7d8d8aa3-c688-4462-934b-236661609e9a,STOFFAËS,Alexandra,alexandrastoffaes@gmail.com,published_contacted,Fontenay-sous-Bois,94120,alexandra-stoffaes-fontenay-sous-bois,bounced|opened,sent
+490bdf8c-c3e1-444b-a0d8-8845f4166f00,SUNNA,Essentielle,contact@essentiellesunna.fr,published_contacted,Aulnay-sous-Bois,93600,essentielle-sunna-aulnay-sous-bois,opened,sent
+56e3410c-2cd4-4ac7-90e7-50d73f41d250,SYLVIE,Combres,contact@crenolibre.fr,published,Saint-Maur-des-Fossés,94210,combres-sylvie-saint-maur-des-fosses,opened,sent
+e4903237-4053-4460-be76-e9681ca814e0,TARDIF,Déborah,deborahtardif.naturopathe@gmail.com,published_contacted,Breuillet,91650,deborah-tardif-breuillet,bounced|opened,sent
+b8094509-a76f-459c-b1b0-89581dc97d89,THEVENY,Manon,mannontobe@gmail.com,published_contacted,Clichy,92110,manon-theveny-clichy,bounced|opened,sent
+d353a5f2-07e6-4ada-b57d-bc21e644c6a9,TORII,Med'Zen,medzentorii@gmail.com,published_contacted,Le Vésinet,78110,med-zen-torii-le-vesinet,bounced|opened,sent
+8a988dd8-a2d1-4a68-b55d-4b2824ab7f23,TOUATI,Céline,touatic@gmail.com,published_contacted,Courbevoie,92400,celine-touati-courbevoie,bounced|opened,sent
+023951fe-c1a6-4120-8b78-69eb98d0f1a9,TURBIN,Nicolas,contact@nicolasturbin.fr,published_contacted,Auvers-Saint-Georges,91580,nicolas-turbin-auvers-saint-georges,delivered,sent
+812ea812-5ec3-4fc8-8e07-7d72f88e04b7,VALCHUK,Oxana,ovalchuk.naturopathe@gmail.com,published_contacted,Le Chesnay-Rocquencourt,78150,oxana-valchuk-le-chesnay-rocquencourt,bounced|opened,sent
+b23576ab-5c94-4dfd-893a-d519127ef453,VAZ,Monica,monicavaz.naturo@gmail.com,published_contacted,Fontenay-sous-Bois,94120,monica-vaz-fontenay-sous-bois,bounced|opened,sent
+cf42d087-fef8-430e-844e-341074d51d40,VOLPEZ,Christelle,christelle@lunaracoaching.fr,published_contacted,Houilles,78800,christelle-volpez-houilles,bounced|opened,sent

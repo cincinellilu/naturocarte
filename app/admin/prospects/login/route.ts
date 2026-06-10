@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createAppUrl } from "@/lib/app-url";
+import { createAppUrl, isSecureAppRequest } from "@/lib/app-url";
 import {
   ADMIN_PROSPECTS_COOKIE_NAME,
   getAdminProspectsSessionValue,
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     value: cookieValue,
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecureAppRequest(request),
     path: "/",
     maxAge: 60 * 60 * 12
   });

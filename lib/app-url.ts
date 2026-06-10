@@ -1,6 +1,7 @@
 import { getSiteUrl } from "@/lib/site";
 
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1"]);
+const LOCAL_PROTOCOLS = new Set(["http:", "https:"]);
 
 function getForwardedOrigin(request: Request): string | null {
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
@@ -22,21 +23,27 @@ function getForwardedOrigin(request: Request): string | null {
 }
 
 export function getAppOrigin(request?: Request): string {
-  if (process.env.NODE_ENV === "production") {
-    return getSiteUrl();
-  }
-
   if (request) {
     const forwardedOrigin = getForwardedOrigin(request);
-    if (forwardedOrigin) return forwardedOrigin;
+    if (forwardedOrigin) {
+      const forwardedUrl = new URL(forwardedOrigin);
+      if (LOCAL_HOSTS.has(forwardedUrl.hostname)) return forwardedUrl.origin;
+      if (process.env.NODE_ENV !== "production") return forwardedUrl.origin;
+    }
 
     try {
       const requestUrl = new URL(request.url);
-      if (LOCAL_HOSTS.has(requestUrl.hostname)) return requestUrl.origin;
-      return requestUrl.origin;
+      if (LOCAL_HOSTS.has(requestUrl.hostname) && LOCAL_PROTOCOLS.has(requestUrl.protocol)) {
+        return requestUrl.origin;
+      }
+      if (process.env.NODE_ENV !== "production") return requestUrl.origin;
     } catch {
       return "http://localhost:3000";
     }
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    return getSiteUrl();
   }
 
   return "http://localhost:3000";
@@ -44,6 +51,10 @@ export function getAppOrigin(request?: Request): string {
 
 export function createAppUrl(path: string, request?: Request): URL {
   return new URL(path, getAppOrigin(request));
+}
+
+export function isSecureAppRequest(request: Request): boolean {
+  return createAppUrl("/", request).protocol === "https:";
 }
 
 export function getSafeAppUrl(request: Request, target: string, fallbackPath = "/"): URL {

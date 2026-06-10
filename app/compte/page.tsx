@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PractitionerEntryLink from "@/components/PractitionerEntryLink";
 import { getCurrentUserSession } from "@/lib/user-auth";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -294,9 +295,14 @@ export default async function AccountPage({
                         <span>{[practitioner.city, practitioner.postal_code].filter(Boolean).join(" · ")}</span>
                       </div>
                       <div className="account-favorite-actions">
-                        <Link className="btn btn-secondary" href={`/naturopathe/${practitioner.slug}`}>
+                        <PractitionerEntryLink
+                          className="btn btn-secondary"
+                          href={`/naturopathe/${practitioner.slug}`}
+                          practitionerSlug={practitioner.slug}
+                          source="account_favorites"
+                        >
                           Voir la fiche
-                        </Link>
+                        </PractitionerEntryLink>
                         <form action="/api/user-favorites" method="post">
                           <input type="hidden" name="practitioner_slug" value={practitioner.slug} />
                           <input type="hidden" name="intent" value="remove" />

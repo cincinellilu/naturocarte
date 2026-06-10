@@ -115,6 +115,15 @@ function isPractitionerCreationStarted(account: PractitionerAccountRow): boolean
   return Boolean(account.last_login_at) || Number(account.login_count ?? 0) > 0;
 }
 
+function buildPractitionersHref(planFilter: PlanFilter): string {
+  return planFilter === "all" ? "/admin/praticiens-actifs" : `/admin/praticiens-actifs?plan=${planFilter}`;
+}
+
+function getDisplayName(practitioner: PractitionerRow | null | undefined): string {
+  if (!practitioner) return "Fiche non reliée";
+  return `${practitioner.first_name ?? ""} ${practitioner.last_name ?? ""}`.trim() || "Nom incomplet";
+}
+
 async function loadActivePractitioners(planFilter: PlanFilter): Promise<ActivePractitionerRow[]> {
   const supabase = getSupabaseAdminClient();
   const rows = await fetchAllSupabaseRows<PractitionerAccountRow>((from, to) => {
@@ -185,6 +194,7 @@ export default async function ActivePractitionersAdminPage({
   }
 
   let practitioners: ActivePractitionerRow[] | null = null;
+
   try {
     practitioners = await loadActivePractitioners(planFilter);
   } catch (error) {
@@ -210,18 +220,18 @@ export default async function ActivePractitionersAdminPage({
     >
       <div className="admin-page">
         <nav className="admin-tabs" aria-label="Filtres praticiens actifs">
-          <Link className={planFilter === "all" ? "admin-tab is-active" : "admin-tab"} href="/admin/praticiens-actifs">
+          <Link className={planFilter === "all" ? "admin-tab is-active" : "admin-tab"} href={buildPractitionersHref("all")}>
             Tous
           </Link>
           <Link
             className={planFilter === PRACTITIONER_PLAN_PRESENCE ? "admin-tab is-active" : "admin-tab"}
-            href="/admin/praticiens-actifs?plan=presence"
+            href={buildPractitionersHref(PRACTITIONER_PLAN_PRESENCE)}
           >
             Forfait gratuit
           </Link>
           <Link
             className={planFilter === PRACTITIONER_PLAN_VISIBILITY ? "admin-tab is-active" : "admin-tab"}
-            href="/admin/praticiens-actifs?plan=visibilite_plus"
+            href={buildPractitionersHref(PRACTITIONER_PLAN_VISIBILITY)}
           >
             Visibilité+
           </Link>
@@ -232,34 +242,13 @@ export default async function ActivePractitionersAdminPage({
             <AdminPractitionerCabinetLinker />
 
             <section className="admin-kpi-grid" aria-label="Indicateurs praticiens actifs">
-              <div className="admin-kpi-card">
-                <strong>{publishedRows.length.toLocaleString("fr-FR")}</strong>
-                <span>Comptes affichés</span>
-              </div>
-              <div className="admin-kpi-card">
-                <strong>{freeRows.length.toLocaleString("fr-FR")}</strong>
-                <span>Forfait gratuit</span>
-              </div>
-              <div className="admin-kpi-card">
-                <strong>{visibilityRows.length.toLocaleString("fr-FR")}</strong>
-                <span>Visibilité+</span>
-              </div>
-              <div className="admin-kpi-card">
-                <strong>{unpublishedRows.length.toLocaleString("fr-FR")}</strong>
-                <span>Fiches non publiées</span>
-              </div>
-              <div className="admin-kpi-card">
-                <strong>{startedCreationRows.length.toLocaleString("fr-FR")}</strong>
-                <span>Fiches en cours de création</span>
-              </div>
-              <div className="admin-kpi-card">
-                <strong>{neverLoggedRows.length.toLocaleString("fr-FR")}</strong>
-                <span>Jamais reconnectés</span>
-              </div>
-              <div className="admin-kpi-card">
-                <strong>{completeRows.length.toLocaleString("fr-FR")}</strong>
-                <span>Fiches complètes</span>
-              </div>
+              <AdminKpi label="Comptes affichés" value={publishedRows.length} />
+              <AdminKpi label="Forfait gratuit" value={freeRows.length} />
+              <AdminKpi label="Visibilité+" value={visibilityRows.length} />
+              <AdminKpi label="Fiches non publiées" value={unpublishedRows.length} />
+              <AdminKpi label="Fiches en cours de création" value={startedCreationRows.length} />
+              <AdminKpi label="Jamais reconnectés" value={neverLoggedRows.length} />
+              <AdminKpi label="Fiches complètes" value={completeRows.length} />
             </section>
 
             <section className="admin-panel admin-active-practitioners-panel">
@@ -296,9 +285,7 @@ export default async function ActivePractitionersAdminPage({
 function ActivePractitionerCard({ account }: { account: ActivePractitionerRow }) {
   const practitioner = getPractitioner(account);
   const plan = getPractitionerPlan(account.plan);
-  const displayName = practitioner
-    ? `${practitioner.first_name ?? ""} ${practitioner.last_name ?? ""}`.trim() || "Nom incomplet"
-    : "Fiche non reliée";
+  const displayName = getDisplayName(practitioner);
 
   return (
     <article className="admin-client-card admin-active-practitioner-card">
@@ -309,10 +296,7 @@ function ActivePractitionerCard({ account }: { account: ActivePractitionerRow })
           <p>{account.email}</p>
           {practitioner?.slug ? (
             <p>
-              Fiche{" "}
-              <Link href={`/naturopathe/${practitioner.slug}`}>
-                /naturopathe/{practitioner.slug}
-              </Link>
+              Fiche <Link href={`/naturopathe/${practitioner.slug}`}>/naturopathe/{practitioner.slug}</Link>
             </p>
           ) : null}
         </div>
@@ -323,6 +307,11 @@ function ActivePractitionerCard({ account }: { account: ActivePractitionerRow })
           <span className="admin-status-pill">
             {Number(account.login_count ?? 0).toLocaleString("fr-FR")} connexion(s)
           </span>
+          {practitioner?.id ? (
+            <Link className="admin-status-pill admin-status-pill--link" href={`/admin/praticiens-actifs/${practitioner.id}`}>
+              Voir les données
+            </Link>
+          ) : null}
         </div>
       </div>
 
@@ -352,5 +341,14 @@ function ActivePractitionerCard({ account }: { account: ActivePractitionerRow })
         </div>
       )}
     </article>
+  );
+}
+
+function AdminKpi({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="admin-kpi-card">
+      <strong>{value.toLocaleString("fr-FR")}</strong>
+      <span>{label}</span>
+    </div>
   );
 }

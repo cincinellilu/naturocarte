@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { GUIDE_INDEX_ENTRIES } from "@/lib/guides";
 import { getSiteUrl } from "@/lib/site";
 import { IDF_DEPARTMENTS } from "@/lib/locations";
 import homeHeroImage from "@/assets/home-hero-naturopathy-v2.jpg";
@@ -10,14 +11,14 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   title: "NaturoCarte | Trouver un naturopathe près de chez vous",
   description:
-    "NaturoCarte aide à trouver un naturopathe près de chez vous via une carte interactive, des pages locales et des fiches praticiens.",
+    "NaturoCarte aide à trouver un naturopathe près de chez vous via une carte interactive, des pages locales, des guides utiles et des fiches praticiens.",
   alternates: {
     canonical: "/"
   },
   openGraph: {
     title: "NaturoCarte | Trouver un naturopathe près de chez vous",
     description:
-      "NaturoCarte aide à trouver un naturopathe près de chez vous via une carte interactive, des pages locales et des fiches praticiens.",
+      "NaturoCarte aide à trouver un naturopathe près de chez vous via une carte interactive, des pages locales, des guides utiles et des fiches praticiens.",
     url: siteUrl,
     type: "website"
   },
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "NaturoCarte | Trouver un naturopathe près de chez vous",
     description:
-      "NaturoCarte aide à trouver un naturopathe près de chez vous via une carte interactive, des pages locales et des fiches praticiens."
+      "NaturoCarte aide à trouver un naturopathe près de chez vous via une carte interactive, des pages locales, des guides utiles et des fiches praticiens."
   }
 };
 
@@ -124,6 +125,33 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section-shell home-section">
+        <div className="section-heading section-heading--stacked">
+          <div>
+            <p className="section-eyebrow">Guides utiles</p>
+            <h2>Des pages qui aident à choisir</h2>
+          </div>
+          <p className="section-intro">
+            Avant d’ouvrir la carte, lisez un guide court si vous voulez clarifier votre
+            besoin ou comparer plus proprement les fiches.
+          </p>
+        </div>
+
+        <div className="quick-guide-grid">
+          {GUIDE_INDEX_ENTRIES.map((guide) => (
+            <article key={guide.slug} className="about-card">
+              <h3 className="about-title">{guide.title}</h3>
+              <p>{guide.description}</p>
+              <p className="about-inline-link">
+                <Link href={guide.href} prefetch={false}>
+                  Lire le guide
+                </Link>
+              </p>
+            </article>
+          ))}
         </div>
       </section>
 

@@ -17,11 +17,11 @@ export const metadata: Metadata = {
     template: "%s | NaturoCarte"
   },
   description:
-    "Cherchez un naturopathe en Île-de-France par adresse, département ou arrondissement à Paris, puis comparez les fiches en quelques clics.",
+    "Cherchez un naturopathe en Île-de-France par adresse, département ou arrondissement à Paris, puis comparez les fiches et guides utiles en quelques clics.",
   openGraph: {
     title: "NaturoCarte | Trouver un naturopathe en Île-de-France",
     description:
-      "Cherchez un naturopathe en Île-de-France par adresse, département ou arrondissement à Paris, puis comparez les fiches en quelques clics.",
+      "Cherchez un naturopathe en Île-de-France par adresse, département ou arrondissement à Paris, puis comparez les fiches et guides utiles en quelques clics.",
     url: siteUrl,
     siteName: "NaturoCarte",
     locale: "fr_FR",
@@ -74,12 +74,13 @@ export default function RootLayout({
                 <div className="site-footer-branding">
                   <p className="site-footer-copy">
                     Cherchez un naturopathe près de chez vous en Île-de-France, par carte,
-                    département ou arrondissement à Paris.
+                    guide, département ou arrondissement à Paris.
                   </p>
                 </div>
 
                 <nav className="site-footer-links" aria-label="Liens de pied de page">
                   <Link href="/carte" prefetch={false}>Carte</Link>
+                  <Link href="/guides" prefetch={false}>Guides</Link>
                   <Link href="/annuaire-naturopathes" prefetch={false}>Annuaire</Link>
                   <Link href="/praticiens" prefetch={false}>Espace praticiens</Link>
                   <Link href="/methode" prefetch={false}>Méthode</Link>

@@ -1,0 +1,5 @@
+id,nom,prenom,email,statut_avant,ville,code_postal,slug,resend_events,campaign_status
+7910327d-1a8b-49ae-8d23-b24c0eeea0b8,DIARD,Evgeniya,contact@evenaturopathe.com,published_contacted,Asnières-sur-Seine,92600,evgeniya-diard-asnieres-sur-seine,bounced,sent
+28126c29-5542-451f-aa50-9fb4a76687e2,MANOUBI,Sabri,contact@naturopraticien.com,published_contacted,Argenteuil,95100,sabri-manoubi-argenteuil,bounced,sent
+a9e25fa1-467b-4df4-9f8a-081e85d056e7,MARTIN,Marine,contact@lorangesanguine.fr,published_contacted,Breuillet,91650,marine-martin-breuillet,bounced,sent
+2c299d99-5d2b-4a74-aa91-2096dcd658e0,THEVENON,Anne,anne@aromacycle.fr,published_contacted,Asnières-sur-Seine,92600,anne-thevenon-asnieres-sur-seine,bounced,sent

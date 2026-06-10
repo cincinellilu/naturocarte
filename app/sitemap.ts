@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
-import { IDF_DEPARTMENTS } from "@/lib/locations";
+import { GUIDE_INDEX_ENTRIES } from "@/lib/guides";
+import { IDF_DEPARTMENTS, normalizeLocationToken } from "@/lib/locations";
 import { PARIS_ARRONDISSEMENTS } from "@/lib/paris";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSiteUrl } from "@/lib/site";
@@ -13,14 +14,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   let practitionerEntries: MetadataRoute.Sitemap = [];
+  let cityEntries: MetadataRoute.Sitemap = [];
 
   try {
     const supabase = getSupabaseServerClient();
-    const data = await fetchAllSupabaseRows<{ slug: string; updated_at: string | null }>(
+    const data = await fetchAllSupabaseRows<{
+      slug: string;
+      updated_at: string | null;
+      city: string | null;
+    }>(
       (from, to) =>
         supabase
           .from("practitioners")
-          .select("slug, updated_at:created_at") // pas de updated_at => on prend created_at
+          .select("slug, city, updated_at:created_at") // pas de updated_at => on prend created_at
           .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
           .order("slug", { ascending: true })
           .range(from, to)
@@ -32,8 +38,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.7
     }));
+
+    const citySlugs = new Set<string>();
+    for (const practitioner of data) {
+      const citySlug = normalizeLocationToken(practitioner.city);
+      if (!citySlug || citySlug === "paris") continue;
+      citySlugs.add(citySlug);
+    }
+
+    cityEntries = [...citySlugs].sort().map((citySlug) => ({
+      url: `${siteUrl}/naturopathe-${citySlug}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.78
+    }));
   } catch {
     practitionerEntries = [];
+    cityEntries = [];
   }
 
   return [
@@ -63,9 +84,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 0.8
     })),
+    ...cityEntries,
     ...practitionerEntries,
     { url: `${siteUrl}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${siteUrl}/methode`, lastModified: now, changeFrequency: "monthly", priority: 0.45 },
+    { url: `${siteUrl}/guides`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    ...GUIDE_INDEX_ENTRIES.map((guide) => ({
+      url: `${siteUrl}${guide.href}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.55
+    })),
     { url: `${siteUrl}/praticiens`, lastModified: now, changeFrequency: "weekly", priority: 0.55 },
     {
       url: `${siteUrl}/mentions-legales`,

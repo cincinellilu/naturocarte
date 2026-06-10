@@ -1,0 +1,6 @@
+id,nom,prenom,email,statut_avant,ville,code_postal,slug,resend_events,campaign_status
+d63ca528-664c-4328-9c3b-6fae02e92b85,BERLIN,Guy,guyberlin.aroma@gmail.com,published_contacted_not_claimed,Gif-sur-Yvette,91190,guy-berlin-gif-sur-yvette,bounced|clicked,
+2265b5d6-211f-42a5-bca2-a98162a0d261,BOUTICHE,Nahnâa,nahnaa.boutiche@gmail.com,published_contacted_not_claimed,Ézanville,95460,nahnaa-boutiche-ezanville,bounced|clicked,
+b65691a8-6825-466d-9919-a6502141aa4c,DUPONT,Delphine,bonjournaturopathie@gmail.com,published_contacted_not_claimed,Chessy,77700,delphine-dupont-chessy,bounced|clicked,
+2c2c3913-fb36-4ece-9db5-795f0be88f9b,ESENCIAL,Afiya,afiyaesencial@gmail.com,published_contacted_not_claimed,Le Blanc-Mesnil,93150,afiya-esencial-le-blanc-mesnil,bounced|clicked,
+141b8d4c-1b5a-4857-829a-5e19c37bfabd,GABORIAU,Brigitte,brgaboriau@orange.fr,published_contacted_not_claimed,Clamart,92140,brigitte-gaboriau-clamart,bounced|clicked,

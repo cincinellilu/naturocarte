@@ -12,6 +12,7 @@ import { trackProductEvent } from "@/lib/product-events";
 function getPageTemplate(pathname: string): string {
   if (pathname === "/") return "home";
   if (pathname === "/carte") return "map";
+  if (pathname.startsWith("/guides")) return "guide";
   if (pathname === "/annuaire-naturopathes") return "directory_hub";
   if (pathname.startsWith("/annuaire-naturopathes/")) return "directory_department";
   if (pathname === "/naturopathe-paris") return "paris_hub";

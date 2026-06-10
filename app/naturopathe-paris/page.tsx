@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import PartnerBadge from "@/components/PartnerBadge";
+import PractitionerEntryLink from "@/components/PractitionerEntryLink";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getPartnerAccount, type PractitionerAccountPlanRow } from "@/lib/practitioner-partner";
@@ -323,9 +324,14 @@ export default async function NaturopatheParisPage({
                       {[p.adresse, p.postal_code, p.city].filter(Boolean).join(", ")}
                     </div>
                   </div>
-                  <Link className="practitioner-item-link" href={`/naturopathe/${p.slug}`}>
+                  <PractitionerEntryLink
+                    className="practitioner-item-link"
+                    href={`/naturopathe/${p.slug}`}
+                    practitionerSlug={p.slug}
+                    source="paris_directory"
+                  >
                     Voir la fiche
-                  </Link>
+                  </PractitionerEntryLink>
                 </li>
               ))}
             </ul>

@@ -1,0 +1,8 @@
+id,nom,prenom,email,statut_avant,ville,code_postal,slug,resend_events,campaign_status
+12972993-cfe2-43dd-8a11-f173b4435ab8,CHI-HSIA,Kao,kao.chihsia@gmail.com,published_contacted,Ézanville,95460,kao-chi-hsia-ezanville,bounced|clicked,sent
+ef6623f6-b939-4d2f-b178-bbeb9a6b1b69,DEROUET,Julie,julie.derouet.naturopathe@gmail.com,published_contacted,Gretz-Armainvilliers,77220,julie-derouet-gretz-armainvilliers,bounced|clicked,sent
+e638e73c-a71c-4de0-b572-552b0e875e70,LAMPSON,Aglaé,aglae.lampson@gmail.com,published,Paris,75011,aglae-lampson-paris-11,,
+d83eef65-f856-4d14-a3c5-b9c548a14235,LAMPSON,Aglaé,aglaelampson@gmail.com,published,Paris,75009,aglae-lampson-paris-9,,
+67e0c2b3-0776-4085-9747-cfac729dea78,NOËL,Başak,basak.noel@doazen.fr,published_contacted,Élancourt,78990,basak-noel-elancourt,clicked,claimed
+d500e5fb-c594-4730-9d56-f026c2d882d9,ROBERT,Marie,contact@naturobinson.fr,published_contacted,Le Plessis-Robinson,92350,marie-robert-le-plessis-robinson,clicked,claimed
+893c7fa0-1dd0-48df-8ab9-af42743aa85b,VITALIS,Isabelle,contact@isabelle-vitalis.fr,published_contacted,Bagneux,92220,isabelle-vitalis-bagneux,clicked,claimed

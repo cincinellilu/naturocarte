@@ -44,7 +44,7 @@ const ADMIN_NAV_ITEMS: Array<{
     key: "practitioners",
     href: "/admin/praticiens-actifs",
     label: "Praticiens",
-    detail: "Comptes, publication, complétion"
+    detail: "Comptes, publication, performance"
   },
   {
     key: "campaigns",

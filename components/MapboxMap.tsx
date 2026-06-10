@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { trackPractitionerStat, type PractitionerStatEvent } from "@/components/PractitionerStatsTracker";
 import { PARTNER_DIRECTORY_HREF } from "@/components/PartnerBadge";
+import { rememberPractitionerEntrySource } from "@/lib/practitioner-entry-source";
 import { trackProductEvent } from "@/lib/product-events";
 
 const PARIS_CENTER: [number, number] = [2.3522, 48.8566];
@@ -177,7 +178,9 @@ function buildPopupHtml(point: MapPoint): string {
   const tarifsLine = point.tarifs?.trim()
     ? `<a class="map-popup-secondary" href="/naturopathe/${encodeURIComponent(
         point.slug
-      )}#tarifs">Voir les tarifs</a>`
+      )}#tarifs" data-practitioner-entry-source="map_popup" data-practitioner-slug="${escapeHtml(
+        point.slug
+      )}">Voir les tarifs</a>`
     : "";
   const ratingLine = ratingValue
     ? `<div class="map-popup-rating" aria-label="Note ${ratingValue.toFixed(1)} sur 5">
@@ -206,7 +209,11 @@ function buildPopupHtml(point: MapPoint): string {
             ? `<p class="map-popup-description">${escapeHtml(descriptionPreview)}</p>`
             : ""
         }
-        <a class="map-popup-link" href="/naturopathe/${encodeURIComponent(point.slug)}">Voir la fiche</a>
+        <a class="map-popup-link" href="/naturopathe/${encodeURIComponent(
+          point.slug
+        )}" data-practitioner-entry-source="map_popup" data-practitioner-slug="${escapeHtml(
+          point.slug
+        )}">Voir la fiche</a>
         <form class="map-popup-favorite-form" action="/api/user-favorites" method="post">
           <input type="hidden" name="practitioner_slug" value="${escapeHtml(point.slug)}" />
           <input type="hidden" name="intent" value="add" />
@@ -380,6 +387,7 @@ function MobilePractitionerPopup({
               <a
                 className="map-popup-secondary map-mobile-popup-secondary"
                 href={`/naturopathe/${encodeURIComponent(point.slug)}#tarifs`}
+                onClick={() => rememberPractitionerEntrySource(point.slug, "map_mobile_popup")}
               >
                 Voir les tarifs
               </a>
@@ -394,6 +402,7 @@ function MobilePractitionerPopup({
                 .filter(Boolean)
                 .join(" ")}
               href={`/naturopathe/${encodeURIComponent(point.slug)}`}
+              onClick={() => rememberPractitionerEntrySource(point.slug, "map_mobile_popup")}
             >
               Voir la fiche
             </a>
@@ -928,6 +937,13 @@ export default function MapboxMap({
       const statEvent = trackedLink?.dataset.practitionerStatEvent;
       const practitionerSlug = trackedLink?.dataset.practitionerSlug;
       const channel = trackedLink?.dataset.practitionerChannel ?? "unknown";
+      const entryLink = target.closest<HTMLElement>("[data-practitioner-entry-source]");
+      const entrySource = entryLink?.dataset.practitionerEntrySource;
+      const entrySlug = entryLink?.dataset.practitionerSlug;
+
+      if (entrySource && entrySlug) {
+        rememberPractitionerEntrySource(entrySlug, entrySource);
+      }
 
       if (
         practitionerSlug &&

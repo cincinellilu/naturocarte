@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { hasAdminProspectsAccess } from "@/lib/admin-prospects-auth";
+import { createAppUrl, getSafeAppUrl } from "@/lib/app-url";
 import { overridePractitionerBillingPlan } from "@/lib/practitioner-billing";
 import {
   PRACTITIONER_PLAN_PRESENCE,
@@ -13,19 +14,13 @@ function normalizeText(value: FormDataEntryValue | null): string {
 }
 
 function getSafeAdminRedirect(request: Request, target: string): URL {
-  const fallback = new URL("/admin/clients", request.url);
+  const fallbackPath = "/admin/clients";
 
-  if (!target.startsWith("/admin/clients")) {
-    return fallback;
+  if (!target.startsWith("/admin/clients") || target.startsWith("//")) {
+    return createAppUrl(fallbackPath, request);
   }
 
-  try {
-    const url = new URL(target, request.url);
-    if (url.origin !== fallback.origin) return fallback;
-    return url;
-  } catch {
-    return fallback;
-  }
+  return getSafeAppUrl(request, target, fallbackPath);
 }
 
 export async function POST(request: Request) {

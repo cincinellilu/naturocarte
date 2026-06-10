@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { createAndSendAdminEmailCampaign } from "@/lib/admin-emailing";
 import { hasAdminProspectsAccess } from "@/lib/admin-prospects-auth";
+import { createAppUrl } from "@/lib/app-url";
 
 function getRedirectUrl(request: Request): URL {
-  return new URL("/admin/emailing", request.url);
+  return createAppUrl("/admin/emailing", request);
 }
 
 function normalizeText(value: FormDataEntryValue | null): string {

@@ -177,28 +177,6 @@ export default async function GuidePage({
         </div>
       </section>
 
-      <section id="guide-essentials" className="section-shell">
-        <div className="section-heading section-heading--stacked">
-          <div>
-            <p className="section-eyebrow">En bref</p>
-            <h2>Les repères essentiels</h2>
-          </div>
-          <p className="section-intro">
-            L'objectif est d'identifier rapidement les critères qui comptent vraiment,
-            puis de prendre une décision plus éclairée.
-          </p>
-        </div>
-
-        <div className="quick-guide-grid">
-          {guide.cards.map((card) => (
-            <article key={card.title} className="about-card">
-              <h3 className="about-title">{card.title}</h3>
-              <p>{card.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
       {guide.sections.map((section) => (
         <section key={section.title} className="about-card">
           <h2 className="about-title">{section.title}</h2>

@@ -3,11 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { getSiteUrl } from "@/lib/site";
 
-type MethodCard = {
-  title: string;
-  text: string;
-};
-
 type MethodSection = {
   title: string;
   paragraphs: string[];
@@ -18,21 +13,6 @@ type MethodFaqItem = {
   question: string;
   answer: string;
 };
-
-const keyPoints: MethodCard[] = [
-  {
-    title: "Transparence du parcours",
-    text: "Un praticien sérieux explique clairement sa formation, son expérience et les sujets sur lesquels il accompagne."
-  },
-  {
-    title: "Clarté des limites",
-    text: "Il sait dire ce qui relève de son accompagnement, ce qui n'en relève pas et quand un autre professionnel doit intervenir."
-  },
-  {
-    title: "Discours mesuré",
-    text: "Il ne promet ni guérison, ni solution universelle, ni opposition systématique avec le monde médical."
-  }
-];
 
 const sections: MethodSection[] = [
   {
@@ -230,38 +210,7 @@ export default function MethodePage() {
               bons repères tiennent surtout à la transparence, à la clarté des limites et à
               la qualité du premier échange.
             </p>
-
-            <div className="hero-actions">
-              <Link className="btn" href="#method-essentials" prefetch={false}>
-                Les repères essentiels
-              </Link>
-              <Link className="btn btn-secondary" href="#faq-title" prefetch={false}>
-                Questions fréquentes
-              </Link>
-            </div>
           </div>
-        </div>
-      </section>
-
-      <section id="method-essentials" className="section-shell">
-        <div className="section-heading section-heading--stacked">
-          <div>
-            <p className="section-eyebrow">En bref</p>
-            <h2>Les repères essentiels</h2>
-          </div>
-          <p className="section-intro">
-            Le sérieux d'un praticien se juge moins à sa promesse qu'à sa transparence,
-            à son cadre de travail et à sa capacité à reconnaître ses limites.
-          </p>
-        </div>
-
-        <div className="quick-guide-grid">
-          {keyPoints.map((card) => (
-            <article key={card.title} className="about-card">
-              <h3 className="about-title">{card.title}</h3>
-              <p>{card.text}</p>
-            </article>
-          ))}
         </div>
       </section>
 

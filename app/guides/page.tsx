@@ -136,8 +136,8 @@ export default function GuidesPage() {
         </div>
 
         <p className="about-inline-link">
-          Si vous souhaitez ensuite repérer des praticiens autour de vous, vous pouvez
-          aussi consulter <Link href="/carte">la carte</Link>.
+          Commencez par le sujet le plus proche de votre situation, puis comparez les
+          critères proposés avec votre besoin réel avant de prendre rendez-vous.
         </p>
       </section>
 

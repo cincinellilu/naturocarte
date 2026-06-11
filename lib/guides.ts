@@ -140,7 +140,18 @@ export const GUIDE_PAGES: GuidePage[] = [
       }
     ],
     relatedLinks: [
-      { href: "/carte", label: "Voir les naturopathes autour de vous sur la carte" }
+      {
+        href: "/methode",
+        label: "Comment évaluer le sérieux d'un naturopathe ?"
+      },
+      {
+        href: "/guides/naturopathe-ou-dieteticien-quelles-differences",
+        label: "Naturopathe ou diététicien : quelle différence ?"
+      },
+      {
+        href: "/guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france",
+        label: "Comment organiser sa recherche près de chez soi ?"
+      }
     ]
   },
   {
@@ -244,8 +255,16 @@ export const GUIDE_PAGES: GuidePage[] = [
     ],
     relatedLinks: [
       {
-        href: "/carte",
-        label: "Chercher un praticien près de chez vous sur la carte"
+        href: "/guides/comment-choisir-un-naturopathe-a-paris",
+        label: "Comment choisir un naturopathe ?"
+      },
+      {
+        href: "/methode",
+        label: "Quels signaux montrent qu'un praticien est sérieux ?"
+      },
+      {
+        href: "/guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france",
+        label: "Comment trouver un praticien proche de chez soi ?"
       }
     ]
   },
@@ -254,7 +273,7 @@ export const GUIDE_PAGES: GuidePage[] = [
     title: "Trouver un naturopathe autour de moi en Île-de-France",
     seoTitle: "Trouver un naturopathe autour de moi : critères utiles en Île-de-France",
     description:
-      "Repères concrets pour trouver un naturopathe proche de chez soi, définir un bon périmètre de recherche et comparer plusieurs praticiens.",
+      "Repères concrets pour trouver un naturopathe proche de chez soi, définir un périmètre réaliste et comparer plusieurs praticiens.",
     keywords: [
       "trouver un naturopathe autour de moi",
       "trouver un naturopathe près de chez moi",
@@ -266,8 +285,8 @@ export const GUIDE_PAGES: GuidePage[] = [
       "Chercher un naturopathe “autour de moi” paraît simple, mais la proximité n'est pas qu'une affaire de kilomètres. Pour faire un choix utile, il faut définir un périmètre réaliste, comparer plusieurs praticiens avec les bons critères et ne pas confondre accessibilité et qualité d'accompagnement.",
     cards: [
       {
-        title: "Définir une zone réaliste",
-        text: "Le bon périmètre de recherche dépend surtout de votre temps de trajet, de votre rythme et de la fréquence des rendez-vous."
+        title: "Définir un périmètre réaliste",
+        text: "Le bon périmètre dépend surtout de votre temps de trajet, de votre rythme et de la fréquence possible des rendez-vous."
       },
       {
         title: "Comparer sur des critères stables",
@@ -283,7 +302,7 @@ export const GUIDE_PAGES: GuidePage[] = [
       "Comparer plusieurs praticiens sur la formation, le cadre et l'adéquation au besoin.",
       "Ne pas choisir uniquement sur la proximité ou la disponibilité immédiate.",
       "Construire une short list courte avec des critères identiques pour chaque option.",
-      "Élargir progressivement la zone de recherche si les résultats locaux ne sont pas convaincants."
+      "Élargir progressivement le périmètre si les options les plus proches ne sont pas convaincantes."
     ],
     sections: [
       {
@@ -334,9 +353,9 @@ export const GUIDE_PAGES: GuidePage[] = [
         ]
       },
       {
-        title: "Quand élargir sa zone de recherche ?",
+        title: "Quand élargir son périmètre ?",
         paragraphs: [
-          "Si les praticiens proches ne correspondent pas à votre besoin, il peut être pertinent d'élargir progressivement la zone de recherche. En Île-de-France, une ville limitrophe ou un secteur mieux desservi peut parfois être plus pratique qu'une adresse théoriquement plus proche.",
+          "Si les praticiens proches ne correspondent pas à votre besoin, il peut être pertinent d'élargir progressivement votre périmètre. En Île-de-France, une ville limitrophe ou un secteur mieux desservi peut parfois être plus pratique qu'une adresse théoriquement plus proche.",
           "L'objectif n'est pas d'aller le plus loin possible, mais d'ouvrir le champ juste assez pour trouver un praticien dont le cadre vous paraît plus sérieux, plus clair et plus compatible avec votre quotidien."
         ]
       }
@@ -360,8 +379,16 @@ export const GUIDE_PAGES: GuidePage[] = [
     ],
     relatedLinks: [
       {
-        href: "/carte",
-        label: "Consulter la carte pour repérer des praticiens autour de vous"
+        href: "/guides/comment-choisir-un-naturopathe-a-paris",
+        label: "Quels critères regarder pour choisir un naturopathe ?"
+      },
+      {
+        href: "/methode",
+        label: "Comment repérer un cadre d'accompagnement sérieux ?"
+      },
+      {
+        href: "/guides/naturopathe-ou-dieteticien-quelles-differences",
+        label: "Naturopathe ou diététicien : qui consulter ?"
       }
     ]
   }

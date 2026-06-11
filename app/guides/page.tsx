@@ -5,26 +5,44 @@ import { GUIDE_INDEX_ENTRIES } from "@/lib/guides";
 import { getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
+const guideHubEntries = [
+  ...GUIDE_INDEX_ENTRIES,
+  {
+    slug: "methode",
+    title: "Comment évaluer le sérieux d'un naturopathe ?",
+    description:
+      "Des repères concrets pour distinguer un cadre sérieux d'un discours trop flou, trop commercial ou trop prometteur.",
+    href: "/methode",
+    ctaLabel: "Évaluer le sérieux d'un naturopathe"
+  }
+];
 
 export const metadata: Metadata = {
-  title: "Guides pratiques",
+  title: "Comment choisir un naturopathe : guides pratiques",
   description:
-    "Des pages simples pour mieux choisir un naturopathe, comprendre les différences avec la diététique et trouver plus vite une fiche utile.",
+    "Guides pédagogiques pour choisir un naturopathe, comprendre la différence avec un diététicien, trouver un naturopathe autour de soi et évaluer le sérieux d'un praticien.",
+  keywords: [
+    "comment choisir un naturopathe",
+    "comment trouver un naturopathe",
+    "naturopathe ou diététicien",
+    "comment savoir si un naturopathe est sérieux",
+    "guides naturopathe"
+  ],
   alternates: {
     canonical: "/guides"
   },
   openGraph: {
-    title: "Guides pratiques | NaturoCarte",
+    title: "Comment choisir un naturopathe : guides pratiques | NaturoCarte",
     description:
-      "Des pages simples pour mieux choisir un naturopathe, comprendre les différences avec la diététique et trouver plus vite une fiche utile.",
+      "Guides pédagogiques pour choisir un naturopathe, comprendre la différence avec un diététicien, trouver un naturopathe autour de soi et évaluer le sérieux d'un praticien.",
     url: "/guides",
     type: "website"
   },
   twitter: {
     card: "summary",
-    title: "Guides pratiques | NaturoCarte",
+    title: "Comment choisir un naturopathe : guides pratiques | NaturoCarte",
     description:
-      "Des pages simples pour mieux choisir un naturopathe, comprendre les différences avec la diététique et trouver plus vite une fiche utile."
+      "Guides pédagogiques pour choisir un naturopathe, comprendre la différence avec un diététicien, trouver un naturopathe autour de soi et évaluer le sérieux d'un praticien."
   }
 };
 
@@ -32,15 +50,19 @@ export default function GuidesPage() {
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Guides pratiques NaturoCarte",
+    name: "Guides pour choisir un naturopathe",
     url: `${siteUrl}/guides`,
+    description:
+      "Ressources pédagogiques pour choisir un naturopathe, comparer plusieurs praticiens et comprendre les différences avec un diététicien.",
     inLanguage: "fr-FR",
-    about: "Guides utiles pour trouver un naturopathe en Île-de-France",
+    about: "Repères pédagogiques pour choisir un naturopathe et comparer plusieurs praticiens",
+    keywords:
+      "comment choisir un naturopathe, comment trouver un naturopathe, naturopathe ou diététicien, naturopathe sérieux",
     mainEntity: {
       "@type": "ItemList",
       itemListOrder: "https://schema.org/ItemListOrderAscending",
-      numberOfItems: GUIDE_INDEX_ENTRIES.length,
-      itemListElement: GUIDE_INDEX_ENTRIES.map((entry, index) => ({
+      numberOfItems: guideHubEntries.length,
+      itemListElement: guideHubEntries.map((entry, index) => ({
         "@type": "ListItem",
         position: index + 1,
         name: entry.title,
@@ -76,11 +98,13 @@ export default function GuidesPage() {
           </nav>
 
           <div className="page-hero-copy about-hero-copy">
-            <p className="page-eyebrow">NaturoCarte</p>
-            <h1>Guides pratiques</h1>
+            <p className="page-eyebrow">Questions fréquentes</p>
+            <h1>Comment choisir un naturopathe</h1>
             <p className="page-lead">
-              Des pages utiles pour choisir plus vite, comprendre les différences de
-              positionnement et aller directement vers la carte ou les fiches locales.
+              Ces contenus répondent aux questions les plus fréquentes avant un premier
+              rendez-vous : comment choisir un naturopathe, comment en trouver un près de
+              chez soi, comment le comparer à d'autres praticiens, comment distinguer
+              naturopathe et diététicien, et comment repérer un cadre sérieux.
             </p>
           </div>
         </div>
@@ -90,22 +114,22 @@ export default function GuidesPage() {
         <div className="section-heading section-heading--stacked">
           <div>
             <p className="section-eyebrow">À lire</p>
-            <h2>Trois guides pour mieux chercher</h2>
+            <h2>Quatre guides pour choisir, comparer et trouver un naturopathe</h2>
           </div>
           <p className="section-intro">
-            Chaque guide répond à un besoin concret et renvoie vers la carte, l’annuaire
-            ou les pages locales quand c’est plus utile.
+            Chaque contenu cible une intention de recherche précise et apporte des repères
+            concrets avant de prendre rendez-vous avec un praticien.
           </p>
         </div>
 
         <div className="quick-guide-grid">
-          {GUIDE_INDEX_ENTRIES.map((entry) => (
+          {guideHubEntries.map((entry) => (
             <article key={entry.slug} className="about-card">
               <h3 className="about-title">{entry.title}</h3>
               <p>{entry.description}</p>
               <p className="about-inline-link">
                 <Link href={entry.href} prefetch={false}>
-                  Lire le guide
+                  {"ctaLabel" in entry ? entry.ctaLabel : entry.title}
                 </Link>
               </p>
             </article>
@@ -116,42 +140,64 @@ export default function GuidesPage() {
       <section className="section-shell">
         <div className="section-heading section-heading--stacked">
           <div>
-            <p className="section-eyebrow">Pages locales</p>
-            <h2>Des points d’entrée simples</h2>
+            <p className="section-eyebrow">Selon votre situation</p>
+            <h2>Quelle page lire selon votre question</h2>
           </div>
           <p className="section-intro">
-            Commencez par la carte si vous partez d’une adresse, ou par les pages Paris
-            et Île-de-France si vous voulez filtrer plus vite.
+            Le bon point de départ dépend surtout de la question que vous vous posez
+            avant de consulter.
           </p>
         </div>
 
         <div className="quick-guide-grid">
           <article className="about-card">
-            <h3 className="about-title">Carte</h3>
-            <p>La meilleure porte d’entrée quand vous cherchez autour d’une adresse précise.</p>
+            <h3 className="about-title">Vous hésitez entre plusieurs praticiens</h3>
+            <p>
+              Commencez par les critères de choix : formation, cadre d'accompagnement,
+              signaux d'alerte et questions à poser.
+            </p>
             <p className="about-inline-link">
-              <Link href="/carte" prefetch={false}>
-                Ouvrir la carte
+              <Link href="/guides/comment-choisir-un-naturopathe-a-paris" prefetch={false}>
+                Comment choisir un naturopathe ?
               </Link>
             </p>
           </article>
 
           <article className="about-card">
-            <h3 className="about-title">Paris par arrondissement</h3>
-            <p>Une vue locale pour comparer rapidement les fiches d’un secteur précis.</p>
+            <h3 className="about-title">Vous ne savez pas quel professionnel consulter</h3>
+            <p>
+              Commencez par la différence entre naturopathe et diététicien pour clarifier
+              le rôle, la formation et les cas d'usage.
+            </p>
             <p className="about-inline-link">
-              <Link href="/naturopathe-paris" prefetch={false}>
-                Voir Paris
+              <Link href="/guides/naturopathe-ou-dieteticien-quelles-differences" prefetch={false}>
+                Naturopathe ou diététicien ?
               </Link>
             </p>
           </article>
 
           <article className="about-card">
-            <h3 className="about-title">Annuaire Île-de-France</h3>
-            <p>Une vue plus large si vous voulez repartir d’un ensemble de départements.</p>
+            <h3 className="about-title">Vous cherchez un praticien proche de chez vous</h3>
+            <p>
+              Commencez par la méthode de recherche locale : périmètre réaliste,
+              comparaison utile et arbitrage entre proximité et pertinence.
+            </p>
             <p className="about-inline-link">
-              <Link href="/annuaire-naturopathes" prefetch={false}>
-                Voir l’annuaire
+              <Link href="/guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france" prefetch={false}>
+                Trouver un naturopathe autour de moi
+              </Link>
+            </p>
+          </article>
+
+          <article className="about-card">
+            <h3 className="about-title">Vous voulez vérifier si un praticien inspire confiance</h3>
+            <p>
+              Commencez par les repères de sérieux : transparence, limites, posture,
+              promesses et rapport aux produits.
+            </p>
+            <p className="about-inline-link">
+              <Link href="/methode" prefetch={false}>
+                Comment savoir si un naturopathe est sérieux ?
               </Link>
             </p>
           </article>

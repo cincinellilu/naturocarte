@@ -34,10 +34,11 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${guide.title}`;
+  const title = guide.seoTitle ?? guide.title;
   return {
     title,
     description: guide.description,
+    keywords: guide.keywords,
     alternates: {
       canonical: `/guides/${guide.slug}`
     },
@@ -109,15 +110,34 @@ export default async function GuidePage({
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: guide.title,
+    headline: guide.seoTitle ?? guide.title,
     description: guide.description,
     url: canonicalUrl,
     inLanguage: "fr-FR",
+    mainEntityOfPage: canonicalUrl,
+    articleSection: guide.sections.map((section) => section.title),
+    keywords: guide.keywords?.join(", "),
     author: {
       "@type": "Organization",
       name: "NaturoCarte"
     }
   };
+
+  const howToJsonLd = guide.howToSteps
+    ? {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: guide.seoTitle ?? guide.title,
+        description: guide.description,
+        inLanguage: "fr-FR",
+        step: guide.howToSteps.map((step, index) => ({
+          "@type": "HowToStep",
+          position: index + 1,
+          name: step,
+          text: step
+        }))
+      }
+    : null;
 
   return (
     <article className="about-page guide-article-page">
@@ -150,31 +170,31 @@ export default async function GuidePage({
           </nav>
 
           <div className="page-hero-copy about-hero-copy">
-            <p className="page-eyebrow">Guide NaturoCarte</p>
+            <p className="page-eyebrow">Guide pratique</p>
             <h1>{guide.title}</h1>
             <p className="page-lead">{guide.intro}</p>
 
             <div className="hero-actions">
-              <Link className="btn" href="/carte" prefetch={false}>
-                Ouvrir la carte
+              <Link className="btn" href="#guide-essentials" prefetch={false}>
+                Les repères essentiels
               </Link>
-              <Link className="btn btn-secondary" href="/guides" prefetch={false}>
-                Tous les guides
+              <Link className="btn btn-secondary" href="#faq-title" prefetch={false}>
+                Questions fréquentes
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section-shell">
+      <section id="guide-essentials" className="section-shell">
         <div className="section-heading section-heading--stacked">
           <div>
             <p className="section-eyebrow">En bref</p>
-            <h2>Les gestes utiles</h2>
+            <h2>Les repères essentiels</h2>
           </div>
           <p className="section-intro">
-            Gardez la recherche simple: un secteur clair, quelques fiches comparées et un
-            regard factuel sur les informations visibles.
+            L'objectif est d'identifier rapidement les critères qui comptent vraiment,
+            puis de prendre une décision plus éclairée.
           </p>
         </div>
 
@@ -250,6 +270,13 @@ export default async function GuidePage({
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      {howToJsonLd ? (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+        />
+      ) : null}
     </article>
   );
 }

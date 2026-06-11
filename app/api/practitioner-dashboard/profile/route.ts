@@ -14,6 +14,12 @@ import {
   PRACTITIONER_PLAN_VISIBILITY
 } from "@/lib/practitioner-plans";
 import {
+  isMissingPractitionerCredentialsColumnError,
+  normalizePractitionerSelectValue,
+  PRACTITIONER_AFFILIATION_OPTIONS,
+  PRACTITIONER_TRAINING_OPTIONS
+} from "@/lib/practitioner-credentials";
+import {
   buildPractitionerTariffsText,
   isMissingPractitionerTariffsColumnError
 } from "@/lib/practitioner-tariffs";
@@ -33,6 +39,11 @@ type PractitionerAddressRow = {
 type GeocodedAddress = {
   lat: number;
   lng: number;
+};
+
+type PractitionerUpdateResult = {
+  data: { slug: string } | null;
+  error: unknown;
 };
 
 function isContactSlot(value: string): value is (typeof CONTACT_SLOTS)[number] {
@@ -99,6 +110,14 @@ export async function POST(request: Request) {
   const bookingUrl = normalizeNullable(formData.get("booking_url"));
   const website = normalizeNullable(formData.get("website"));
   const description = normalizeNullable(formData.get("description"));
+  const trainingSchool = normalizePractitionerSelectValue(
+    formData.get("training_school"),
+    PRACTITIONER_TRAINING_OPTIONS
+  );
+  const professionalAffiliation = normalizePractitionerSelectValue(
+    formData.get("professional_affiliation"),
+    PRACTITIONER_AFFILIATION_OPTIONS
+  );
   const primaryTariff = normalizeNullable(formData.get("tariff_primary"));
   const additionalTariffs = normalizeNullable(formData.get("tariff_additional"));
   const adresse = normalizeNullable(formData.get("adresse"));
@@ -220,29 +239,67 @@ export async function POST(request: Request) {
           booking_url: bookingUrl,
           website,
           description,
+          training_school: trainingSchool,
+          professional_affiliation: professionalAffiliation,
           tarifs
         };
 
-  let updateResult = await supabase
-    .from("practitioners")
-    .update(updatePayload)
-    .eq("id", account.practitioner_id)
-    .select("slug")
-    .maybeSingle();
+  let includeTariffs = plan === PRACTITIONER_PLAN_VISIBILITY;
+  let includeCredentials = plan === PRACTITIONER_PLAN_VISIBILITY;
+  let updateResult: PractitionerUpdateResult | null = null;
 
-  if (updateResult.error && isMissingPractitionerTariffsColumnError(updateResult.error)) {
-    const updatePayloadWithoutTariffs = { ...updatePayload } as Record<string, unknown>;
-    delete updatePayloadWithoutTariffs.tarifs;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const payload =
+      plan === PRACTITIONER_PLAN_PRESENCE
+        ? updatePayload
+        : {
+            ...addressPayload,
+            phone,
+            email,
+            booking_url: bookingUrl,
+            website,
+            description,
+            ...(includeCredentials
+              ? {
+                  training_school: trainingSchool,
+                  professional_affiliation: professionalAffiliation
+                }
+              : {}),
+            ...(includeTariffs ? { tarifs } : {})
+          };
 
     updateResult = await supabase
       .from("practitioners")
-      .update(updatePayloadWithoutTariffs)
+      .update(payload)
       .eq("id", account.practitioner_id)
       .select("slug")
       .maybeSingle();
+
+    if (!updateResult.error) {
+      break;
+    }
+
+    let changed = false;
+
+    if (includeCredentials && isMissingPractitionerCredentialsColumnError(updateResult.error)) {
+      includeCredentials = false;
+      changed = true;
+    }
+
+    if (includeTariffs && isMissingPractitionerTariffsColumnError(updateResult.error)) {
+      includeTariffs = false;
+      changed = true;
+    }
+
+    if (!changed) {
+      break;
+    }
   }
 
-  const { data: practitioner, error: updateError } = updateResult;
+  const { data: practitioner, error: updateError } = updateResult ?? {
+    data: null,
+    error: new Error("Missing update result")
+  };
 
   if (updateError || !practitioner) {
     redirectUrl.searchParams.set("error", "save_failed");
@@ -269,6 +326,8 @@ export async function POST(request: Request) {
       has_booking_url: Boolean(bookingUrl),
       has_website: Boolean(website),
       has_description: Boolean(description),
+      has_training_school: Boolean(trainingSchool),
+      has_professional_affiliation: Boolean(professionalAffiliation),
       has_tariffs: Boolean(tarifs),
       address_changed: addressChanged,
       coordinates_were_missing: coordinatesMissing,

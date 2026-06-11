@@ -22,6 +22,11 @@ import {
   PRACTITIONER_PLANS
 } from "@/lib/practitioner-plans";
 import {
+  isMissingPractitionerCredentialsColumnError,
+  PRACTITIONER_AFFILIATION_OPTIONS,
+  PRACTITIONER_TRAINING_OPTIONS
+} from "@/lib/practitioner-credentials";
+import {
   isInternalTestPractitionerStatus,
   isPublicPractitionerStatus
 } from "@/lib/practitioner-status";
@@ -69,6 +74,8 @@ type Practitioner = {
   photo_url?: string | null;
   description: string | null;
   tarifs?: string | null;
+  training_school?: string | null;
+  professional_affiliation?: string | null;
   status: string;
 };
 
@@ -311,28 +318,73 @@ export default async function PractitionerDashboardPage({
   let managedCabinets: ManagedCabinet[] = [];
 
   if (practitionerIds.length > 0) {
-    const loadPractitioners = async (includeTariffs: boolean) =>
+    const loadPractitioners = async (params: {
+      includeTariffs: boolean;
+      includeCredentials: boolean;
+    }) =>
       supabase
         .from("practitioners")
         .select(
-          includeTariffs
-            ? "id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status"
-            : "id, slug, first_name, last_name, siret, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status"
+          [
+            "id",
+            "slug",
+            "first_name",
+            "last_name",
+            "siret",
+            "adresse",
+            "postal_code",
+            "city",
+            "lat",
+            "lng",
+            "phone",
+            "email",
+            "website",
+            "booking_url",
+            "photo_url",
+            "description",
+            ...(params.includeCredentials
+              ? ["training_school", "professional_affiliation"]
+              : []),
+            ...(params.includeTariffs ? ["tarifs"] : []),
+            "status"
+          ].join(", ")
         )
         .in("id", practitionerIds);
 
     let practitionersData: Practitioner[] = [];
-    const result = await loadPractitioners(true);
+    let includeTariffs = true;
+    let includeCredentials = true;
+    let result = await loadPractitioners({ includeTariffs, includeCredentials });
 
-    if (result.error && isMissingPractitionerTariffsColumnError(result.error)) {
-      const fallback = await loadPractitioners(false);
-      practitionersData = ((fallback.data ?? []) as unknown as Practitioner[]).map((practitioner) => ({
-        ...practitioner,
-        tarifs: null
-      }));
-    } else {
-      practitionersData = (result.data ?? []) as unknown as Practitioner[];
+    while (result.error) {
+      let changed = false;
+
+      if (includeCredentials && isMissingPractitionerCredentialsColumnError(result.error)) {
+        includeCredentials = false;
+        changed = true;
+      }
+
+      if (includeTariffs && isMissingPractitionerTariffsColumnError(result.error)) {
+        includeTariffs = false;
+        changed = true;
+      }
+
+      if (!changed) {
+        break;
+      }
+
+      result = await loadPractitioners({ includeTariffs, includeCredentials });
     }
+
+    const loadedPractitioners = (result.data ?? []) as unknown as Practitioner[];
+    practitionersData = loadedPractitioners.map((managedPractitioner) => ({
+      ...managedPractitioner,
+      tarifs: includeTariffs ? managedPractitioner.tarifs ?? null : null,
+      training_school: includeCredentials ? managedPractitioner.training_school ?? null : null,
+      professional_affiliation: includeCredentials
+        ? managedPractitioner.professional_affiliation ?? null
+        : null
+    }));
 
     const practitionersById = new Map(
       practitionersData.map((practitioner) => [practitioner.id, practitioner])
@@ -780,6 +832,64 @@ export default async function PractitionerDashboardPage({
                     defaultValue={practitioner.description ?? ""}
                     placeholder="Description de votre approche"
                   />
+                </fieldset>
+              )}
+
+              {!isPaid ? (
+                <section className="dashboard-fieldset dashboard-fieldset--enriched dashboard-fieldset--collapsed is-locked">
+                  <div>
+                    <p className="dashboard-fieldset-title">Formation et affiliation professionnelle</p>
+                    <p className="dashboard-help">
+                      Mettez en avant votre école ou formation principale ainsi que votre
+                      affiliation professionnelle pour renforcer la confiance sur votre fiche.
+                    </p>
+                  </div>
+                  <a className="dashboard-lock-callout dashboard-lock-callout--link" href={buildDashboardHref({ plans: "open" }, "#forfaits")}>
+                    <span className="dashboard-lock-icon" aria-hidden="true" />
+                    <strong>Disponible avec Visibilité+</strong>
+                  </a>
+                </section>
+              ) : (
+                <fieldset className="dashboard-fieldset">
+                  <legend>Formation et affiliation professionnelle</legend>
+                  <p className="dashboard-help">
+                    Ces informations sont affichées sur votre fiche détaillée pour aider les
+                    visiteurs à mieux situer votre parcours.
+                  </p>
+                  <label className="practitioner-form-label">
+                    École ou formation principale
+                    <select
+                      className="practitioner-form-input practitioner-form-select"
+                      name="training_school"
+                      defaultValue={practitioner.training_school ?? ""}
+                    >
+                      <option value="">Sélectionner votre école ou formation</option>
+                      {PRACTITIONER_TRAINING_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="practitioner-form-label">
+                    Affiliation professionnelle
+                    <select
+                      className="practitioner-form-input practitioner-form-select"
+                      name="professional_affiliation"
+                      defaultValue={practitioner.professional_affiliation ?? ""}
+                    >
+                      <option value="">Sélectionner votre affiliation</option>
+                      {PRACTITIONER_AFFILIATION_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <p className="dashboard-help">
+                    Si votre école ou votre affiliation n’apparaît pas dans la liste, l’équipe
+                    pourra l’ajouter.
+                  </p>
                 </fieldset>
               )}
 

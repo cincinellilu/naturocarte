@@ -38,6 +38,9 @@ Le build nettoie aussi `.next` avant compilation. Si le CSS ne charge pas en loc
 npm run start
 ```
 
+Le projet est compile en mode standalone. Apres `npm run build`, le script `start`
+lance donc `.next/standalone/server.js` directement.
+
 ## Variables d'environnement
 
 Copier `.env.local.example` vers `.env.local` et adapter:

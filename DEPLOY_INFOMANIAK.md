@@ -31,6 +31,7 @@ set -a && . ./.env.production && set +a && PORT=3000 npm run start:prod
 ```
 
 Le script `start:prod` bind en `0.0.0.0` et utilise `PORT`.
+Comme le projet utilise `output: "standalone"`, le demarrage se fait avec `node .next/standalone/server.js` et non avec `next start`.
 Le script `build` nettoie `.next` avant compilation. Apres un deploiement, redemarrer le process Node pour eviter qu'un ancien serveur conserve des references vers des chunks CSS/JS qui n'existent plus.
 
 Si ton panel impose une seule commande de build, utilise plutot:

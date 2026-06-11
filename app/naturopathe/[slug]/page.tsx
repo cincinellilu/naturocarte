@@ -8,6 +8,11 @@ import PractitionerStatsTracker from "@/components/PractitionerStatsTracker";
 import PractitionerTrackedLink from "@/components/PractitionerTrackedLink";
 import { fetchAllSupabaseRows } from "@/lib/fetch-all-supabase-rows";
 import { getDepartmentFromPostalCode } from "@/lib/locations";
+import {
+  getPractitionerAffiliationLabel,
+  getPractitionerTrainingLabel,
+  isMissingPractitionerCredentialsColumnError
+} from "@/lib/practitioner-credentials";
 import { PUBLIC_PRACTITIONER_STATUSES } from "@/lib/practitioner-status";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getSiteUrl } from "@/lib/site";
@@ -41,6 +46,8 @@ type Practitioner = {
   photo_url?: string | null;
   description: string | null;
   tarifs?: string | null;
+  training_school?: string | null;
+  professional_affiliation?: string | null;
   status: string;
   practitioner_accounts:
     | PractitionerPublicAccountInput[]
@@ -67,29 +74,74 @@ type FavoriteRow = {
 async function getPublishedPractitioner(slug: string): Promise<Practitioner | null> {
   const supabase = getSupabaseServerClient();
 
-  async function run(includeTariffs: boolean) {
+  async function run(params: { includeTariffs: boolean; includeCredentials: boolean }) {
     return supabase
       .from("practitioners")
       .select(
-        includeTariffs
-          ? "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, tarifs, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
-          : "id, slug, first_name, last_name, adresse, postal_code, city, lat, lng, phone, email, website, booking_url, photo_url, description, status, practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
+        [
+          "id",
+          "slug",
+          "first_name",
+          "last_name",
+          "adresse",
+          "postal_code",
+          "city",
+          "lat",
+          "lng",
+          "phone",
+          "email",
+          "website",
+          "booking_url",
+          "photo_url",
+          "description",
+          ...(params.includeCredentials
+            ? ["training_school", "professional_affiliation"]
+            : []),
+          ...(params.includeTariffs ? ["tarifs"] : []),
+          "status",
+          "practitioner_accounts(id, plan, contact_slot, stripe_subscription_status)"
+        ].join(", ")
       )
       .eq("slug", slug)
       .in("status", [...PUBLIC_PRACTITIONER_STATUSES])
       .maybeSingle();
   }
 
-  const result = await run(true);
+  let includeTariffs = true;
+  let includeCredentials = true;
+  let result = await run({ includeTariffs, includeCredentials });
 
-  if (result.error && isMissingPractitionerTariffsColumnError(result.error)) {
-    const fallback = await run(false);
-    if (fallback.error || !fallback.data) return null;
-    return { ...(fallback.data as unknown as Practitioner), tarifs: null };
+  while (result.error) {
+    let changed = false;
+
+    if (includeCredentials && isMissingPractitionerCredentialsColumnError(result.error)) {
+      includeCredentials = false;
+      changed = true;
+    }
+
+    if (includeTariffs && isMissingPractitionerTariffsColumnError(result.error)) {
+      includeTariffs = false;
+      changed = true;
+    }
+
+    if (!changed) {
+      break;
+    }
+
+    result = await run({ includeTariffs, includeCredentials });
   }
 
   if (result.error || !result.data) return null;
-  return result.data as unknown as Practitioner;
+  const publishedPractitioner = result.data as unknown as Practitioner;
+
+  return {
+    ...publishedPractitioner,
+    tarifs: includeTariffs ? publishedPractitioner.tarifs ?? null : null,
+    training_school: includeCredentials ? publishedPractitioner.training_school ?? null : null,
+    professional_affiliation: includeCredentials
+      ? publishedPractitioner.professional_affiliation ?? null
+      : null
+  };
 }
 
 async function getPublishedPractitionerReviews(practitionerId: string): Promise<PractitionerReview[]> {
@@ -438,6 +490,13 @@ export default async function PractitionerPage({
     ? splitTextIntoParagraphs(practitionerDescription)
     : [];
   const visiblePhotoUrl = isPartner ? practitioner.photo_url?.trim() || null : null;
+  const trainingSchoolLabel = isPartner
+    ? getPractitionerTrainingLabel(practitioner.training_school)
+    : null;
+  const professionalAffiliationLabel = isPartner
+    ? getPractitionerAffiliationLabel(practitioner.professional_affiliation)
+    : null;
+  const shouldShowCredentials = Boolean(trainingSchoolLabel || professionalAffiliationLabel);
   const tariffItems = parsePractitionerTariffs(practitioner.tarifs ?? null);
   const primaryTariff = tariffItems[0] ?? null;
   const additionalTariffs = tariffItems.slice(1);
@@ -668,6 +727,22 @@ export default async function PractitionerPage({
                   <strong>Département :</strong> {departmentLabel ?? "Département non renseigné"}
                 </p>
               </section>
+
+              {shouldShowCredentials ? (
+                <section className="practitioner-detail-tile">
+                  <p className="practitioner-detail-label">Parcours professionnel</p>
+                  {trainingSchoolLabel ? (
+                    <p className="practitioner-detail-value">
+                      <strong>Formation principale :</strong> {trainingSchoolLabel}
+                    </p>
+                  ) : null}
+                  {professionalAffiliationLabel ? (
+                    <p className="practitioner-detail-value">
+                      <strong>Affiliation professionnelle :</strong> {professionalAffiliationLabel}
+                    </p>
+                  ) : null}
+                </section>
+              ) : null}
 
               <section className="practitioner-detail-tile practitioner-detail-tile--contact">
                 <p className="practitioner-detail-label">Coordonnées</p>

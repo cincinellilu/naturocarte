@@ -1,0 +1,403 @@
+Export contenus pedagogie / acquisition
+
+Date d'export : 2026-06-11
+
+Perimetre retenu :
+- /methode
+- /guides
+- sous-pages de guides :
+  - /guides/comment-choisir-un-naturopathe-a-paris
+  - /guides/naturopathe-ou-dieteticien-quelles-differences
+  - /guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france
+
+Vue d'ensemble
+
+Nombre total de pages exportees : 5
+
+Angle editorial actuel constate :
+- contenu utile mais souvent oriente vers la navigation produit
+- renvois frequents vers la carte, l'annuaire, Paris ou l'espace praticien
+- pedagogie presente, mais rarement developpee en profondeur
+- structure tres homogene sur les guides, ce qui facilite une reecriture globale
+
+Pages internes citees depuis ces contenus :
+- /carte
+- /annuaire-naturopathes
+- /naturopathe-paris
+- /praticiens
+- /a-propos
+
+Structure commune des pages guide detail
+
+Source template : app/guides/[slug]/page.tsx
+
+Blocs visibles sur chaque guide :
+1. Hero
+   - breadcrumb
+   - eyebrow "Guide NaturoCarte"
+   - h1
+   - intro
+   - CTA "Ouvrir la carte"
+   - CTA secondaire "Tous les guides"
+2. Bloc "En bref"
+   - titre fixe "Les gestes utiles"
+   - intro fixe : "Gardez la recherche simple: un secteur clair, quelques fiches comparees et un regard factuel sur les informations visibles."
+   - 3 cartes
+3. Corps editorial
+   - sections texte
+   - listes a puces eventuelles
+4. FAQ
+5. Bloc "Aller plus loin"
+   - liens internes
+
+Cette structure peut etre conservee si tu veux seulement refaire les contenus, ou retravaillee si tu veux une pedagogie moins "entonnoir produit".
+
+----------------------------------------------------------------
+
+PAGE 1
+
+URL
+/methode
+
+Role actuel
+Page de reassurance sur le fonctionnement du site, la qualite des fiches et la moderation.
+
+Metadonnees
+- Title : Methode et fiabilite
+- Meta description : Decouvrez comment NaturoCarte structure ses fiches, modere les avis et organise les corrections pour proposer un annuaire clair et fiable.
+- Canonical : /methode
+
+Hero
+- Eyebrow : NaturoCarte
+- H1 : Methode et fiabilite
+- Lead : NaturoCarte organise les fiches pour que l'utilisateur comprenne rapidement ce qu'il regarde, d'ou viennent les informations et comment elles peuvent etre corrigees ou completees.
+
+Sections visibles
+
+Ce que le site affiche
+"Le service presente des fiches professionnelles avec les informations utiles pour decider rapidement: nom, localisation, adresse, moyens de contact, site web et, lorsque c'est disponible, prise de rendez-vous, tarifs et avis clients."
+
+"La logique editoriale reste volontairement simple: carte, annuaire, pages locales et fiche detaillee. Pas de comparaison artificielle, pas de classement cache."
+
+Comment les fiches sont mises a jour
+"Les fiches peuvent evoluer dans le temps. Lorsqu'un praticien cree ou retrouve son espace, les informations de contact et de presentation peuvent etre ajustees pour rester exactes."
+
+"Les modifications sont traitees de maniere structuree afin d'eviter les doublons, les imprecisions et les changements incoherents."
+
+Lien interne affiche :
+- /praticiens : Acceder a l'espace praticien
+
+Avis clients
+"Les avis deposes via la fiche praticien demandent un email et peuvent contenir un commentaire facultatif. Les avis sont conserves avec une note, une date et un statut de publication avant d'apparaitre publiquement."
+
+"L'objectif est d'offrir un espace lisible et modere, sans affichage d'informations personnelles inutiles."
+
+Ce que NaturoCarte n'est pas
+"NaturoCarte n'est pas un comparateur, n'attribue pas de promesse de resultat et ne remplace pas un avis medical. Le site sert de point d'entree pour trouver plus vite une fiche claire et utile."
+
+"Cette approche permet de rester sobre, transparent et coherent dans le temps."
+
+Aller plus loin
+"Si vous voulez comprendre la presentation de l'annuaire, vous pouvez aussi consulter la page A propos ou passer directement a la carte."
+
+Liens internes affiches :
+- /a-propos
+- /carte
+
+CTA de fin de page
+- /carte : Consulter la carte des naturopathes
+
+Lecture editoriale
+- page tres centree sur NaturoCarte lui-meme
+- peu de pedagogie "metier" ou "comment chercher"
+- forte logique de reassurance produit
+
+----------------------------------------------------------------
+
+PAGE 2
+
+URL
+/guides
+
+Role actuel
+Hub editorial qui regroupe les guides et redirige rapidement vers les entrees produit principales.
+
+Metadonnees
+- Title : Guides pratiques
+- Meta description : Des pages simples pour mieux choisir un naturopathe, comprendre les differences avec la dietetique et trouver plus vite une fiche utile.
+- Canonical : /guides
+
+Hero
+- Eyebrow : NaturoCarte
+- H1 : Guides pratiques
+- Lead : Des pages utiles pour choisir plus vite, comprendre les differences de positionnement et aller directement vers la carte ou les fiches locales.
+
+Sections visibles
+
+A lire
+- Eyebrow : A lire
+- Titre : Trois guides pour mieux chercher
+- Intro : Chaque guide repond a un besoin concret et renvoie vers la carte, l'annuaire ou les pages locales quand c'est plus utile.
+
+Guides listes :
+1. Comment choisir un naturopathe a Paris ?
+   - description : Des reperes concrets pour choisir un naturopathe a Paris selon votre besoin, votre secteur et les informations disponibles.
+   - lien : /guides/comment-choisir-un-naturopathe-a-paris
+2. Naturopathe ou dieteticien : quelles differences ?
+   - description : Une explication simple pour ne pas confondre accompagnement en hygiene de vie et suivi alimentaire encadre.
+   - lien : /guides/naturopathe-ou-dieteticien-quelles-differences
+3. Trouver un naturopathe autour de moi en Ile-de-France
+   - description : Conseils pratiques pour chercher un naturopathe proche de chez soi en Ile-de-France sans perdre de temps dans des listes trop larges.
+   - lien : /guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france
+
+Pages locales
+- Eyebrow : Pages locales
+- Titre : Des points d'entree simples
+- Intro : Commencez par la carte si vous partez d'une adresse, ou par les pages Paris et Ile-de-France si vous voulez filtrer plus vite.
+
+Blocs listes :
+1. Carte
+   - texte : La meilleure porte d'entree quand vous cherchez autour d'une adresse precise.
+   - lien : /carte
+2. Paris par arrondissement
+   - texte : Une vue locale pour comparer rapidement les fiches d'un secteur precis.
+   - lien : /naturopathe-paris
+3. Annuaire Ile-de-France
+   - texte : Une vue plus large si vous voulez repartir d'un ensemble de departements.
+   - lien : /annuaire-naturopathes
+
+Lecture editoriale
+- page de hub claire, mais tres tournee vers l'orientation vers les outils du site
+- pedagogie assez courte
+- peu de matiere editoriale autonome
+
+----------------------------------------------------------------
+
+PAGE 3
+
+URL
+/guides/comment-choisir-un-naturopathe-a-paris
+
+Role actuel
+Guide de selection local centre sur Paris.
+
+Metadonnees
+- Title : Comment choisir un naturopathe a Paris ?
+- Meta description : Des reperes concrets pour choisir un naturopathe a Paris selon votre besoin, votre secteur et les informations disponibles.
+- Canonical : /guides/comment-choisir-un-naturopathe-a-paris
+
+Hero
+- H1 : Comment choisir un naturopathe a Paris ?
+- Intro : A Paris, l'offre peut vite sembler difficile a comparer. Le plus simple est de partir de votre besoin reel, de limiter la recherche a un secteur pratique, puis de verifier quelques criteres factuels avant de prendre contact.
+- CTA principal : /carte
+- CTA secondaire : /guides
+
+Bloc En bref
+1. 1. Clarifier votre besoin
+   - Avant de chercher, notez ce que vous attendez: hygiene de vie, alimentation, stress, sommeil ou accompagnement global.
+2. 2. Choisir une zone realiste
+   - Un cabinet facile d'acces reduit la friction et augmente vos chances d'aller jusqu'au rendez-vous.
+3. 3. Comparer quelques profils
+   - Regardez la presentation, les informations pratiques et la coherence entre votre besoin et l'approche proposee.
+
+Sections
+
+Commencer par votre besoin, pas par une liste de noms
+Paragraphes :
+- La naturopathie peut couvrir des sujets tres varies: equilibre alimentaire, energie, stress, sommeil, digestion, habitudes quotidiennes ou accompagnement de terrain. Tous les praticiens ne mettent pas l'accent sur les memes sujets.
+- Avant de comparer les profils, formulez votre besoin en une phrase simple. Cela vous evite de choisir uniquement sur la proximite ou sur une fiche visuellement plus complete.
+
+Puces :
+- Quel est le sujet principal de votre recherche ?
+- Souhaitez-vous un rendez-vous proche de chez vous ou de votre travail ?
+- Preferez-vous une approche tres pratique, pedagogique ou plus globale ?
+- Avez-vous besoin d'un contact rapide ou d'informations detaillees avant de reserver ?
+
+Verifier les criteres pratiques
+Paragraphes :
+- A Paris, la localisation compte beaucoup. Un cabinet situe dans un arrondissement proche mais mal desservi peut etre moins pratique qu'un praticien un peu plus eloigne mais facile d'acces.
+- Regardez aussi la facilite de prise de contact: telephone, email, site web ou lien de reservation. Plus l'information est claire, plus vous pouvez avancer sans perdre de temps.
+
+Puces :
+- Adresse et arrondissement
+- Temps de trajet realiste
+- Moyen de contact disponible
+- Lien de reservation ou site web si vous voulez en savoir plus
+
+Lire la presentation avec prudence
+Paragraphes :
+- Une presentation claire aide a comprendre l'approche du praticien, mais elle ne doit pas etre lue comme une garantie de resultat. Elle sert surtout a voir si le ton, la methode et les sujets abordes correspondent a votre recherche.
+- Mefiez-vous des promesses trop fortes ou des formulations qui ressemblent a un engagement de guerison. Pour une situation medicale, un suivi ou un avis professionnel de sante reste prioritaire.
+
+Comparer sans se disperser
+Paragraphes :
+- Le bon reflexe n'est pas d'ouvrir toutes les fiches disponibles, mais d'en selectionner trois a cinq dans une zone coherente. Vous pouvez ensuite comparer les informations factuelles et garder les profils les plus lisibles.
+- Si aucun profil ne vous semble adapte, elargissez progressivement: arrondissement voisin, ville limitrophe, puis departement.
+
+FAQ
+1. Faut-il choisir le naturopathe le plus proche ?
+   - Pas forcement. La proximite est importante, mais elle doit etre croisee avec la clarte de la presentation, les moyens de contact et l'adequation avec votre besoin.
+2. Combien de fiches faut-il ouvrir ?
+   - Trois a cinq profils suffisent souvent pour comparer correctement sans se disperser. Au-dela, il devient plus difficile de garder une lecture claire.
+3. Que regarder en premier ?
+   - Commencez par le besoin, l'adresse, les moyens de contact et la presentation de l'accompagnement. Ce sont les reperes les plus utiles avant un premier contact.
+
+Aller plus loin
+- /naturopathe-paris : Voir les pages Paris par arrondissement
+- /carte : Ouvrir la carte
+- /annuaire-naturopathes : Consulter l'annuaire Ile-de-France
+
+Lecture editoriale
+- contenu utile et plutot pedagogique
+- angle tres "recherche de fiche"
+- pedagogie davantage orientee parcours utilisateur que comprehension de la naturopathie ou criteres de choix approfondis
+
+----------------------------------------------------------------
+
+PAGE 4
+
+URL
+/guides/naturopathe-ou-dieteticien-quelles-differences
+
+Role actuel
+Guide comparatif de clarification entre deux types d'accompagnement.
+
+Metadonnees
+- Title : Naturopathe ou dieteticien : quelles differences ?
+- Meta description : Une explication simple pour ne pas confondre accompagnement en hygiene de vie et suivi alimentaire encadre.
+- Canonical : /guides/naturopathe-ou-dieteticien-quelles-differences
+
+Hero
+- H1 : Naturopathe ou dieteticien : quelles differences ?
+- Intro : Les deux metiers peuvent parler d'alimentation, mais ils ne repondent pas au meme besoin. La bonne approche depend surtout de ce que vous cherchez: accompagnement global, conseils d'hygiene de vie ou suivi plus oriente alimentation et sante.
+- CTA principal : /carte
+- CTA secondaire : /guides
+
+Bloc En bref
+1. Naturopathe
+   - Accompagnement autour du bien-etre, de l'hygiene de vie et des habitudes du quotidien.
+2. Dieteticien
+   - Approche centree sur l'alimentation et le cadre nutritionnel, avec un positionnement de sante plus structure.
+3. Le bon reflexe
+   - Choisissez selon votre besoin reel, puis verifiez toujours la fiche et le parcours du professionnel.
+
+Sections
+
+En pratique, ce n'est pas le meme role
+Paragraphes :
+- Un naturopathe est generalement recherche pour un accompagnement plus large autour de l'hygiene de vie, de l'organisation du quotidien et du bien-etre.
+- Un dieteticien intervient dans un cadre plus oriente alimentation et suivi nutritionnel. Si votre situation est medicale ou complexe, l'avis d'un professionnel de sante reste la base.
+
+Puces :
+- Naturopathe: hygiene de vie, equilibre du quotidien, accompagnement global
+- Dieteticien: alimentation, besoins nutritionnels, suivi structure
+- Situation medicale: prioriser le bon interlocuteur de sante avant tout
+
+Comment choisir selon votre besoin
+Paragraphes :
+- Si vous cherchez surtout des reperes concrets pour mieux organiser votre hygiene de vie, une fiche de naturopathe peut suffire a demarrer.
+- Si vous cherchez un suivi alimentaire plus cadre, regardez plutot la specialite et le positionnement du professionnel avant de prendre contact.
+
+Ce que NaturoCarte vous aide a faire
+Paragraphes :
+- NaturoCarte ne tranche pas a votre place. Le site vous aide a comparer les fiches, les coordonnees et les zones de presence pour vous orienter plus vite vers le bon profil.
+- L'important reste de garder une recherche simple, lisible et adaptee a votre besoin reel.
+
+FAQ
+1. Peut-on consulter un naturopathe et un dieteticien ?
+   - Oui, si vos besoins sont differents. L'essentiel est de ne pas melanger les roles et de garder un interlocuteur adapte a chaque sujet.
+2. Un naturopathe remplace-t-il un avis medical ?
+   - Non. La naturopathie peut accompagner une demarche de bien-etre et d'hygiene de vie, mais ne remplace pas un suivi medical.
+3. Comment lire une fiche sur NaturoCarte ?
+   - Concentrez-vous sur les informations factuelles: adresse, contact, zone de presence et maniere dont le praticien presente son accompagnement.
+
+Aller plus loin
+- /carte : Trouver un professionnel sur la carte
+- /naturopathe-paris : Explorer Paris par arrondissement
+- /annuaire-naturopathes : Parcourir l'Ile-de-France
+
+Lecture editoriale
+- c'est la page la plus pedagogique du lot sur le fond
+- la fin rebascule vers l'usage du produit
+- bon candidat pour etre approfondi avec davantage de pedagogie metier et de cas d'usage
+
+----------------------------------------------------------------
+
+PAGE 5
+
+URL
+/guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france
+
+Role actuel
+Guide de recherche locale a l'echelle Ile-de-France.
+
+Metadonnees
+- Title : Trouver un naturopathe autour de moi en Ile-de-France
+- Meta description : Conseils pratiques pour chercher un naturopathe proche de chez soi en Ile-de-France sans perdre de temps dans des listes trop larges.
+- Canonical : /guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france
+
+Hero
+- H1 : Trouver un naturopathe autour de moi en Ile-de-France
+- Intro : En Ile-de-France, la proximite ne se resume pas a une distance en kilometres. Le temps de trajet, les transports, les horaires et la facilite de contact comptent autant que l'adresse du cabinet.
+- CTA principal : /carte
+- CTA secondaire : /guides
+
+Bloc En bref
+1. 1. Partir d'un point concret
+   - Utilisez votre domicile, votre lieu de travail ou une gare pratique comme point de depart.
+2. 2. Raisonner en temps de trajet
+   - Un praticien a 6 km peut etre plus accessible qu'un cabinet a 2 km si les transports sont plus directs.
+3. 3. Garder une comparaison simple
+   - Selectionnez quelques profils proches et verifiez les informations essentielles avant de contacter.
+
+Sections
+
+Definir ce que veut dire "autour de moi"
+Paragraphes :
+- En Ile-de-France, une recherche locale doit tenir compte de votre quotidien. Le bon perimetre n'est pas toujours la ville la plus proche, mais la zone que vous pouvez rejoindre facilement.
+- Avant de comparer les praticiens, choisissez votre point de depart: domicile, travail, ecole, gare ou ligne de transport habituelle.
+
+Puces :
+- Domicile si vous cherchez un rendez-vous pres de chez vous
+- Lieu de travail si vous voulez consulter avant ou apres la journee
+- Gare ou ligne de transport si vous vous deplacez surtout en commun
+- Ville voisine si votre commune offre peu de resultats
+
+Limiter la zone sans la rendre trop etroite
+Paragraphes :
+- Commencer trop large rend la recherche confuse. Commencer trop etroit peut vous faire passer a cote d'un profil plus adapte. Le bon equilibre consiste a partir d'une zone proche, puis a elargir par cercles successifs.
+- Dans Paris, raisonner par arrondissement est souvent efficace. En petite couronne, les villes limitrophes peuvent etre aussi pertinentes que votre ville exacte.
+
+Puces :
+- Commencez par votre ville ou arrondissement
+- Ajoutez les communes voisines si les resultats sont trop faibles
+- Elargissez au departement seulement si necessaire
+- Gardez en tete le temps de trajet reel
+
+Comparer les informations qui changent vraiment la decision
+Paragraphes :
+- Une fois quelques profils reperes, comparez les informations qui influencent reellement votre decision: adresse, moyen de contact, possibilite de reserver, presentation de l'accompagnement et clarte generale.
+- Ne vous arretez pas uniquement a la distance. Un profil mieux explique ou plus facile a contacter peut etre plus pertinent qu'un cabinet legerement plus proche.
+
+Quand prendre contact
+Paragraphes :
+- Quand deux ou trois profils vous semblent coherents, le premier contact permet souvent de clarifier les modalites pratiques: disponibilite, type d'accompagnement, duree du rendez-vous ou informations complementaires.
+- Si la situation concerne un probleme de sante, gardez un cadre clair: la naturopathie ne remplace pas un avis medical ni un suivi par un professionnel de sante.
+
+FAQ
+1. Quelle page utiliser si je connais seulement ma ville ?
+   - Commencez par votre ville, puis ajoutez les communes voisines si les resultats sont trop limites. En Ile-de-France, le temps de trajet est souvent plus parlant que la distance.
+2. Faut-il chercher uniquement dans mon departement ?
+   - Pas forcement. Selon votre position, une ville d'un departement voisin peut etre plus accessible qu'une commune eloignee du meme departement.
+3. Combien de praticiens comparer ?
+   - Comparer trois a cinq praticiens est generalement suffisant pour garder une recherche claire et reperer les profils les plus adaptes.
+
+Aller plus loin
+- /carte : Ouvrir la carte
+- /naturopathe-paris : Voir Paris par arrondissement
+- /annuaire-naturopathes : Parcourir l'annuaire Ile-de-France
+
+Lecture editoriale
+- guide utile et concret
+- forte logique d'orientation vers les pages de recherche
+- pedagogie presente, mais encore tres liee au fonctionnement du site

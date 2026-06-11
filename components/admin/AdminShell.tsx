@@ -32,8 +32,8 @@ const ADMIN_NAV_ITEMS: Array<{
   {
     key: "overview",
     href: "/admin",
-    label: "Pilotage",
-    detail: "Trafic, usage, conversions"
+    label: "Tableau de bord",
+    detail: "Indicateurs globaux"
   },
   {
     key: "clients",
@@ -45,13 +45,19 @@ const ADMIN_NAV_ITEMS: Array<{
     key: "practitioners",
     href: "/admin/praticiens-actifs",
     label: "Praticiens",
-    detail: "Comptes, publication, performance"
+    detail: "Comptes et fiches"
+  },
+  {
+    key: "emailing",
+    href: "/admin/emailing",
+    label: "Emailing",
+    detail: "Envois et audiences"
   },
   {
     key: "campaigns",
     href: "/admin/campagnes",
-    label: "Revendication",
-    detail: "Campagnes et taux"
+    label: "Revendications",
+    detail: "Campagnes"
   },
   {
     key: "prospects",
@@ -137,7 +143,7 @@ export default function AdminShell({
             </div>
             <div>
               <p>NaturoCarte</p>
-              <strong>Console admin</strong>
+              <strong>Admin</strong>
             </div>
             <button
               type="button"
@@ -164,18 +170,9 @@ export default function AdminShell({
             ))}
           </nav>
 
-          <div className="admin-sidebar-card">
-            <p className="admin-sidebar-card-eyebrow">Accès rapide</p>
-            <strong>Navigation pensée mobile</strong>
-            <p>
-              Barre latérale persistante sur desktop, menu burger sur mobile, et accès
-              direct aux écrans qui servent vraiment au quotidien.
-            </p>
-          </div>
-
           <div className="admin-sidebar-footer">
-            <Link className="btn btn-secondary" href="/carte">
-              Voir la carte
+            <Link className="btn btn-secondary" href="/">
+              Voir le site
             </Link>
             <form action="/admin/prospects/logout" method="post">
               <button className="btn" type="submit">

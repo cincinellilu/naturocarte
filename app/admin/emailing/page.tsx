@@ -75,7 +75,7 @@ export default async function AdminEmailingPage({
       <AdminAuthGate
         eyebrow="Admin emailing"
         title="Accès protégé"
-        description="Connectez-vous pour gérer les audiences NaturoCarte, envoyer des campagnes et suivre les événements Resend."
+        description="Connectez-vous pour accéder à l’emailing."
         nextPath="/admin/emailing"
         errorMessage="Aucun mot de passe admin n’est configuré."
       />
@@ -88,7 +88,7 @@ export default async function AdminEmailingPage({
       <AdminAuthGate
         eyebrow="Admin emailing"
         title="Accès protégé"
-        description="Connectez-vous pour gérer les audiences NaturoCarte, envoyer des campagnes et suivre les événements Resend."
+        description="Connectez-vous pour accéder à l’emailing."
         nextPath="/admin/emailing"
         errorMessage={errorMessage}
       />
@@ -111,7 +111,7 @@ export default async function AdminEmailingPage({
         section="emailing"
         eyebrow="Admin emailing"
         title="Emailing NaturoCarte"
-        description="Audiences gérées dans NaturoCarte, envoi via l’API Resend et suivi des statuts directement dans la base."
+        description="Audiences, campagnes et statuts d’envoi."
         headerMeta={["Resend", "Migration requise"]}
       >
         <div className="admin-page">
@@ -148,7 +148,7 @@ export default async function AdminEmailingPage({
       section="emailing"
       eyebrow="Admin emailing"
       title="Emailing NaturoCarte"
-      description="Audiences gérées dans NaturoCarte, envoi via l’API Resend, et suivi des statuts directement dans la base."
+      description="Audiences, campagnes et statuts d’envoi."
       headerMeta={["Resend", `${data.campaigns.length.toLocaleString("fr-FR")} campagnes suivies`]}
     >
       <div className="admin-page">
@@ -199,7 +199,7 @@ export default async function AdminEmailingPage({
           <section className="admin-panel">
             <div>
               <h2>Clics récents</h2>
-              <p>Signal d’engagement visible rapidement, même sur mobile.</p>
+              <p>Volume de clics par campagne.</p>
             </div>
             <AdminSparkline
               items={clickTrend}

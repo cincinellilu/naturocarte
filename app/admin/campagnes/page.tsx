@@ -149,8 +149,8 @@ export default async function AdminCampaignsPage({
     <AdminShell
       section="campaigns"
       eyebrow="Admin campagnes"
-      title="Campagnes email de revendication"
-      description="Les emails sont envoyés via Resend. NaturoCarte suit ici les envois, les clics uniques et surtout les fiches revendiquées par campagne."
+      title="Campagnes de revendication"
+      description="Suivi des envois, clics et fiches revendiquées par campagne."
       headerMeta={["15 variantes", `${totals.sent.toLocaleString("fr-FR")} envois suivis`]}
     >
       <div className="admin-page">

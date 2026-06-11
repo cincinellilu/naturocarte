@@ -3,42 +3,47 @@ import { getSiteUrl } from "@/lib/site";
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1"]);
 const LOCAL_PROTOCOLS = new Set(["http:", "https:"]);
 
-function getForwardedOrigin(request: Request): string | null {
-  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
-  const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
-
-  if (!forwardedHost) return null;
-
-  const protocol =
-    forwardedProto ||
-    (forwardedHost.startsWith("localhost") || forwardedHost.startsWith("127.0.0.1")
-      ? "http"
-      : "https");
-
+function createOrigin(host: string | null | undefined, protocol?: string | null): string | null {
+  const cleanHost = host?.split(",")[0]?.trim();
+  if (!cleanHost) return null;
+  const hostname = cleanHost.split(":")[0];
+  const cleanProtocol = protocol?.split(",")[0]?.trim() || (LOCAL_HOSTS.has(hostname) ? "http" : "https");
   try {
-    return new URL(`${protocol}://${forwardedHost}`).origin;
+    return new URL(`${cleanProtocol}://${cleanHost}`).origin;
   } catch {
     return null;
   }
 }
 
+function isLocalOrigin(origin: string): boolean {
+  try {
+    const url = new URL(origin);
+    return LOCAL_HOSTS.has(url.hostname) && LOCAL_PROTOCOLS.has(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
 export function getAppOrigin(request?: Request): string {
   if (request) {
-    const forwardedOrigin = getForwardedOrigin(request);
-    if (forwardedOrigin) {
-      const forwardedUrl = new URL(forwardedOrigin);
-      if (LOCAL_HOSTS.has(forwardedUrl.hostname)) return forwardedUrl.origin;
-      if (process.env.NODE_ENV !== "production") return forwardedUrl.origin;
-    }
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    const candidates = [
+      createOrigin(request.headers.get("x-forwarded-host"), forwardedProto),
+      createOrigin(request.headers.get("host"), forwardedProto)
+    ];
 
     try {
-      const requestUrl = new URL(request.url);
-      if (LOCAL_HOSTS.has(requestUrl.hostname) && LOCAL_PROTOCOLS.has(requestUrl.protocol)) {
-        return requestUrl.origin;
-      }
-      if (process.env.NODE_ENV !== "production") return requestUrl.origin;
+      candidates.push(new URL(request.url).origin);
     } catch {
-      return "http://localhost:3000";
+      // Keep the fallback below.
+    }
+
+    const publicOrigin = candidates.find((origin): origin is string => Boolean(origin && !isLocalOrigin(origin)));
+    if (publicOrigin) return publicOrigin;
+
+    const localOrigin = candidates.find((origin): origin is string => Boolean(origin && isLocalOrigin(origin)));
+    if (localOrigin && process.env.NODE_ENV !== "production") {
+      return localOrigin;
     }
   }
 

@@ -314,7 +314,7 @@ export default async function ActivePractitionerDetailAdminPage({
       <AdminAuthGate
         eyebrow="Admin praticiens"
         title="Accès protégé"
-        description="Connectez-vous pour consulter les données d’une fiche praticien."
+        description="Connectez-vous pour accéder à cette fiche."
         nextPath={nextPath}
         errorMessage="Aucun mot de passe admin n’est configuré."
       />
@@ -327,7 +327,7 @@ export default async function ActivePractitionerDetailAdminPage({
       <AdminAuthGate
         eyebrow="Admin praticiens"
         title="Accès protégé"
-        description="Connectez-vous pour consulter les données d’une fiche praticien."
+        description="Connectez-vous pour accéder à cette fiche."
         nextPath={nextPath}
         errorMessage={errorMessage}
       />
@@ -358,7 +358,7 @@ export default async function ActivePractitionerDetailAdminPage({
       section="practitioners"
       eyebrow="Admin praticiens"
       title={displayName}
-      description="Données détaillées de la fiche sélectionnée: compte, complétion, vues, contacts et événements récents."
+      description="Compte, complétion, vues, contacts et événements récents."
       headerMeta={[
         account ? `Le forfait ${plan.name}` : "Compte non rattaché",
         formatPractitionerStatusLabel(practitioner?.status),

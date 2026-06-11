@@ -36,7 +36,7 @@ export default function AdminAuthGate({
             required
           />
           <button className="btn" type="submit">
-            Ouvrir l’admin
+            Se connecter
           </button>
         </form>
       </section>

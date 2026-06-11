@@ -63,7 +63,7 @@ export default async function AdminProspectsPage({
       <AdminAuthGate
         eyebrow="Admin prospects"
         title="Accès protégé"
-        description="Connectez-vous pour gérer les naturopathes à contacter et les retirer temporairement du site si nécessaire."
+        description="Connectez-vous pour accéder aux prospects."
         nextPath="/admin/prospects"
         errorMessage={errorMessage}
       />
@@ -93,8 +93,8 @@ export default async function AdminProspectsPage({
       section="prospects"
       eyebrow="Admin prospects"
       title="Suivi des naturopathes"
-      description="Cochez Contacté quand la prise de contact est faite, et Retiré du site pour masquer complètement une fiche pendant le suivi."
-      headerMeta={["Suivi commercial", `${practitioners.length.toLocaleString("fr-FR")} fiches suivies`]}
+      description="Mise à jour des statuts de contact et de publication."
+      headerMeta={[`${practitioners.length.toLocaleString("fr-FR")} fiches suivies`]}
     >
       <div className="admin-page">
         {hasError ? (

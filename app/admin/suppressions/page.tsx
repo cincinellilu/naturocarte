@@ -37,7 +37,7 @@ export default async function AdminSuppressionsPage({
       <AdminAuthGate
         eyebrow="Admin suppressions"
         title="Accès protégé"
-        description="Connectez-vous pour gérer les demandes de retrait de fiches."
+        description="Connectez-vous pour accéder aux suppressions."
         nextPath="/admin/suppressions"
         errorMessage="Aucun mot de passe admin n’est configuré."
       />
@@ -50,7 +50,7 @@ export default async function AdminSuppressionsPage({
       <AdminAuthGate
         eyebrow="Admin suppressions"
         title="Accès protégé"
-        description="Connectez-vous pour gérer les demandes de retrait de fiches."
+        description="Connectez-vous pour accéder aux suppressions."
         nextPath="/admin/suppressions"
         errorMessage={errorMessage}
       />
@@ -61,8 +61,8 @@ export default async function AdminSuppressionsPage({
     <AdminShell
       section="compliance"
       eyebrow="Admin suppressions"
-      title="Suppressions RGPD"
-      description="Retirez définitivement une fiche praticien quand une personne demande à ne plus apparaître sur NaturoCarte."
+      title="Suppressions"
+      description="Recherche et suppression définitive d’une fiche praticien."
       headerMeta={["Action irréversible", "Recherche par email"]}
     >
       <div className="admin-page">

@@ -173,7 +173,7 @@ export default async function ActivePractitionersAdminPage({
       <AdminAuthGate
         eyebrow="Admin praticiens"
         title="Accès protégé"
-        description="Connectez-vous pour suivre l’activité des praticiens et les comptes à relancer."
+        description="Connectez-vous pour accéder aux praticiens."
         nextPath="/admin/praticiens-actifs"
         errorMessage="Aucun mot de passe admin n’est configuré."
       />
@@ -186,7 +186,7 @@ export default async function ActivePractitionersAdminPage({
       <AdminAuthGate
         eyebrow="Admin praticiens"
         title="Accès protégé"
-        description="Connectez-vous pour suivre l’activité des praticiens et les comptes à relancer."
+        description="Connectez-vous pour accéder aux praticiens."
         nextPath="/admin/praticiens-actifs"
         errorMessage={errorMessage}
       />
@@ -215,8 +215,8 @@ export default async function ActivePractitionersAdminPage({
       section="practitioners"
       eyebrow="Admin praticiens"
       title="Praticiens actifs"
-      description="Vue des comptes praticiens, de leur activité de connexion et de la complétion de leur fiche."
-      headerMeta={["Mobile, tablette, desktop", `${publishedRows.length.toLocaleString("fr-FR")} fiches publiées`]}
+      description="Comptes praticiens, connexions et complétion des fiches."
+      headerMeta={[`${publishedRows.length.toLocaleString("fr-FR")} fiches publiées`]}
     >
       <div className="admin-page">
         <nav className="admin-tabs" aria-label="Filtres praticiens actifs">

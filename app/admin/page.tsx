@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
-import Link from "next/link";
 import AdminAuthGate from "@/components/admin/AdminAuthGate";
 import AdminShell from "@/components/admin/AdminShell";
 import AdminSparkline from "@/components/admin/AdminSparkline";
@@ -145,7 +144,7 @@ export default async function AdminPage({
       <AdminAuthGate
         eyebrow="Admin NaturoCarte"
         title="Accès protégé"
-        description="Connectez-vous pour piloter le trafic, les parcours utilisateurs, les prospects et les métriques business."
+        description="Connectez-vous pour accéder à l’administration."
         nextPath="/admin"
         errorMessage="Aucun mot de passe admin n’est configuré."
       />
@@ -158,7 +157,7 @@ export default async function AdminPage({
       <AdminAuthGate
         eyebrow="Admin NaturoCarte"
         title="Accès protégé"
-        description="Connectez-vous pour piloter le trafic, les parcours utilisateurs, les prospects et les métriques business."
+        description="Connectez-vous pour accéder à l’administration."
         nextPath="/admin"
         errorMessage={errorMessage}
       />
@@ -172,9 +171,8 @@ export default async function AdminPage({
       <AdminShell
         section="overview"
         eyebrow="Admin NaturoCarte"
-        title="Pilotage produit"
-        description="Vue transversale du trafic, des parcours et des signaux business."
-        headerMeta={["Console produit", "Données indisponibles"]}
+        title="Tableau de bord"
+        description="Indicateurs globaux indisponibles pour le moment."
       >
         <div className="admin-page">
           <p className="page-alert">
@@ -230,8 +228,8 @@ export default async function AdminPage({
     <AdminShell
       section="overview"
       eyebrow="Admin NaturoCarte"
-      title="Pilotage produit"
-      description="Vue des 30 derniers jours. Les chiffres combinent acquisition, carte, fiches praticiens, avis, favoris et abonnement Visibilité+."
+      title="Tableau de bord"
+      description="Indicateurs globaux des 30 derniers jours."
       headerMeta={["30 derniers jours", `${events.length.toLocaleString("fr-FR")} événements`]}
     >
       <div className="admin-page">
@@ -272,35 +270,6 @@ export default async function AdminPage({
 
           <AdminPanel title="Événements fréquents" description="Volume brut par type d’événement.">
             <AdminList items={topEvents} />
-          </AdminPanel>
-
-          <AdminPanel title="Back-office disponible" description="Accès rapides aux autres vues internes.">
-            <div className="admin-action-list admin-action-list--grid">
-              <Link className="btn" href="/admin/clients">
-                Suivre les clients
-              </Link>
-              <Link className="btn btn-secondary" href="/admin/emailing">
-                Emailing NaturoCarte
-              </Link>
-              <Link className="btn btn-secondary" href="/admin/praticiens-actifs">
-                Praticiens actifs
-              </Link>
-              <Link className="btn btn-secondary" href="/admin/campagnes">
-                Campagnes email
-              </Link>
-              <Link className="btn btn-secondary" href="/admin/clients/visibilite-plus">
-                Clients Visibilité+
-              </Link>
-              <Link className="btn" href="/admin/prospects">
-                Suivre les prospects
-              </Link>
-              <Link className="btn btn-secondary" href="/carte">
-                Vérifier la carte publique
-              </Link>
-              <Link className="btn btn-secondary" href="/praticiens/dashboard">
-                Voir un dashboard praticien
-              </Link>
-            </div>
           </AdminPanel>
         </section>
       </div>

@@ -135,14 +135,14 @@ function getPlanFilterTitle(planFilter: PlanFilter) {
 
 function getPlanFilterIntro(planFilter: PlanFilter) {
   if (planFilter === PRACTITIONER_PLAN_PRESENCE) {
-    return "Comptes praticiens gratuits, sans facturation Stripe active attendue.";
+    return "Comptes praticiens gratuits.";
   }
 
   if (planFilter === PRACTITIONER_PLAN_VISIBILITY) {
-    return "Comptes praticiens payants, avec statut d’abonnement et factures Stripe quand disponibles.";
+    return "Comptes praticiens payants, abonnements et factures Stripe.";
   }
 
-  return "Vue commerciale de tous les comptes praticiens créés sur NaturoCarte.";
+  return "Comptes praticiens et abonnements.";
 }
 
 function isPaidInvoiceForCurrentMonth(invoice: StripeInvoiceSummary, now = new Date()) {
@@ -297,7 +297,7 @@ export default async function AdminClientsView({
       <AdminAuthGate
         eyebrow="Admin commercial"
         title="Accès protégé"
-        description="Connectez-vous pour suivre les clients, les forfaits et les abonnements."
+        description="Connectez-vous pour accéder aux clients."
         nextPath="/admin/clients"
         errorMessage="Aucun mot de passe admin n’est configuré."
       />
@@ -310,7 +310,7 @@ export default async function AdminClientsView({
       <AdminAuthGate
         eyebrow="Admin commercial"
         title="Accès protégé"
-        description="Connectez-vous pour suivre les clients, les forfaits et les abonnements."
+        description="Connectez-vous pour accéder aux clients."
         nextPath="/admin/clients"
         errorMessage={errorMessage}
       />
@@ -336,7 +336,7 @@ export default async function AdminClientsView({
       title={getPlanFilterTitle(planFilter)}
       description={getPlanFilterIntro(planFilter)}
       headerMeta={[
-        planFilter === "all" ? "Vue commerciale globale" : getPlanFilterTitle(planFilter),
+        planFilter === "all" ? "Tous les forfaits" : getPlanFilterTitle(planFilter),
         `${(clients?.length ?? 0).toLocaleString("fr-FR")} client(s)`
       ]}
     >

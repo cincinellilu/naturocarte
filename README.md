@@ -40,6 +40,8 @@ npm run start
 
 Le projet est compile en mode standalone. Apres `npm run build`, le script `start`
 lance donc `.next/standalone/server.js` directement.
+Le build recopie aussi `public` et `.next/static` dans le bundle standalone pour que
+les CSS, JS et assets soient correctement servis en production.
 
 ## Variables d'environnement
 

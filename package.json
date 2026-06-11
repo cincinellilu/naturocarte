@@ -6,7 +6,7 @@
     "clean": "rm -rf .next",
     "dev": "node scripts/ensure-dev-port-free.mjs && npm run clean && next dev --webpack",
     "dev:turbo": "node scripts/ensure-dev-port-free.mjs && npm run clean && next dev",
-    "build": "npm run clean && next build",
+    "build": "npm run clean && next build && node scripts/prepare-standalone.mjs",
     "start": "node .next/standalone/server.js",
     "start:prod": "HOSTNAME=0.0.0.0 PORT=${PORT:-3000} node .next/standalone/server.js",
     "imports:reconcile:paris": "node scripts/imports/reconcile-paris-lot.mjs",

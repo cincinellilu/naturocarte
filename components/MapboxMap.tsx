@@ -55,6 +55,14 @@ function getPopupPadding() {
   return { top: 160, bottom: 120, left: 60, right: 60 };
 }
 
+function getSearchFocusPadding() {
+  if (isMobileViewportNow()) {
+    return { top: 176, bottom: 112, left: 24, right: 24 };
+  }
+
+  return { top: 136, bottom: 84, left: 320, right: 60 };
+}
+
 function moveMap(
   map: mapboxgl.Map,
   options: {
@@ -974,7 +982,8 @@ export default function MapboxMap({
     moveMap(map, {
       center: [searchCenter.lng, searchCenter.lat],
       zoom: 13.5,
-      mode: "fly"
+      mode: "fly",
+      padding: getSearchFocusPadding()
     });
 
     if (!searchMarkerElementRef.current) {

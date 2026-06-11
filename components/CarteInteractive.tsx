@@ -119,6 +119,7 @@ export default function CarteInteractive({
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
   const mapFrameRef = useRef<HTMLDivElement | null>(null);
   const searchWrapperRef = useRef<HTMLDivElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -480,6 +481,7 @@ export default function CarteInteractive({
     setSearchQuery(suggestion.label);
     setSuggestions([]);
     setIsSuggestionsOpen(false);
+    searchInputRef.current?.blur();
     mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
@@ -510,6 +512,7 @@ export default function CarteInteractive({
     !isLoadingSuggestions &&
     searchQuery.trim().length >= 2 &&
     suggestions.length === 0;
+  const isMobileSearchCollapsed = Boolean(searchCenter) && !isSuggestionsOpen;
 
   const resultsTitle = activeDepartment
     ? activeSubzoneLabel
@@ -542,7 +545,7 @@ export default function CarteInteractive({
             className={[
               "search-box",
               "search-box--overlay",
-              selectedSlug ? "search-box--hidden-mobile" : null
+              selectedSlug || isMobileSearchCollapsed ? "search-box--hidden-mobile" : null
             ]
               .filter(Boolean)
               .join(" ")}
@@ -553,6 +556,7 @@ export default function CarteInteractive({
               </label>
               <input
                 id="address-search"
+                ref={searchInputRef}
                 type="text"
                 className="search-input"
                 placeholder="10 Rue de Rivoli, Paris ou Versailles"
@@ -590,6 +594,22 @@ export default function CarteInteractive({
               ) : null}
             </div>
           </div>
+
+          {searchCenter && isMobileSearchCollapsed && !selectedSlug ? (
+            <button
+              type="button"
+              className="map-mobile-search-toggle"
+              onClick={() => {
+                setIsSuggestionsOpen(true);
+                window.requestAnimationFrame(() => {
+                  searchInputRef.current?.focus();
+                  searchInputRef.current?.select();
+                });
+              }}
+            >
+              Modifier l’adresse
+            </button>
+          ) : null}
 
           {isFullscreen ? (
             <button

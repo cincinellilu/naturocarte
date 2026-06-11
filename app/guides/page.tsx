@@ -12,8 +12,7 @@ const guideHubEntries = [
     title: "Comment évaluer le sérieux d'un naturopathe ?",
     description:
       "Des repères concrets pour distinguer un cadre sérieux d'un discours trop flou, trop commercial ou trop prometteur.",
-    href: "/methode",
-    ctaLabel: "Évaluer le sérieux d'un naturopathe"
+    href: "/methode"
   }
 ];
 
@@ -98,13 +97,13 @@ export default function GuidesPage() {
           </nav>
 
           <div className="page-hero-copy about-hero-copy">
-            <p className="page-eyebrow">Questions fréquentes</p>
-            <h1>Comment choisir un naturopathe</h1>
+            <p className="page-eyebrow">Articles pratiques</p>
+            <h1>Guides pour choisir un naturopathe</h1>
             <p className="page-lead">
-              Ces contenus répondent aux questions les plus fréquentes avant un premier
+              Ces articles répondent aux questions les plus fréquentes avant un premier
               rendez-vous : comment choisir un naturopathe, comment en trouver un près de
-              chez soi, comment le comparer à d'autres praticiens, comment distinguer
-              naturopathe et diététicien, et comment repérer un cadre sérieux.
+              chez soi, comment distinguer naturopathe et diététicien, et comment évaluer
+              le sérieux d'un praticien.
             </p>
           </div>
         </div>
@@ -114,11 +113,11 @@ export default function GuidesPage() {
         <div className="section-heading section-heading--stacked">
           <div>
             <p className="section-eyebrow">À lire</p>
-            <h2>Quatre guides pour choisir, comparer et trouver un naturopathe</h2>
+            <h2>Articles à lire avant de choisir un praticien</h2>
           </div>
           <p className="section-intro">
-            Chaque contenu cible une intention de recherche précise et apporte des repères
-            concrets avant de prendre rendez-vous avec un praticien.
+            Chaque page traite une problématique précise et apporte des repères concrets
+            pour mieux comprendre votre besoin avant de prendre rendez-vous.
           </p>
         </div>
 
@@ -129,79 +128,17 @@ export default function GuidesPage() {
               <p>{entry.description}</p>
               <p className="about-inline-link">
                 <Link href={entry.href} prefetch={false}>
-                  {"ctaLabel" in entry ? entry.ctaLabel : entry.title}
+                  Lire l'article
                 </Link>
               </p>
             </article>
           ))}
         </div>
-      </section>
 
-      <section className="section-shell">
-        <div className="section-heading section-heading--stacked">
-          <div>
-            <p className="section-eyebrow">Selon votre situation</p>
-            <h2>Quelle page lire selon votre question</h2>
-          </div>
-          <p className="section-intro">
-            Le bon point de départ dépend surtout de la question que vous vous posez
-            avant de consulter.
-          </p>
-        </div>
-
-        <div className="quick-guide-grid">
-          <article className="about-card">
-            <h3 className="about-title">Vous hésitez entre plusieurs praticiens</h3>
-            <p>
-              Commencez par les critères de choix : formation, cadre d'accompagnement,
-              signaux d'alerte et questions à poser.
-            </p>
-            <p className="about-inline-link">
-              <Link href="/guides/comment-choisir-un-naturopathe-a-paris" prefetch={false}>
-                Comment choisir un naturopathe ?
-              </Link>
-            </p>
-          </article>
-
-          <article className="about-card">
-            <h3 className="about-title">Vous ne savez pas quel professionnel consulter</h3>
-            <p>
-              Commencez par la différence entre naturopathe et diététicien pour clarifier
-              le rôle, la formation et les cas d'usage.
-            </p>
-            <p className="about-inline-link">
-              <Link href="/guides/naturopathe-ou-dieteticien-quelles-differences" prefetch={false}>
-                Naturopathe ou diététicien ?
-              </Link>
-            </p>
-          </article>
-
-          <article className="about-card">
-            <h3 className="about-title">Vous cherchez un praticien proche de chez vous</h3>
-            <p>
-              Commencez par la méthode de recherche locale : périmètre réaliste,
-              comparaison utile et arbitrage entre proximité et pertinence.
-            </p>
-            <p className="about-inline-link">
-              <Link href="/guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france" prefetch={false}>
-                Trouver un naturopathe autour de moi
-              </Link>
-            </p>
-          </article>
-
-          <article className="about-card">
-            <h3 className="about-title">Vous voulez vérifier si un praticien inspire confiance</h3>
-            <p>
-              Commencez par les repères de sérieux : transparence, limites, posture,
-              promesses et rapport aux produits.
-            </p>
-            <p className="about-inline-link">
-              <Link href="/methode" prefetch={false}>
-                Comment savoir si un naturopathe est sérieux ?
-              </Link>
-            </p>
-          </article>
-        </div>
+        <p className="about-inline-link">
+          Si vous souhaitez ensuite repérer des praticiens autour de vous, vous pouvez
+          aussi consulter <Link href="/carte">la carte</Link>.
+        </p>
       </section>
 
       <script

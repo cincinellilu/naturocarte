@@ -173,15 +173,6 @@ export default async function GuidePage({
             <p className="page-eyebrow">Guide pratique</p>
             <h1>{guide.title}</h1>
             <p className="page-lead">{guide.intro}</p>
-
-            <div className="hero-actions">
-              <Link className="btn" href="#guide-essentials" prefetch={false}>
-                Les repères essentiels
-              </Link>
-              <Link className="btn btn-secondary" href="#faq-title" prefetch={false}>
-                Questions fréquentes
-              </Link>
-            </div>
           </div>
         </div>
       </section>

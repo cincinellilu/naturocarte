@@ -13,6 +13,38 @@
       "phones": [
         "0781245679"
       ]
+    },
+    {
+      "type": "practitioner_rgpd_erasure",
+      "source": "manual",
+      "reason": "rgpd_erasure",
+      "requested_at": "2026-06-11T09:31:27.000Z",
+      "deleted_at": "2026-06-11T09:31:27.000Z",
+      "slugs": [
+        "leslie-chemouny-paris-18"
+      ],
+      "emails": [
+        "lesliechemouny.naturo@gmail.com"
+      ],
+      "phones": [
+        "0665596534"
+      ]
+    },
+    {
+      "type": "practitioner_rgpd_erasure",
+      "source": "manual",
+      "reason": "rgpd_erasure",
+      "requested_at": "2026-06-11T11:52:36.000Z",
+      "deleted_at": "2026-06-11T11:52:36.000Z",
+      "slugs": [
+        "nabil-el-mansouri-paris-1"
+      ],
+      "emails": [
+        "nabilnaturopathe@gmail.com"
+      ],
+      "phones": [
+        "0660590388"
+      ]
     }
   ]
 }

@@ -140,15 +140,7 @@ export const GUIDE_PAGES: GuidePage[] = [
       }
     ],
     relatedLinks: [
-      { href: "/methode", label: "Comment savoir si un naturopathe est sérieux ?" },
-      {
-        href: "/guides/naturopathe-ou-dieteticien-quelles-differences",
-        label: "Naturopathe ou diététicien : quelle différence ?"
-      },
-      {
-        href: "/guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france",
-        label: "Trouver un naturopathe autour de moi : par où commencer ?"
-      }
+      { href: "/carte", label: "Voir les naturopathes autour de vous sur la carte" }
     ]
   },
   {
@@ -252,14 +244,9 @@ export const GUIDE_PAGES: GuidePage[] = [
     ],
     relatedLinks: [
       {
-        href: "/guides/comment-choisir-un-naturopathe-a-paris",
-        label: "Comment choisir un naturopathe ?"
-      },
-      {
-        href: "/guides/trouver-un-naturopathe-autour-de-moi-en-ile-de-france",
-        label: "Trouver un naturopathe autour de moi"
-      },
-      { href: "/methode", label: "Comment évaluer le sérieux d'un praticien ?" }
+        href: "/carte",
+        label: "Chercher un praticien près de chez vous sur la carte"
+      }
     ]
   },
   {
@@ -373,14 +360,9 @@ export const GUIDE_PAGES: GuidePage[] = [
     ],
     relatedLinks: [
       {
-        href: "/guides/comment-choisir-un-naturopathe-a-paris",
-        label: "Comment choisir un naturopathe ?"
-      },
-      {
-        href: "/guides/naturopathe-ou-dieteticien-quelles-differences",
-        label: "Naturopathe ou diététicien : qui consulter ?"
-      },
-      { href: "/methode", label: "Comment savoir si un naturopathe est sérieux ?" }
+        href: "/carte",
+        label: "Consulter la carte pour repérer des praticiens autour de vous"
+      }
     ]
   }
 ];

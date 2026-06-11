@@ -11,7 +11,8 @@ export type AdminSectionKey =
   | "practitioners"
   | "campaigns"
   | "emailing"
-  | "prospects";
+  | "prospects"
+  | "compliance";
 
 type AdminShellProps = {
   section: AdminSectionKey;
@@ -57,6 +58,12 @@ const ADMIN_NAV_ITEMS: Array<{
     href: "/admin/prospects",
     label: "Prospects",
     detail: "Contact et visibilité"
+  },
+  {
+    key: "compliance",
+    href: "/admin/suppressions",
+    label: "Suppressions",
+    detail: "Retraits RGPD"
   }
 ];
 
